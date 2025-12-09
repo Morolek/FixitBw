@@ -1,31 +1,474 @@
-<script>
-/* ============================
-  CUSTOM CURSOR (FIXED FOR SMOOTHNESS)
-============================ */
-const dot = document.querySelector(".cursor-dot");
-const circle = document.querySelector(".cursor-circle");
+<!doctype html>
+<html lang="en" class="lenis">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Fixit 🔨 BW | Power Tools Botswana</title>
 
-document.addEventListener("mousemove", (e) => {
-  if (!dot || !circle) return;
+  <script src="https://cdn.tailwindcss.com"></script>
 
-  // 1. Use gsap.set for the DOT for instant, lag-free positioning
-  gsap.set(dot, {
-    x: e.clientX,
-    y: e.clientY
+  <link href="https://api.fontshare.com/v2/css?f[]=clash-display@200,300,400,500,600,700&f[]=general-sans@200,300,400,500,600&display=swap" rel="stylesheet">
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.29/bundled/lenis.min.js"></script>
+  <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+
+  <meta name="description" content="Fixit 🔨 BW — Power tool sales & rentals across Botswana. Rent or buy drills, saws, grinders, generators and more. Contact +267 73318758.">
+
+  <style>
+    /* -------------------- CORE VISUAL STYLES -------------------- */
+    :root {
+      --accent: #f97316;
+      --bg: #030303;
+      --muted: #a9a9a9;
+      --glass: rgba(255,255,255,0.04);
+    }
+
+    html,body { height:100%; margin:0; }
+    body {
+      background-color: var(--bg);
+      color: #fff;
+      overflow-x: hidden;
+      cursor: none;
+      font-family: "General Sans", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+    }
+
+    ::selection { background: var(--accent); color:#000; }
+
+    /* Noise + canvas */
+    .noise { position: fixed; inset: 0; pointer-events: none; z-index: 50; opacity: 0.05;
+      background:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E"); }
+
+    /* WebGL canvas sits behind everything */
+    #webgl { position: fixed; top:0; left:0; width:100%; height:100vh; z-index:-1; opacity:0; }
+
+    /* Cursor (FIXED STYLES) */
+    .cursor-dot { width:6px; height:6px; background:var(--accent); position:fixed; top:0; left:0; border-radius:50%; z-index:9999; pointer-events:none; transform:translate(-50%,-50%); }
+    .cursor-circle { width:40px; height:40px; border:1px solid rgba(255,255,255,0.18); position:fixed; top:0; left:0; border-radius:50%; z-index:9998; pointer-events:none; transform:translate(-50%,-50%); transition:all .25s; }
+    .cursor-circle.active { width:60px; height:60px; background-color: rgba(249,115,22,0.08); border-color:var(--accent); backdrop-filter: blur(2px); }
+
+    /* Spotlight hover effect */
+    .spotlight { position:relative; overflow:hidden; background:#050505; border-radius:8px; }
+    .spotlight::before { content:''; position:absolute; inset:0; background: radial-gradient(800px circle at var(--mouse-x) var(--mouse-y), rgba(249,115,22,0.06), transparent 40%); z-index:1; pointer-events:none; }
+    .spotlight-border::after { content:""; position:absolute; inset:0; border-radius:inherit; padding:1px; background: radial-gradient(600px circle at var(--mouse-x) var(--mouse-y), rgba(249,115,22,0.45), transparent 40%); -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); -webkit-mask-composite: xor; mask-composite: exclude; opacity:0; transition:opacity .45s; pointer-events:none; }
+    .spotlight:hover .spotlight-border::after { opacity:1; }
+
+    /* Reveal helpers */
+    .reveal-text { clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%); display:inline-block; }
+    .char { display:inline-block; transform: translateY(110%); will-change: transform; }
+
+    /* Loader */
+    .loader-wrap { position: fixed; z-index:10000; inset:0; background:#000; display:flex; align-items:center; justify-content:center; }
+    .loader-bar { width:1px; height:0%; background:var(--accent); }
+    .loader-text { position:absolute; bottom:40px; right:40px; font-family:'Clash Display', sans-serif; font-size:12px; letter-spacing:0.1em; color:#bbb; }
+
+    /* Layout containers */
+    .max-w-center { max-width:1600px; margin:0 auto; padding:0 16px; }
+
+    /* NAV */
+    nav { position: fixed; top:0; left:0; width:100%; z-index:100; padding:14px 20px; display:flex; justify-content:center; background: linear-gradient(180deg, rgba(0,0,0,0.35), transparent); }
+    .nav-inner { width:100%; max-width:1600px; display:flex; align-items:center; justify-content:space-between; gap:12px; }
+    .logo { display:flex; align-items:center; gap:10px; font-weight:700; color:#fff; text-decoration:none; }
+    .logo .brand { font-size:18px; font-weight:800; letter-spacing:0.02em; line-height:1; }
+    .logo .hammer { display:inline-flex; align-items:center; justify-content:center; width:28px; height:28px; }
+    .nav-links { display:flex; gap:12px; align-items:center; }
+    .nav-links a { color: #cfcfcf; text-decoration:none; font-weight:700; font-size:12px; letter-spacing:0.08em; padding:8px 10px; border-radius:6px; cursor:none; }
+    .nav-links a:hover { color:#fff; background: rgba(255,255,255,0.02); }
+
+    /* CTA in nav */
+    .nav-cta { display:inline-flex; align-items:center; gap:8px; padding:8px 12px; border-radius:8px; border:1px solid rgba(255,255,255,0.06); background: rgba(0,0,0,0.45); color:#fff; text-decoration:none; font-weight:800; cursor:none; }
+    .nav-cta:hover { border-color:var(--accent); }
+
+    /* Hero */
+    header { min-height:100vh; display:flex; align-items:center; justify-content:center; padding:0 20px; position:relative; }
+    h1.big { font-family: 'Clash Display', sans-serif; font-size: clamp(36px, 10vw, 120px); line-height:0.9; text-align:center; margin:0; letter-spacing:-0.02em; }
+    p.lead { color:#c7c7c7; font-size:18px; max-width:900px; margin:18px auto 0; text-align:center; }
+
+    .cta { margin-top:26px; display:inline-flex; align-items:center; gap:12px; padding:14px 22px; border:1px solid rgba(255,255,255,0.06); border-radius:8px; background:transparent; color:#fff; text-decoration:none; font-weight:700; cursor:none; }
+    .cta:hover { border-color:var(--accent); }
+
+    /* Marquee */
+    .marquee-content { display:flex; gap:4rem; align-items:center; animation: marquee-scroll 40s linear infinite; }
+    @keyframes marquee-scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+
+    /* Footer */
+    footer { background:#020202; border-top:1px solid rgba(255,255,255,0.03); padding:40px 20px; color:#bfbfbf; }
+    .footer-inner { max-width:1200px; margin:0 auto; display:flex; flex-direction:column; gap:20px; }
+
+    .socials a { color:#bbb; text-decoration:none; margin-right:18px; }
+    .visit-btn { display:inline-block; padding:12px 20px; border-radius:8px; background:#fff; color:#000; font-weight:700; text-decoration:none; cursor:none; }
+
+    /* Responsive tweaks */
+    @media (max-width: 1024px) {
+      .nav-links { display:none; }
+      .logo .brand { font-size:16px; }
+    }
+
+    @media (max-width: 640px) {
+      .nav-cta { display:none; }
+      .marquee-content { gap:2rem; }
+    }
+
+    /* Hero section padding fix for large screens */
+    @media (min-width: 1024px) {
+      header.max-w-center {
+        padding-top: 180px !important; 
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="noise"></div>
+  <div class="cursor-dot hidden md:block"></div>
+  <div class="cursor-circle hidden md:block"></div>
+  <canvas id="webgl" aria-hidden="true"></canvas>
+
+  <div class="loader-wrap" aria-hidden="true">
+    <div class="loader-bar"></div>
+    <div class="loader-text"><span class="counter">000</span>% // PREPARING TOOLS</div>
+  </div>
+
+  <nav role="navigation" aria-label="Main navigation">
+    <div class="nav-inner max-w-center">
+      <a class="logo" href="index.html" aria-label="Fixit BW home">
+        <span class="brand">Fixit</span>
+        <span class="hammer" aria-hidden="true">
+          <iconify-icon icon="lucide:hammer" width="26" height="26" style="color:var(--accent)"></iconify-icon>
+        </span>
+        <span class="brand" style="font-weight:900">BW</span>
+      </a>
+
+      <div class="nav-links" role="navigation" aria-label="Site links">
+        <a href="about.html">About</a>
+        <a href="sales.html">Sales & Rentals</a>
+        <a href="promise.html">Our Promise</a>
+      </div>
+
+      <a class="nav-cta" id="get-tools-cta" href="https://wa.me/26773318758" target="_blank" rel="noopener noreferrer">
+        Contact Us Today
+        <iconify-icon icon="lucide:arrow-right" width="14" style="transform: translateY(1px);"></iconify-icon>
+      </a>
+    </div>
+  </nav>
+
+  <header class="max-w-center" style="padding-top:140px;">
+    <div style="text-align:center;z-index:10;">
+      <div style="opacity:0.95;">
+        <p class="lead" style="
+          text-transform:uppercase;
+          letter-spacing:0.25em;
+          color:#ffb88b;
+          font-weight:700;
+          font-size:12px;">
+          Botswana's Trusted Source
+        </p>
+      </div>
+
+      <h1 class="big reveal-text" style="margin-top:14px;">
+        <span class="char">Build.</span><br>
+        <span class="char">Repair.</span><br>
+        <span class="char">Create. <em style="font-weight:400">Fixit.</em></span>
+      </h1>
+
+      <p class="lead">
+        Whether you're building, repairing, or creating, we provide the tools that help you get the job done right.
+        Rent or buy with ease, supported by dependable quality.
+      </p>
+
+      <div>
+        <a class="cta" href="sales.html" style="margin-top:20px;display:inline-block;">View Tools</a>
+      </div>
+    </div>
+  </header>
+
+
+  <section class="max-w-center" style="padding:120px 0;">
+    <h2 class="text-center reveal-text" style="
+      font-family:'Clash Display';
+      font-size:48px;
+      margin-bottom:60px;">
+      What We Offer
+    </h2>
+
+    <div class="grid md:grid-cols-3 gap-10">
+      <div class="spotlight spotlight-border p-10" style="border-radius:14px;">
+        <h3 style="font-family:'Clash Display'; font-size:26px; margin-bottom:10px;">Power Tool Sales</h3>
+        <p style="color:#ccc;">
+          Buy high-quality power tools built for reliability and performance. Perfect for construction professionals and DIY users.
+        </p>
+      </div>
+
+      <div class="spotlight spotlight-border p-10" style="border-radius:14px;">
+        <h3 style="font-family:'Clash Display'; font-size:26px; margin-bottom:10px;">Tool Rentals</h3>
+        <p style="color:#ccc;">
+          Rent tools only when you need them. Affordable rates, flexible times, and reliable equipment ready for any job.
+        </p>
+      </div>
+
+      <div class="spotlight spotlight-border p-10" style="border-radius:14px;">
+        <h3 style="font-family:'Clash Display'; font-size:26px; margin-bottom:10px;">Trusted Quality</h3>
+        <p style="color:#ccc;">
+          Every tool is inspected and maintained so you get peak performance every time you work with FixitBW.
+        </p>
+      </div>
+    </div>
+  </section>
+
+
+  <section class="max-w-center" style="padding:80px 0;">
+    <div class="grid md:grid-cols-2 gap-10">
+      <div>
+        <h2 class="reveal-text" style="
+          font-family:'Clash Display';
+          font-size:46px;
+          margin-bottom:16px;">
+          About FixitBW
+        </h2>
+        <p style="color:#d0d0d0; font-size:17px; line-height:1.7;">
+          FixitBW is Botswana’s reliable partner for both power tool sales and rentals.
+          We help builders, creators, and DIY makers get the right tools without stress —
+          whether you’re purchasing professional-grade equipment or renting for a short project.
+        </p>
+      </div>
+
+      <div class="spotlight spotlight-border p-10" style="min-height:200px; border-radius:12px;">
+        <p style="color:#ccc; line-height:1.7;">
+          Our commitment is simple: dependable tools, transparent pricing, and support that
+          helps you finish your work efficiently. FixitBW empowers your projects with
+          trustworthy equipment and accessible service.
+        </p>
+      </div>
+    </div>
+  </section>
+
+
+  <section style="padding:80px 0;">
+    <div class="overflow-hidden">
+      <div class="marquee-content">
+        <span class="text-3xl font-bold" style="color:#fff;">Power Tools</span>
+        <span class="text-3xl font-bold" style="color:#f97316;">•</span>
+        <span class="text-3xl font-bold" style="color:#fff;">Rentals</span>
+        <span class="text-3xl font-bold" style="color:#f97316;">•</span>
+        <span class="text-3xl font-bold" style="color:#fff;">Construction</span>
+        <span class="text-3xl font-bold" style="color:#f97316;">•</span>
+        <span class="text-3xl font-bold" style="color:#fff;">DIY</span>
+        <span class="text-3xl font-bold" style="color:#f97316;">•</span>
+        <span class="text-3xl font-bold" style="color:#fff;">FixitBW</span>
+      </div>
+    </div>
+  </section>
+
+
+  <footer id="contact" class="max-w-center" style="padding:50px 0 60px;">
+    <div class="footer-inner">
+      <h2 style="color:white;font-size:32px;margin-bottom:10px;text-align:center;">
+        Contact FixitBW
+      </h2>
+
+      <div style="margin-bottom:30px;text-align:center;">
+        <p style="color:#aaa;font-size:16px;margin-bottom:4px;">WhatsApp:</p>
+        <a href="https://wa.me/26773318758" style="
+          color:#f97316;
+          font-size:20px;
+          text-decoration:none;">
+          +267 73318758
+        </a>
+      </div>
+
+      <div style="display:flex;justify-content:center;gap:25px;margin-bottom:40px;">
+        <a href="https://www.tiktok.com/@prodmoroka" target="_blank" style="color:#bbb;font-size:14px;">TikTok</a>
+        <a href="https://www.facebook.com/profile.php?id=61556143019845" target="_blank" style="color:#bbb;font-size:14px;">Facebook</a>
+        <a href="https://wa.me/26773318758" target="_blank" style="color:#bbb;font-size:14px;">WhatsApp</a>
+      </div>
+
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;color:#bbb;font-size:14px;">
+        <div><strong>Fixit</strong> <iconify-icon icon="lucide:hammer" width="18" style="color:#f97316;margin:0 4px;"></iconify-icon> BW • Botswana • Sales & Rentals</div>
+        <div>© 2024 FixitBW Botswana</div>
+      </div>
+
+      <div style="text-align:center;margin-top:25px;">
+        <a class="visit-btn" href="https://www.tiktok.com/@prodmoroka" target="_blank">
+          Visit FixitBW →
+        </a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+  /* ============================
+    CUSTOM CURSOR (FIXED FOR SMOOTHNESS)
+  ============================ */
+  const dot = document.querySelector(".cursor-dot");
+  const circle = document.querySelector(".cursor-circle");
+
+  document.addEventListener("mousemove", (e) => {
+    if (!dot || !circle) return;
+
+    // 1. Use gsap.set for the DOT for instant, lag-free positioning
+    gsap.set(dot, {
+      x: e.clientX,
+      y: e.clientY
+    });
+
+    // 2. Use gsap.to for the CIRCLE to create the desired trailing effect
+    gsap.to(circle, {
+      x: e.clientX,
+      y: e.clientY,
+      duration: 0.18,
+      ease: "power3.out"
+    });
   });
 
-  // 2. Use gsap.to for the CIRCLE to create the desired trailing effect
-  gsap.to(circle, {
-    x: e.clientX,
-    y: e.clientY,
-    duration: 0.18,
-    ease: "power3.out"
+  document.querySelectorAll("a, button, .cta, .nav-cta, .spotlight, .visit-btn").forEach((el) => {
+    el.addEventListener("mouseenter", () => circle.classList.add("active"));
+    el.addEventListener("mouseleave", () => circle.classList.remove("active"));
   });
-});
+  </script>
 
-// Original hover listeners remain correct
-document.querySelectorAll("a, button, .cta, .nav-cta, .spotlight").forEach((el) => {
-  el.addEventListener("mouseenter", () => circle.classList.add("active"));
-  el.addEventListener("mouseleave", () => circle.classList.remove("active"));
-});
-</script>
+
+  <script>
+  /* ============================
+    SPOTLIGHT HOVER EFFECT
+  ============================ */
+  document.querySelectorAll(".spotlight").forEach((card) => {
+    card.onmousemove = (e) => {
+      const rect = card.getBoundingClientRect();
+      card.style.setProperty("--mouse-x", e.clientX - rect.left + "px");
+      card.style.setProperty("--mouse-y", e.clientY - rect.top + "px");
+    };
+  });
+  </script>
+
+
+  <script>
+  /* ============================
+    PAGE LOADER ANIMATION
+  ============================ */
+  const loaderWrap = document.querySelector(".loader-wrap");
+  const loaderBar = document.querySelector(".loader-bar");
+  const counterEl = document.querySelector(".counter");
+
+  let counter = 0;
+  const interval = setInterval(() => {
+    counter += 1;
+    counterEl.textContent = counter.toString().padStart(3, "0");
+    loaderBar.style.height = counter + "%";
+
+    if (counter >= 100) {
+      clearInterval(interval);
+      gsap.to(loaderWrap, {
+        opacity: 0,
+        duration: 0.6,
+        onComplete: () => loaderWrap.style.display = "none"
+      });
+      gsap.to("#webgl", { opacity: 1, duration: 1 });
+    }
+  }, 12);
+  </script>
+
+
+  <script>
+  /* ============================
+    LENIS SMOOTH SCROLL
+  ============================ */
+  const lenis = new Lenis({
+    duration: 1.2,
+    smooth: true
+  });
+
+  function raf(time) {
+    lenis.raf(time);
+    requestAnimationFrame(raf);
+  }
+  requestAnimationFrame(raf);
+  </script>
+
+
+  <script>
+  /* ============================
+    GSAP TEXT REVEAL (HERO)
+  ============================ */
+  gsap.utils.toArray(".char").forEach((char, i) => {
+    gsap.to(char, {
+      y: 0,
+      duration: 1.2,
+      delay: i * 0.03,
+      ease: "power3.out"
+    });
+  });
+  </script>
+
+
+  <script>
+  /* ============================
+    OPTIMIZED WEBGL BACKGROUND
+  ============================ */
+  let scene, camera, renderer, particles;
+
+  function initWebGL() {
+    const canvas = document.getElementById("webgl");
+
+    scene = new THREE.Scene();
+    camera = new THREE.PerspectiveCamera(
+      75, window.innerWidth / window.innerHeight, 0.1, 1000
+    );
+    camera.position.z = 90;
+
+    renderer = new THREE.WebGLRenderer({
+      canvas,
+      alpha: true,
+      antialias: false
+    });
+
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
+
+    // LIGHTER PARTICLE SYSTEM (800 particles instead of 2000)
+    const particleCount = 800;
+    const geometry = new THREE.BufferGeometry();
+    const positions = new Float32Array(particleCount * 3);
+
+    for (let i = 0; i < particleCount * 3; i++) {
+      positions[i] = (Math.random() - 0.5) * 300; 
+    }
+
+    geometry.setAttribute("position", new THREE.BufferAttribute(positions, 3));
+
+    const material = new THREE.PointsMaterial({
+      color: 0xf97316,
+      size: 1.2,
+      transparent: true,
+      opacity: 0.65
+    });
+
+    particles = new THREE.Points(geometry, material);
+    scene.add(particles);
+
+    animateWebGL();
+  }
+
+  function animateWebGL() {
+    requestAnimationFrame(animateWebGL);
+
+    particles.rotation.y += 0.0008;
+    particles.rotation.x += 0.0003;
+
+    renderer.render(scene, camera);
+  }
+
+  window.addEventListener("resize", () => {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+  });
+
+  initWebGL();
+  </script>
+
+
+</body>
+</html>
