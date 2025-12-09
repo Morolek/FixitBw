@@ -1,1 +1,43 @@
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #0b0b0b;
+  color: white;
+}
+
+nav {
+  background: #111;
+  padding: 15px;
+  display: flex;
+  gap: 20px;
+}
+
+nav a {
+  color: #ccc;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+nav a:hover {
+  color: #f97316;
+}
+
+.container {
+  max-width: 1000px;
+  margin: 50px auto;
+  padding: 20px;
+}
+
+h1 {
+  font-size: 40px;
+  margin-bottom: 10px;
+}
+
+footer {
+  margin-top: 60px;
+  padding: 20px;
+  text-align: center;
+  color: #555;
+  border-top: 1px solid #222;
+}
 
