@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>About | FIXIT Botswana</title>
+  <title>About | Fixit 🔨 BW</title>
 
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://api.fontshare.com/v2/css?f[]=clash-display@200,300,400,500,600,700&f[]=general-sans@200,300,400,500,600&display=swap" rel="stylesheet">
@@ -13,20 +13,20 @@
   <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
 
   <style>
-    /* same core styles (trimmed) so visual matches home */
-    :root { --accent-glow: rgba(249,115,22,0.5); }
-    body { background:#030303; color:#fff; font-family:'General Sans', system-ui; overflow-x:hidden; cursor:none; }
-    ::selection{ background:#f97316; color:#000; }
-    .cursor-dot{width:6px;height:6px;background:#f97316;position:fixed;top:0;left:0;border-radius:50%;z-index:9999;pointer-events:none;transform:translate(-50%,-50%);}
-    .cursor-circle{width:40px;height:40px;border:1px solid rgba(255,255,255,0.2);position:fixed;top:0;left:0;border-radius:50%;z-index:9998;pointer-events:none;transform:translate(-50%,-50%);transition:width .3s,height .3s;}
-    .cursor-circle.active{width:60px;height:60px;background-color:rgba(249,115,22,0.1);border-color:#f97316;}
-    .spotlight{position:relative;overflow:hidden;background:#050505;}
-    .spotlight::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:radial-gradient(800px circle at var(--mouse-x) var(--mouse-y), rgba(249,115,22,0.04), transparent 40%);z-index:1;pointer-events:none;}
-    nav{position:fixed;top:0;left:0;width:100%;z-index:100;background:linear-gradient(180deg, rgba(0,0,0,0.6), transparent);padding:18px;}
-    nav a{color:#cfcfcf;margin-right:18px;text-decoration:none;font-weight:600;}
-    .container{max-width:1200px;margin:120px auto;padding:20px;}
-    h1{font-size:44px;margin-bottom:12px;}
-    footer{padding:24px;text-align:center;color:#777;border-top:1px solid #111;margin-top:60px;}
+    :root{--accent:#f97316;}
+    body{margin:0;background:#030303;color:#fff;font-family:'General Sans',system-ui;cursor:none;overflow-x:hidden;}
+    nav{position:fixed;top:0;left:0;width:100%;z-index:100;padding:18px;background:linear-gradient(180deg, rgba(0,0,0,0.35), transparent);}
+    .nav-inner{max-width:1200px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;padding:0 16px;}
+    .nav-inner a{color:#cfcfcf;text-decoration:none;margin-left:12px;font-weight:700;}
+    .logo{display:flex;align-items:center;gap:10px;font-weight:700;}
+    .cursor-dot{width:6px;height:6px;background:var(--accent);position:fixed;top:0;left:0;border-radius:50%;z-index:9999;pointer-events:none;transform:translate(-50%,-50%);}
+    .cursor-circle{width:40px;height:40px;border:1px solid rgba(255,255,255,0.18);position:fixed;top:0;left:0;border-radius:50%;z-index:9998;pointer-events:none;transform:translate(-50%,-50%);transition:all .25s;}
+    .cursor-circle.active{width:60px;height:60px;background:rgba(249,115,22,0.08);border-color:var(--accent);}
+    .container{max-width:1000px;margin:120px auto;padding:20px;}
+    h1{font-size:40px;margin-bottom:8px;}
+    .spotlight{position:relative;overflow:hidden;background:#050505;padding:18px;border-radius:8px;}
+    .spotlight::before{content:'';position:absolute;inset:0;background:radial-gradient(600px circle at var(--mouse-x) var(--mouse-y), rgba(249,115,22,0.04), transparent 40%);pointer-events:none;}
+    footer{margin-top:60px;padding:24px;color:#777;border-top:1px solid #111;}
   </style>
 </head>
 <body>
@@ -34,50 +34,68 @@
   <div class="cursor-dot hidden md:block"></div>
   <div class="cursor-circle hidden md:block"></div>
 
-  <nav class="max-w-center mx-auto flex items-center justify-between">
-    <a href="index.html" class="flex items-center gap-2"><span style="font-weight:700;font-size:18px">FI</span><div style="width:24px;height:24px"></div><span style="font-weight:700;font-size:18px">IT</span></a>
-    <div>
-      <a href="index.html">Home</a>
-      <a href="about.html">About</a>
-      <a href="sales.html">Sales & Rentals</a>
-      <a href="promise.html">Our Promise</a>
+  <nav>
+    <div class="nav-inner">
+      <a class="logo" href="index.html" aria-label="Home">
+        <span style="font-weight:700;font-size:18px;color:#fff;">Fixit</span>
+        <span style="width:26px;height:26px;display:inline-flex;align-items:center;justify-content:center;">
+          <iconify-icon icon="lucide:hammer" width="22" height="22" style="color:var(--accent)"></iconify-icon>
+        </span>
+        <span style="font-weight:900;font-size:18px;color:#fff;">BW</span>
+      </a>
+
+      <div>
+        <a href="index.html">Home</a>
+        <a href="about.html">About</a>
+        <a href="sales.html">Sales & Rentals</a>
+        <a href="promise.html">Our Promise</a>
+      </div>
     </div>
   </nav>
 
   <main class="container">
-    <section class="mb-12">
+    <section>
       <h1>Who We Are</h1>
-      <p style="color:#a9a9a9;max-width:800px;">
-        Fixit is a locally owned power tools business committed to serving Botswana’s builders, creators, and professionals.
-        We focus on providing high-quality power tools for both sale and rental, making reliable equipment accessible to everyone — from construction companies to DIY homeowners.
+      <p style="color:#bdbdbd;max-width:860px;">
+        Fixit 🔨 BW is a locally owned power tools business committed to serving Botswana’s builders, creators, and professionals.
+        We provide high-quality power tools for sale and rentals, making reliable equipment accessible to everyone — from construction companies to DIY homeowners.
       </p>
     </section>
 
-    <section class="grid md:grid-cols-2 gap-8">
-      <div class="spotlight p-8 spotlight-border">
-        <h3 class="text-2xl mb-3">Our Mission</h3>
-        <p class="text-zinc-400">To provide Botswana with dependable tools that help people work faster, safer, and more efficiently.</p>
+    <section style="display:grid;grid-template-columns:repeat(2,1fr);gap:18px;margin-top:28px;">
+      <div class="spotlight">
+        <h3 style="margin-top:0;">Our Mission</h3>
+        <p style="color:#bdbdbd;">To empower builders, creators, and craftsmen across Botswana with the tools they need to work efficiently, safely, and confidently.</p>
       </div>
 
-      <div class="spotlight p-8 spotlight-border">
-        <h3 class="text-2xl mb-3">What We Offer</h3>
-        <ul class="text-zinc-400">
-          <li>High-quality power tool sales</li>
-          <li>Flexible rentals for projects or short-term use</li>
+      <div class="spotlight">
+        <h3 style="margin-top:0;">What We Offer</h3>
+        <ul style="color:#bdbdbd;">
+          <li>Power tool sales: drills, saws, grinders, generators and more</li>
+          <li>Short-term and long-term rentals</li>
           <li>Accessories and consumables</li>
         </ul>
       </div>
     </section>
   </main>
 
-  <footer>
-    <div style="max-width:1200px;margin:0 auto;">
-      <div style="display:flex;justify-content:space-between;align-items:center;">
-        <div><strong>FI</strong>IT • Botswana • Sales & Rentals</div>
-        <div><a href="#" style="color:#bbb">Facebook</a> · <a href="#" style="color:#bbb">Instagram</a> · <a href="#" style="color:#bbb">WhatsApp</a></div>
+  <footer id="contact">
+    <div style="max-width:1000px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;gap:12px;padding:20px;">
+      <div style="display:flex;align-items:center;gap:10px;">
+        <span style="font-weight:800;color:#fff;">Fixit</span>
+        <span><iconify-icon icon="lucide:hammer" width="20" style="color:var(--accent)"></iconify-icon></span>
+        <span style="font-weight:900;color:#fff;">BW</span>
       </div>
-      <p style="margin-top:18px;color:#666">© 2024 FIXIT Botswana</p>
+
+      <div style="text-align:right;">
+        <div style="margin-bottom:6px;"><a href="https://wa.me/26773318758" style="color:#f97316;text-decoration:none;font-weight:700;">+267 73318758</a></div>
+        <div style="display:flex;gap:10px;justify-content:flex-end;">
+          <a href="https://www.tiktok.com/@prodmoroka" target="_blank" rel="noopener noreferrer">TikTok</a>
+          <a href="https://www.facebook.com/profile.php?id=61556143019845" target="_blank" rel="noopener noreferrer">Facebook</a>
+        </div>
+      </div>
     </div>
+    <div style="text-align:center;color:#666;margin-top:12px;">© 2024 Fixit 🔨 BW</div>
   </footer>
 
   <script>
@@ -85,11 +103,11 @@
     const lenis = new Lenis({ duration:1.2, easing:(t)=>Math.min(1,1.001-Math.pow(2,-10*t)), smooth:true });
     function raf(time){ lenis.raf(time); requestAnimationFrame(raf); } requestAnimationFrame(raf);
 
-    // GSAP reveal / ScrollTrigger
+    // GSAP
     gsap.registerPlugin(ScrollTrigger);
-    gsap.from('main section', { y:40, opacity:0, duration:0.8, stagger:0.12, ease:"power2.out", scrollTrigger:{ trigger:'main', start:'top 80%' } });
+    gsap.from('main section', { y:30, opacity:0, duration:0.8, stagger:0.12, ease:"power2.out", scrollTrigger:{ trigger:'main', start:'top 85%' } });
 
-    // Cursor movement + interactions
+    // Cursor
     const cursorDot = document.querySelector('.cursor-dot');
     const cursorCircle = document.querySelector('.cursor-circle');
     document.addEventListener('mousemove', e => {
@@ -101,7 +119,7 @@
       el.addEventListener('mouseleave', ()=> cursorCircle.classList.remove('active'));
     });
 
-    // Spotlight mouse update
+    // Spotlight position
     document.addEventListener('mousemove', e=>{
       document.querySelectorAll('.spotlight').forEach(card=>{
         const rect = card.getBoundingClientRect();
@@ -114,5 +132,4 @@
   </script>
 </body>
 </html>
-
 
