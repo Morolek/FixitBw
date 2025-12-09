@@ -1,9 +1,9 @@
 <!doctype html>
 <html lang="en" class="lenis">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Sales & Rentals | FIXIT Botswana</title>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Sales & Rentals | Fixit 🔨 BW</title>
 
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://api.fontshare.com/v2/css?f[]=clash-display@200,300,400,500,600,700&f[]=general-sans@200,300,400,500,600&display=swap" rel="stylesheet">
@@ -13,43 +13,43 @@
   <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
 
   <style>
-    /* keep same look */
-    body{background:#030303;color:#fff;font-family:'General Sans',system-ui;cursor:none;overflow-x:hidden;}
-    .cursor-dot{width:6px;height:6px;background:#f97316;position:fixed;top:0;left:0;border-radius:50%;z-index:9999;pointer-events:none;transform:translate(-50%,-50%);}
-    .cursor-circle{width:40px;height:40px;border:1px solid rgba(255,255,255,0.2);position:fixed;top:0;left:0;border-radius:50%;pointer-events:none;transform:translate(-50%,-50%);transition:all .25s;}
-    .cursor-circle.active{width:60px;height:60px;background:rgba(249,115,22,0.08);border-color:#f97316;}
-    nav{position:fixed;top:0;left:0;width:100%;z-index:100;background:linear-gradient(180deg, rgba(0,0,0,0.6), transparent);padding:18px;}
-    nav a{color:#cfcfcf;margin-right:18px;text-decoration:none;font-weight:600;}
-    .container{max-width:1200px;margin:120px auto;padding:20px;}
-    h1{font-size:40px;margin-bottom:10px;}
-    footer{padding:24px;text-align:center;color:#777;border-top:1px solid #111;margin-top:60px;}
+    :root{--accent:#f97316;}
+    body{margin:0;background:#030303;color:#fff;font-family:'General Sans',system-ui;cursor:none;overflow-x:hidden;}
+    nav{position:fixed;top:0;left:0;width:100%;z-index:100;padding:18px;background:linear-gradient(180deg, rgba(0,0,0,0.35), transparent);}
+    .nav-inner{max-width:1200px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;padding:0 16px;}
+    .nav-inner a{color:#cfcfcf;text-decoration:none;margin-left:12px;font-weight:700;}
+    .container{max-width:1080px;margin:120px auto;padding:20px;}
+    h1{font-size:40px;margin-bottom:8px;}
     .spotlight{position:relative;overflow:hidden;background:#050505;padding:18px;border-radius:8px;}
     .spotlight::before{content:'';position:absolute;inset:0;background:radial-gradient(600px circle at var(--mouse-x) var(--mouse-y), rgba(249,115,22,0.04), transparent 40%);pointer-events:none;}
+    footer{margin-top:60px;padding:24px;color:#777;border-top:1px solid #111;}
   </style>
 </head>
 <body>
+
   <div class="cursor-dot hidden md:block"></div>
   <div class="cursor-circle hidden md:block"></div>
 
-  <nav class="max-w-center mx-auto flex items-center justify-between">
-    <a href="index.html" class="flex items-center gap-2"><span style="font-weight:700;font-size:18px">FI</span></a>
-    <div>
-      <a href="index.html">Home</a>
-      <a href="about.html">About</a>
-      <a href="sales.html">Sales & Rentals</a>
-      <a href="promise.html">Our Promise</a>
+  <nav>
+    <div class="nav-inner">
+      <a href="index.html" class="logo" style="display:flex;align-items:center;gap:10px;"><span style="font-weight:800;color:#fff;">Fixit</span><iconify-icon icon="lucide:hammer" width="18" style="color:var(--accent)"></iconify-icon><span style="font-weight:900;color:#fff;">BW</span></a>
+      <div>
+        <a href="index.html">Home</a>
+        <a href="about.html">About</a>
+        <a href="sales.html">Sales & Rentals</a>
+        <a href="promise.html">Our Promise</a>
+      </div>
     </div>
   </nav>
 
   <main class="container">
-    <section id="sales" class="mb-12">
+    <section id="sales">
       <h1>Power Tool Sales</h1>
-      <p style="color:#a9a9a9;max-width:900px;">
-        Build your own arsenal. We sell high-quality drills, grinders, saws, cutters, and more.
-        Our tools include trusted, premium brands to ensure durability and excellent performance.
+      <p style="color:#bfbfbf;max-width:920px;">
+        Build your own arsenal. We sell high-quality drills, grinders, saws, cutters, and more. Our tools include trusted, premium brands to ensure durability and excellent performance.
       </p>
 
-      <h2 class="mt-8">Why Buy From Us</h2>
+      <h2 style="margin-top:18px;">Why Buy From Us</h2>
       <ul style="color:#bdbdbd;margin-left:18px;">
         <li>Wide range of tools for every job</li>
         <li>Quality brands you can trust</li>
@@ -57,14 +57,15 @@
       </ul>
     </section>
 
-    <section id="rentals" class="mt-16 grid md:grid-cols-2 gap-8">
+    <section id="rentals" style="margin-top:32px;display:grid;grid-template-columns:repeat(2,1fr);gap:18px;">
       <div class="spotlight">
-        <h2 class="text-2xl mb-2">Tool Rentals</h2>
-        <p class="text-zinc-400">Need a tool for a specific job? We offer short-term and long-term rentals on well-maintained equipment. From heavy-duty generators to precision saws, get what you need without the upfront cost.</p>
+        <h2 style="margin-top:0;">Tool Rentals</h2>
+        <p style="color:#bdbdbd;">Need a tool for a specific job? We offer short-term and long-term rentals on well-maintained equipment. From heavy-duty generators to precision saws, get what you need without the upfront cost.</p>
       </div>
+
       <div class="spotlight">
-        <h3 class="text-xl mb-2">Rental Options</h3>
-        <ul class="text-zinc-400">
+        <h3 style="margin-top:0;">Rental Options</h3>
+        <ul style="color:#bdbdbd;">
           <li>Short-Term: Daily and Weekly Rentals</li>
           <li>Long-Term: Project-Based Rentals</li>
         </ul>
@@ -72,12 +73,19 @@
     </section>
   </main>
 
-  <footer id="contact" class="max-w-center mx-auto" style="padding:30px 16px;">
-    <div style="display:flex;justify-content:space-between;align-items:center;max-width:1000px;margin:0 auto;">
-      <div><strong>FI</strong>IT • Botswana • Sales & Rentals</div>
-      <div><a href="#" style="color:#bbb">Facebook</a> · <a href="#" style="color:#bbb">Instagram</a> · <a href="#" style="color:#bbb">WhatsApp</a></div>
+  <footer id="contact" style="padding:24px;">
+    <div style="max-width:1000px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;">
+      <div style="display:flex;align-items:center;gap:10px;"><span style="font-weight:800;color:#fff;">Fixit</span><iconify-icon icon="lucide:hammer" width="18" style="color:var(--accent)"></iconify-icon><span style="font-weight:900;color:#fff;">BW</span></div>
+      <div style="text-align:right;">
+        <div style="margin-bottom:6px;"><a href="https://wa.me/26773318758" style="color:#f97316;text-decoration:none;font-weight:700;">+267 73318758</a></div>
+        <div style="display:flex;gap:12px;justify-content:flex-end;">
+          <a href="https://www.tiktok.com/@prodmoroka" target="_blank" rel="noopener noreferrer">TikTok</a>
+          <a href="https://www.facebook.com/profile.php?id=61556143019845" target="_blank" rel="noopener noreferrer">Facebook</a>
+          <a class="visit-btn" href="https://www.tiktok.com/@prodmoroka" target="_blank" rel="noopener noreferrer" style="background:#fff;color:#000;padding:10px 14px;border-radius:8px;font-weight:700;text-decoration:none;">Visit Fixit</a>
+        </div>
+      </div>
     </div>
-    <p style="color:#666;margin-top:18px;">© 2024 FIXIT Botswana</p>
+    <div style="text-align:center;color:#666;margin-top:12px;">© 2024 Fixit 🔨 BW</div>
   </footer>
 
   <script>
@@ -85,17 +93,22 @@
     const lenis = new Lenis({ duration:1.2, easing:(t)=>Math.min(1,1.001-Math.pow(2,-10*t)), smooth:true });
     function raf(time){ lenis.raf(time); requestAnimationFrame(raf); } requestAnimationFrame(raf);
 
-    // GSAP + ScrollTrigger
+    // GSAP
     gsap.registerPlugin(ScrollTrigger);
-    gsap.from('main section', { y:30, opacity:0, duration:0.9, stagger:0.12, ease:"power2.out", scrollTrigger:{ trigger:'main', start:'top 85%' } });
+    gsap.from('main section', { y:30, opacity:0, duration:0.8, stagger:0.12, ease:"power2.out", scrollTrigger:{ trigger:'main', start:'top 85%' } });
 
     // Cursor
     const cursorDot = document.querySelector('.cursor-dot');
     const cursorCircle = document.querySelector('.cursor-circle');
-    document.addEventListener('mousemove', e => { gsap.to(cursorDot,{x:e.clientX,y:e.clientY,duration:0.08}); gsap.to(cursorCircle,{x:e.clientX,y:e.clientY,duration:0.3}); });
-    document.querySelectorAll('a, button, .spotlight').forEach(el=>{ el.addEventListener('mouseenter', ()=> cursorCircle.classList.add('active')); el.addEventListener('mouseleave', ()=> cursorCircle.classList.remove('active')); });
+    document.addEventListener('mousemove', e => {
+      if(cursorDot) gsap.to(cursorDot, { x:e.clientX, y:e.clientY, duration:0.08 });
+      if(cursorCircle) gsap.to(cursorCircle, { x:e.clientX, y:e.clientY, duration:0.25 });
+    });
+    document.querySelectorAll('a, button, .spotlight').forEach(el => {
+      el.addEventListener('mouseenter', ()=> { document.querySelector('.cursor-circle')?.classList?.add('active'); });
+      el.addEventListener('mouseleave', ()=> { document.querySelector('.cursor-circle')?.classList?.remove('active'); });
+    });
 
-    // Spotlight
     document.addEventListener('mousemove', e=>{
       document.querySelectorAll('.spotlight').forEach(card=>{
         const rect = card.getBoundingClientRect();
@@ -108,5 +121,3 @@
   </script>
 </body>
 </html>
-
-
