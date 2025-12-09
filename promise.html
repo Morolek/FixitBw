@@ -1,167 +1,31 @@
-<!doctype html>
-<html lang="en" class="lenis">
-<head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Our Promise | Fixit 🔨 BW</title>
+<script>
+/* ============================
+  CUSTOM CURSOR (FIXED FOR SMOOTHNESS)
+============================ */
+const dot = document.querySelector(".cursor-dot");
+const circle = document.querySelector(".cursor-circle");
 
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://api.fontshare.com/v2/css?f[]=clash-display@200,300,400,500,600,700&f[]=general-sans@200,300,400,500,600&display=swap" rel="stylesheet">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.29/bundled/lenis.min.js"></script>
-  <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+document.addEventListener("mousemove", (e) => {
+  if (!dot || !circle) return;
 
-  <style>
-    :root { --accent: #f97316; }
-    
-    /* 1. Hide default cursor on desktop */
-    body { margin: 0; background: #030303; color: #fff; font-family: 'General Sans', system-ui; cursor: none; overflow-x: hidden; }
+  // 1. Use gsap.set for the DOT for instant, lag-free positioning
+  gsap.set(dot, {
+    x: e.clientX,
+    y: e.clientY
+  });
 
-    /* 2. Styles for the Custom Cursor */
-    .cursor-dot,
-    .cursor-circle {
-        position: fixed;
-        top: 0;
-        left: 0;
-        transform: translate(-50%, -50%); /* Centers the div on the mouse coordinates */
-        border-radius: 50%;
-        z-index: 9999; /* Keeps it on top of everything */
-        pointer-events: none; /* CRITICAL: Lets clicks pass through to links below */
-    }
+  // 2. Use gsap.to for the CIRCLE to create the desired trailing effect
+  gsap.to(circle, {
+    x: e.clientX,
+    y: e.clientY,
+    duration: 0.18,
+    ease: "power3.out"
+  });
+});
 
-    /* The small inner dot */
-    .cursor-dot {
-        width: 8px;
-        height: 8px;
-        background-color: var(--accent); /* Uses your orange accent color */
-        box-shadow: 0 0 10px var(--accent);
-    }
-
-    /* The larger trailing circle */
-    .cursor-circle {
-        width: 40px;
-        height: 40px;
-        border: 1px solid rgba(255, 255, 255, 0.5);
-        transition: width 0.3s, height 0.3s, background-color 0.3s;
-    }
-
-    /* Animation when hovering over links (defined in JS below) */
-    .cursor-circle.active {
-        width: 60px;
-        height: 60px;
-        background-color: rgba(255, 255, 255, 0.1);
-        border-color: transparent;
-    }
-
-    /* 3. Mobile Fallback: Bring back normal cursor on touch screens */
-    @media (max-width: 768px) {
-        body { cursor: auto; }
-        .cursor-dot, .cursor-circle { display: none !important; }
-    }
-
-    /* Rest of your existing CSS */
-    nav { position: fixed; top: 0; left: 0; width: 100%; z-index: 100; padding: 18px; background: linear-gradient(180deg, rgba(0,0,0,0.35), transparent); }
-    .nav-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 0 16px; }
-    .nav-inner a { color: #cfcfcf; text-decoration: none; margin-left: 12px; font-weight: 700; cursor: none; /* Ensure links don't force pointer */ }
-    .container { max-width: 1100px; margin: 120px auto; padding: 20px; }
-    .spotlight { position: relative; overflow: hidden; background: #050505; padding: 18px; border-radius: 8px; }
-    .spotlight::before { content: ''; position: absolute; inset: 0; background: radial-gradient(600px circle at var(--mouse-x) var(--mouse-y), rgba(249,115,22,0.04), transparent 40%); pointer-events: none; }
-    footer { margin-top: 60px; padding: 24px; color: #777; border-top: 1px solid #111; }
-    a, button { cursor: none; /* Force no cursor on interactive elements too */ }
-  </style>
-</head>
-<body>
-
-  <div class="cursor-dot hidden md:block"></div>
-  <div class="cursor-circle hidden md:block"></div>
-
-  <nav>
-    <div class="nav-inner">
-      <a href="index.html" style="display:flex;align-items:center;gap:8px;"><span style="font-weight:800;color:#fff;">Fixit</span><iconify-icon icon="lucide:hammer" width="18" style="color:var(--accent)"></iconify-icon><span style="font-weight:900;color:#fff;">BW</span></a>
-      <div>
-        <a href="index.html">Home</a>
-        <a href="about.html">About</a>
-        <a href="sales.html">Sales & Rentals</a>
-        <a href="promise.html">Our Promise</a>
-      </div>
-    </div>
-  </nav>
-
-  <main class="container">
-    <section>
-      <h1>Our Promise</h1>
-      <p style="color:#bdbdbd;max-width:880px;">We aim to provide reliable tools, fair prices, and excellent service to support your work — no matter the size of the project.</p>
-    </section>
-
-    <section style="margin-top:24px;display:grid;grid-template-columns:repeat(3,1fr);gap:16px;">
-      <div class="spotlight">
-        <h3 style="margin-top:0;">Well-Maintained Equipment</h3>
-        <p style="color:#bdbdbd;">Our rental tools are serviced and ready for any project. We ensure reliability so you can focus on the job.</p>
-      </div>
-      <div class="spotlight">
-        <h3 style="margin-top:0;">Friendly Service</h3>
-        <p style="color:#bdbdbd;">We provide helpful advice and fast responses so you can pick the right tool quickly.</p>
-      </div>
-      <div class="spotlight">
-        <h3 style="margin-top:0;">Accessible to Everyone</h3>
-        <p style="color:#bdbdbd;">From contractors to DIY homeowners, our goal is to make good tools easy to get across Botswana.</p>
-      </div>
-    </section>
-  </main>
-
-  <footer id="contact">
-    <div style="max-width:1000px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;">
-      <div style="display:flex;align-items:center;gap:10px;"><span style="font-weight:800;color:#fff;">Fixit</span><iconify-icon icon="lucide:hammer" width="18" style="color:var(--accent)"></iconify-icon><span style="font-weight:900;color:#fff;">BW</span></div>
-      <div style="text-align:right;">
-        <div style="margin-bottom:6px;"><a href="https://wa.me/26773318758" style="color:#f97316;text-decoration:none;font-weight:700;">+267 73318758</a></div>
-        <div style="display:flex;gap:12px;justify-content:flex-end;">
-          <a href="https://www.tiktok.com/@prodmoroka" target="_blank" rel="noopener noreferrer">TikTok</a>
-          <a href="https://www.facebook.com/profile.php?id=61556143019845" target="_blank" rel="noopener noreferrer">Facebook</a>
-          <a class="visit-btn" href="https://www.tiktok.com/@prodmoroka" target="_blank" rel="noopener noreferrer" style="background:#fff;color:#000;padding:10px 14px;border-radius:8px;font-weight:700;text-decoration:none;">Visit Fixit</a>
-        </div>
-      </div>
-    </div>
-    <div style="text-align:center;color:#666;margin-top:12px;">© 2024 Fixit 🔨 BW</div>
-  </footer>
-
-  <script>
-    // LENIS
-    const lenis = new Lenis({ duration:1.2, easing:(t)=>Math.min(1,1.001-Math.pow(2,-10*t)), smooth:true });
-    function raf(time){ lenis.raf(time); requestAnimationFrame(raf); } requestAnimationFrame(raf);
-
-    // GSAP SCROLL TRIGGER
-    gsap.registerPlugin(ScrollTrigger);
-    gsap.from('main section', { y:30, opacity:0, duration:0.8, stagger:0.12, ease:"power2.out", scrollTrigger:{ trigger:'main', start:'top 85%' } });
-
-    // CUSTOM CURSOR LOGIC
-    const cursorDot = document.querySelector('.cursor-dot');
-    const cursorCircle = document.querySelector('.cursor-circle');
-    
-    // Move cursor
-    document.addEventListener('mousemove', e => {
-      // Use gsap.set for instant movement of the dot (prevents lag)
-      gsap.set(cursorDot, { x: e.clientX, y: e.clientY });
-      // Use gsap.to for the circle to create the "trailing" effect
-      gsap.to(cursorCircle, { x: e.clientX, y: e.clientY, duration: 0.15, ease: "power2.out" });
-    });
-
-    // Hover effects
-    document.querySelectorAll('a, button, .spotlight, .visit-btn').forEach(el => {
-      el.addEventListener('mouseenter', () => cursorCircle.classList.add('active'));
-      el.addEventListener('mouseleave', () => cursorCircle.classList.remove('active'));
-    });
-
-    // Spotlight effect
-    document.addEventListener('mousemove', e=>{
-      document.querySelectorAll('.spotlight').forEach(card=>{
-        const rect = card.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
-        card.style.setProperty('--mouse-x', `${x}px`);
-        card.style.setProperty('--mouse-y', `${y}px`);
-      });
-    });
-  </script>
-</body>
-</html>
+// Original hover listeners remain correct
+document.querySelectorAll("a, button, .cta, .nav-cta, .spotlight").forEach((el) => {
+  el.addEventListener("mouseenter", () => circle.classList.add("active"));
+  el.addEventListener("mouseleave", () => circle.classList.remove("active"));
+});
+</script>
