@@ -15,6 +15,40 @@
   <style>
     :root{--accent:#f97316;}
     body{margin:0;background:#030303;color:#fff;font-family:'General Sans',system-ui;cursor:none;overflow-x:hidden;}
+
+    /* --- ADDED/CORRECTED: Custom Cursor Styles --- */
+    .cursor-dot,
+    .cursor-circle {
+        position: fixed;
+        top: 0; left: 0;
+        transform: translate(-50%, -50%); /* Centers the cursor on the mouse point */
+        border-radius: 50%;
+        z-index: 9999; 
+        pointer-events: none; /* ESSENTIAL: Allows clicking through the cursor */
+    }
+
+    .cursor-dot {
+        width: 8px;
+        height: 8px;
+        background-color: var(--accent);
+    }
+
+    .cursor-circle {
+        width: 40px;
+        height: 40px;
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        transition: width 0.25s, height 0.25s, border-color 0.25s; 
+    }
+
+    /* Hover effect */
+    .cursor-circle.active { 
+        width: 55px; 
+        height: 55px; 
+        border-color: var(--accent);
+        background-color: rgba(249,115,22,0.1);
+    }
+    /* --- END Custom Cursor Styles --- */
+
     nav{position:fixed;top:0;left:0;width:100%;z-index:100;padding:18px;background:linear-gradient(180deg, rgba(0,0,0,0.35), transparent);}
     .nav-inner{max-width:1200px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;padding:0 16px;}
     .nav-inner a{color:#cfcfcf;text-decoration:none;margin-left:12px;font-weight:700;}
@@ -97,18 +131,25 @@
     gsap.registerPlugin(ScrollTrigger);
     gsap.from('main section', { y:30, opacity:0, duration:0.8, stagger:0.12, ease:"power2.out", scrollTrigger:{ trigger:'main', start:'top 85%' } });
 
-    // Cursor
+    // Cursor (FIXED FOR SMOOTHNESS)
     const cursorDot = document.querySelector('.cursor-dot');
     const cursorCircle = document.querySelector('.cursor-circle');
     document.addEventListener('mousemove', e => {
-      if(cursorDot) gsap.to(cursorDot, { x:e.clientX, y:e.clientY, duration:0.08 });
-      if(cursorCircle) gsap.to(cursorCircle, { x:e.clientX, y:e.clientY, duration:0.25 });
+      if(!cursorDot || !cursorCircle) return;
+      
+      // FIX: Use gsap.set for instant positioning of the dot
+      gsap.set(cursorDot, { x:e.clientX, y:e.clientY }); 
+      // FIX: Use gsap.to for the smooth trailing effect of the circle
+      gsap.to(cursorCircle, { x:e.clientX, y:e.clientY, duration:0.25 });
     });
-    document.querySelectorAll('a, button, .spotlight').forEach(el => {
+    
+    // Hover effects
+    document.querySelectorAll('a, button, .spotlight, .visit-btn').forEach(el => {
       el.addEventListener('mouseenter', ()=> { document.querySelector('.cursor-circle')?.classList?.add('active'); });
       el.addEventListener('mouseleave', ()=> { document.querySelector('.cursor-circle')?.classList?.remove('active'); });
     });
 
+    // Spotlight hover effect
     document.addEventListener('mousemove', e=>{
       document.querySelectorAll('.spotlight').forEach(card=>{
         const rect = card.getBoundingClientRect();
