@@ -1,19 +1,18 @@
-<!-- index.html — PART 1/3 (HEAD, STYLES, NAVBAR) -->
+<!-- index-optionA.html — PART 1/6 (HEAD, STYLES, NAV) -->
 <!doctype html>
 <html lang="en" class="lenis">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Fixit 🔨 BW | Power Tools Botswana</title>
+  <title>Fixit 🔨 BW | Power Tools Botswana — Option A (Gradient)</title>
 
-  <!-- Tailwind utilities (keeps original Tailwind look) -->
+  <!-- Tailwind utilities -->
   <script src="https://cdn.tailwindcss.com"></script>
 
   <!-- Fonts -->
   <link href="https://api.fontshare.com/v2/css?f[]=clash-display@200,300,400,500,600,700&f[]=general-sans@200,300,400,500,600&display=swap" rel="stylesheet">
 
-  <!-- External libs used on HOME (Three.js loaded on this page) + GSAP + Lenis + Iconify -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <!-- Libraries -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
   <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.29/bundled/lenis.min.js"></script>
@@ -22,113 +21,109 @@
   <meta name="description" content="Fixit 🔨 BW — Power tool sales & rentals across Botswana. Rent or buy drills, saws, grinders, generators and more. Contact +267 73318758.">
 
   <style>
-    /* -------------------- CORE VISUAL STYLES -------------------- */
-    :root {
-      --accent: #f97316;
-      --bg: #030303;
-      --muted: #a9a9a9;
-      --glass: rgba(255,255,255,0.04);
+    :root{
+      --accent:#f97316;
+      --bg:#030303;
+      --muted:#a9a9a9;
     }
 
-    html,body { height:100%; margin:0; }
-    body {
-      background-color: var(--bg);
-      color: #fff;
-      overflow-x: hidden;
-      cursor: none;
-      font-family: "General Sans", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    html,body{height:100%;margin:0;}
+    body{
+      background:var(--bg);
+      color:#fff;
+      font-family:"General Sans",system-ui,-apple-system,"Segoe UI",Roboto,Arial;
       -webkit-font-smoothing:antialiased;
       -moz-osx-font-smoothing:grayscale;
+      overflow-x:hidden;
+      cursor:none;
+    }
+    ::selection{background:var(--accent); color:#000;}
+
+    /* BACKGROUND (Option A uses animated gradient) */
+    #background {
+      position:fixed;
+      inset:0;
+      z-index:-1;
+      background: linear-gradient(130deg, #0d0d0d, #141414, #0f0f0f);
+      background-size: 400% 400%;
+      animation: gradientShift 18s ease infinite;
+    }
+    @keyframes gradientShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
     }
 
-    ::selection { background: var(--accent); color:#000; }
-
-    /* Noise + canvas */
-    .noise { position: fixed; inset: 0; pointer-events: none; z-index: 50; opacity: 0.05;
-      background:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E"); }
-
-    /* WebGL canvas sits behind everything */
-    #webgl { position: fixed; top:0; left:0; width:100%; height:100vh; z-index:-1; opacity:0; }
+    /* Noise layer */
+    .noise { position: fixed; inset: 0; pointer-events: none; z-index: 10; opacity: 0.04;
+      background:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E"); }
 
     /* Cursor */
-    .cursor-dot { width:6px; height:6px; background:var(--accent); position:fixed; top:0; left:0; border-radius:50%; z-index:9999; pointer-events:none; transform:translate(-50%,-50%); }
-    .cursor-circle { width:40px; height:40px; border:1px solid rgba(255,255,255,0.18); position:fixed; top:0; left:0; border-radius:50%; z-index:9998; pointer-events:none; transform:translate(-50%,-50%); transition:all .25s; }
-    .cursor-circle.active { width:60px; height:60px; background-color: rgba(249,115,22,0.08); border-color:var(--accent); backdrop-filter: blur(2px); }
+    .cursor-dot{width:6px;height:6px;background:var(--accent);position:fixed;top:0;left:0;border-radius:50%;z-index:9999;pointer-events:none;transform:translate(-50%,-50%);}
+    .cursor-circle{width:40px;height:40px;border:1px solid rgba(255,255,255,0.14);position:fixed;top:0;left:0;border-radius:50%;z-index:9998;pointer-events:none;transform:translate(-50%,-50%);transition:all .22s;}
+    .cursor-circle.active{width:60px;height:60px;background:rgba(249,115,22,0.08);border-color:var(--accent);backdrop-filter: blur(2px);}
 
-    /* Spotlight hover effect */
-    .spotlight { position:relative; overflow:hidden; background:#050505; border-radius:8px; }
-    .spotlight::before { content:''; position:absolute; inset:0; background: radial-gradient(800px circle at var(--mouse-x) var(--mouse-y), rgba(249,115,22,0.06), transparent 40%); z-index:1; pointer-events:none; }
-    .spotlight-border::after { content:""; position:absolute; inset:0; border-radius:inherit; padding:1px; background: radial-gradient(600px circle at var(--mouse-x) var(--mouse-y), rgba(249,115,22,0.45), transparent 40%); -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); -webkit-mask-composite: xor; mask-composite: exclude; opacity:0; transition:opacity .45s; pointer-events:none; }
-    .spotlight:hover .spotlight-border::after { opacity:1; }
+    /* Spotlight */
+    .spotlight{position:relative;overflow:hidden;border-radius:12px;background:rgba(255,255,255,0.02);}
+    .spotlight::before{content:'';position:absolute;inset:0;background:radial-gradient(600px circle at var(--mouse-x) var(--mouse-y), rgba(249,115,22,0.06), transparent 34%);pointer-events:none;transition:opacity .18s;}
 
     /* Reveal helpers */
-    .reveal-text { clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%); display:inline-block; }
-    .char { display:inline-block; transform: translateY(110%); will-change: transform; }
+    .reveal-text { display:inline-block; overflow:hidden; }
+    .char{display:inline-block; transform:translateY(110%); will-change:transform;}
 
-    /* Loader */
-    .loader-wrap { position: fixed; z-index:10000; inset:0; background:#000; display:flex; align-items:center; justify-content:center; }
-    .loader-bar { width:1px; height:0%; background:var(--accent); }
-    .loader-text { position:absolute; bottom:40px; right:40px; font-family:'Clash Display', sans-serif; font-size:12px; letter-spacing:0.1em; color:#bbb; }
+    /* Layout utilities */
+    .max-w-center{max-width:1400px;margin:0 auto;padding:0 18px;}
+    nav{position:fixed;top:0;left:0;width:100%;z-index:100;padding:14px 18px;display:flex;justify-content:center;background:linear-gradient(180deg, rgba(0,0,0,0.35), transparent);}
+    .nav-inner{width:100%;max-width:1400px;display:flex;align-items:center;justify-content:space-between;gap:12px;}
+    .logo{display:flex;align-items:center;gap:8px;text-decoration:none;color:#fff;}
+    .logo .brand{font-weight:800;font-size:18px;}
+    .logo .hammer{display:inline-flex;width:28px;height:28px;align-items:center;justify-content:center;}
 
-    /* Layout containers */
-    .max-w-center { max-width:1600px; margin:0 auto; padding:0 16px; }
+    .nav-links{display:flex;gap:12px;align-items:center;}
+    .nav-links a{color:#d1d1d1;text-decoration:none;font-weight:700;font-size:13px;padding:8px 10px;border-radius:8px;}
+    .nav-links a:hover{color:#fff;background:rgba(255,255,255,0.02);}
 
-    /* NAV */
-    nav { position: fixed; top:0; left:0; width:100%; z-index:100; padding:14px 20px; display:flex; justify-content:center; background: linear-gradient(180deg, rgba(0,0,0,0.35), transparent); }
-    .nav-inner { width:100%; max-width:1600px; display:flex; align-items:center; justify-content:space-between; gap:12px; }
-    .logo { display:flex; align-items:center; gap:10px; font-weight:700; color:#fff; text-decoration:none; }
-    .logo .brand { font-size:18px; font-weight:800; letter-spacing:0.02em; line-height:1; }
-    .logo .hammer { display:inline-flex; align-items:center; justify-content:center; width:28px; height:28px; }
-    .nav-links { display:flex; gap:12px; align-items:center; }
-    .nav-links a { color: #cfcfcf; text-decoration:none; font-weight:700; font-size:12px; letter-spacing:0.08em; padding:8px 10px; border-radius:6px; }
-    .nav-links a:hover { color:#fff; background: rgba(255,255,255,0.02); }
+    .nav-cta{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:10px;background:rgba(0,0,0,0.45);border:1px solid rgba(255,255,255,0.04);color:#fff;text-decoration:none;font-weight:800;}
+    .nav-cta:hover{border-color:var(--accent);}
 
-    /* CTA in nav */
-    .nav-cta { display:inline-flex; align-items:center; gap:8px; padding:8px 12px; border-radius:8px; border:1px solid rgba(255,255,255,0.06); background: rgba(0,0,0,0.45); color:#fff; text-decoration:none; font-weight:800; }
-    .nav-cta:hover { border-color:var(--accent); }
+    header{min-height:92vh;display:flex;align-items:center;justify-content:center;padding:0 20px;}
+    h1.big{font-family:'Clash Display',sans-serif;font-size:clamp(34px,9vw,100px);line-height:0.9;text-align:center;margin:0;letter-spacing:-0.02em;}
+    p.lead{color:#c7c7c7;font-size:17px;max-width:920px;margin:16px auto 0;text-align:center;}
 
-    /* Hero */
-    header { min-height:100vh; display:flex; align-items:center; justify-content:center; padding:0 20px; position:relative; }
-    h1.big { font-family: 'Clash Display', sans-serif; font-size: clamp(36px, 10vw, 120px); line-height:0.9; text-align:center; margin:0; letter-spacing:-0.02em; }
-    p.lead { color:#c7c7c7; font-size:18px; max-width:900px; margin:18px auto 0; text-align:center; }
-
-    .cta { margin-top:26px; display:inline-flex; align-items:center; gap:12px; padding:14px 22px; border:1px solid rgba(255,255,255,0.06); border-radius:8px; background:transparent; color:#fff; text-decoration:none; font-weight:700; }
-    .cta:hover { border-color:var(--accent); }
-
-    /* Marquee */
-    .marquee-content { display:flex; gap:4rem; align-items:center; animation: marquee-scroll 40s linear infinite; }
-    @keyframes marquee-scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+    /* Cards / Services */
+    .services-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;}
+    .card{padding:28px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));box-shadow:0 6px 20px rgba(0,0,0,0.35);}
 
     /* Footer */
-    footer { background:#020202; border-top:1px solid rgba(255,255,255,0.03); padding:40px 20px; color:#bfbfbf; }
-    .footer-inner { max-width:1200px; margin:0 auto; display:flex; flex-direction:column; gap:20px; }
+    footer{background:transparent;padding:48px 20px;color:#d0d0d0;border-top:1px solid rgba(255,255,255,0.03);}
+    .footer-inner{max-width:1200px;margin:0 auto;display:flex;flex-direction:column;gap:14px;align-items:center;}
 
-    .socials a { color:#bbb; text-decoration:none; margin-right:18px; }
-    .visit-btn { display:inline-block; padding:12px 20px; border-radius:8px; background:#fff; color:#000; font-weight:700; text-decoration:none; }
-
-    /* Responsive tweaks */
-    @media (max-width: 1024px) {
-      .nav-links { display:none; }
-      .logo .brand { font-size:16px; }
+    /* Responsive tweaks: MOBILE = 1-column stack (M1) */
+    @media (max-width: 1024px){
+      .services-grid{grid-template-columns:1fr;}
+      header{min-height:80vh;padding-top:110px;}
     }
-
-    @media (max-width: 640px) {
-      .nav-cta { display:none; }
-      .marquee-content { gap:2rem; }
+    @media (max-width:640px){
+      .nav-links{display:none;}
+      .logo .brand{font-size:16px;}
+      header{min-height:72vh;padding-top:90px;}
+      h1.big{font-size:34px;}
+      .card{padding:20px;}
     }
   </style>
 </head>
 <body>
-  <!-- noise + cursor + webgl canvas -->
-  <div class="noise"></div>
-  <div class="cursor-dot hidden md:block"></div>
-  <div class="cursor-circle hidden md:block"></div>
-  <canvas id="webgl" aria-hidden="true"></canvas>
+  <!-- Background & noise -->
+  <div id="background" aria-hidden="true"></div>
+  <div class="noise" aria-hidden="true"></div>
 
-  <!-- Loader -->
-  <div class="loader-wrap" aria-hidden="true">
-    <div class="loader-bar"></div>
-    <div class="loader-text"><span class="counter">000</span>% // PREPARING TOOLS</div>
+  <!-- Cursor elements (desktop) -->
+  <div class="cursor-dot"></div>
+  <div class="cursor-circle"></div>
+
+  <!-- Loader (light) -->
+  <div class="loader-wrap" aria-hidden="true" style="position:fixed;inset:0;z-index:9998;display:flex;align-items:center;justify-content:center;pointer-events:none;">
+    <div style="width:2px;height:0;background:var(--accent);" class="loader-bar"></div>
   </div>
 
   <!-- NAVIGATION -->
@@ -136,13 +131,11 @@
     <div class="nav-inner max-w-center">
       <a class="logo" href="index.html" aria-label="Fixit BW home">
         <span class="brand">Fixit</span>
-        <span class="hammer" aria-hidden="true">
-          <iconify-icon icon="lucide:hammer" width="26" height="26" style="color:var(--accent)"></iconify-icon>
-        </span>
+        <span class="hammer" aria-hidden="true"><iconify-icon icon="lucide:hammer" width="26" style="color:var(--accent)"></iconify-icon></span>
         <span class="brand" style="font-weight:900">BW</span>
       </a>
 
-      <div class="nav-links" role="navigation" aria-label="Site links">
+      <div class="nav-links" role="navigation" aria-label="site links">
         <a href="about.html">About</a>
         <a href="sales.html">Sales & Rentals</a>
         <a href="promise.html">Our Promise</a>
@@ -150,33 +143,26 @@
 
       <a class="nav-cta" id="get-tools-cta" href="https://wa.me/26773318758" target="_blank" rel="noopener noreferrer">
         Contact Us Today
-        <iconify-icon icon="lucide:arrow-right" width="14" style="transform: translateY(1px);"></iconify-icon>
+        <iconify-icon icon="lucide:arrow-right" width="14" style="transform:translateY(1px)"></iconify-icon>
       </a>
     </div>
   </nav>
 
-  <!-- PART 1/3 END: head, styles, nav -->
-  <!-- NEXT: Part 2/3 contains the hero (updated), services, about grid, and footer -->
-<!-- index.html — PART 2/3 (UPDATED HERO SECTION + SERVICES + ABOUT + FOOTER) -->
+  <!-- PART 1/6 END -->
+  <!-- NEXT: PART 2/6 — HERO section + CTA (will keep cards unchanged) -->
+<!-- index-optionA.html — PART 2/6 (HERO, SERVICES, ABOUT GRID, MARQUEE, FOOTER) -->
 
-<!-- HERO SECTION (with fixed desktop spacing) -->
+<!-- HERO -->
 <header class="max-w-center" style="padding-top:140px;">
   <style>
     @media (min-width: 1024px) {
-      header.max-w-center {
-        padding-top: 180px !important; /* moves hero text lower on PC */
-      }
+      header.max-w-center { padding-top: 180px !important; }
     }
   </style>
 
   <div style="text-align:center;z-index:10;">
     <div style="opacity:0.95;">
-      <p class="lead" style="
-        text-transform:uppercase;
-        letter-spacing:0.25em;
-        color:#ffb88b;
-        font-weight:700;
-        font-size:12px;">
+      <p class="lead" style="text-transform:uppercase;letter-spacing:0.25em;color:#ffb88b;font-weight:700;font-size:12px;">
         Botswana's Trusted Source
       </p>
     </div>
@@ -187,309 +173,285 @@
       <span class="char">Create. <em style="font-weight:400">Fixit.</em></span>
     </h1>
 
-    <p class="lead">
+    <p class="lead" style="margin-top:14px;">
       Whether you're building, repairing, or creating, we provide the tools that help you get the job done right.
       Rent or buy with ease, supported by dependable quality.
     </p>
 
-    <div>
-      <a class="cta" href="sales.html" style="margin-top:20px;display:inline-block;">View Tools</a>
+    <div style="margin-top:22px;">
+      <a class="nav-cta" href="sales.html" style="text-decoration:none;">View Tools</a>
     </div>
   </div>
 </header>
 
+<!-- SERVICES (3 cards) -->
+<section class="max-w-center" style="padding:80px 0 40px;">
+  <h2 style="font-family:'Clash Display';font-size:44px;text-align:center;margin-bottom:36px;">What We Offer</h2>
 
-<!-- SERVICES SECTION -->
-<section class="max-w-center" style="padding:120px 0;">
-  <h2 class="text-center reveal-text" style="
-      font-family:'Clash Display';
-      font-size:48px;
-      margin-bottom:60px;">
-    What We Offer
-  </h2>
-
-  <div class="grid md:grid-cols-3 gap-10">
-    <!-- Card 1 -->
-    <div class="spotlight spotlight-border p-10" style="border-radius:14px;">
-      <h3 style="font-family:'Clash Display'; font-size:26px; margin-bottom:10px;">Power Tool Sales</h3>
-      <p style="color:#ccc;">
-        Buy high-quality power tools built for reliability and performance. Perfect for construction professionals and DIY users.
+  <div class="services-grid">
+    <!-- Card: Sales -->
+    <article class="card spotlight" aria-labelledby="sales-title">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
+        <div style="width:46px;height:46px;border-radius:10px;background:rgba(255,255,255,0.02);display:flex;align-items:center;justify-content:center;">
+          <iconify-icon icon="lucide:drill" width="20"></iconify-icon>
+        </div>
+        <div>
+          <h3 id="sales-title" style="margin:0;font-size:20px;font-weight:800;">Power Tool Sales</h3>
+          <div style="color:var(--muted);font-size:12px;text-transform:uppercase;margin-top:4px;">Own it. Keep it.</div>
+        </div>
+      </div>
+      <p style="color:#cfcfcf;line-height:1.6;">
+        Build your arsenal with reliable drills, saws, grinders, cutters and generators. We stock quality brands suited for professionals and home users.
       </p>
-    </div>
+    </article>
 
-    <!-- Card 2 -->
-    <div class="spotlight spotlight-border p-10" style="border-radius:14px;">
-      <h3 style="font-family:'Clash Display'; font-size:26px; margin-bottom:10px;">Tool Rentals</h3>
-      <p style="color:#ccc;">
-        Rent tools only when you need them. Affordable rates, flexible times, and reliable equipment ready for any job.
+    <!-- Card: Rentals -->
+    <article class="card spotlight" aria-labelledby="rentals-title">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
+        <div style="width:46px;height:46px;border-radius:10px;background:rgba(255,255,255,0.02);display:flex;align-items:center;justify-content:center;">
+          <iconify-icon icon="lucide:tool" width="20"></iconify-icon>
+        </div>
+        <div>
+          <h3 id="rentals-title" style="margin:0;font-size:20px;font-weight:800;">Tool Rentals</h3>
+          <div style="color:var(--muted);font-size:12px;text-transform:uppercase;margin-top:4px;">Short & long-term</div>
+        </div>
+      </div>
+      <p style="color:#cfcfcf;line-height:1.6;">
+        Need a tool for a day or a project? Rent well-maintained equipment at fair rates — flexible pick-up and return options across Botswana.
       </p>
-    </div>
+    </article>
 
-    <!-- Card 3 -->
-    <div class="spotlight spotlight-border p-10" style="border-radius:14px;">
-      <h3 style="font-family:'Clash Display'; font-size:26px; margin-bottom:10px;">Trusted Quality</h3>
-      <p style="color:#ccc;">
-        Every tool is inspected and maintained so you get peak performance every time you work with FixitBW.
+    <!-- Card: Trusted -->
+    <article class="card spotlight" aria-labelledby="trusted-title">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
+        <div style="width:46px;height:46px;border-radius:10px;background:rgba(255,255,255,0.02);display:flex;align-items:center;justify-content:center;">
+          <iconify-icon icon="lucide:shield-check" width="20"></iconify-icon>
+        </div>
+        <div>
+          <h3 id="trusted-title" style="margin:0;font-size:20px;font-weight:800;">Trusted Quality</h3>
+          <div style="color:var(--muted);font-size:12px;text-transform:uppercase;margin-top:4px;">Inspected & ready</div>
+        </div>
+      </div>
+      <p style="color:#cfcfcf;line-height:1.6;">
+        All tools are inspected and serviced before rentals and carefully selected for sales — we stand behind everything we offer.
       </p>
-    </div>
+    </article>
   </div>
 </section>
 
-
-<!-- ABOUT GRID SECTION -->
-<section class="max-w-center" style="padding:80px 0;">
-  <div class="grid md:grid-cols-2 gap-10">
-    <!-- Left -->
+<!-- ABOUT GRID / PROMO -->
+<section class="max-w-center" style="padding:40px 0 60px;">
+  <div style="display:grid;grid-template-columns:1fr 420px;gap:26px;align-items:center;">
     <div>
-      <h2 class="reveal-text" style="
-          font-family:'Clash Display';
-          font-size:46px;
-          margin-bottom:16px;">
-        About FixitBW
-      </h2>
-      <p style="color:#d0d0d0; font-size:17px; line-height:1.7;">
-        FixitBW is Botswana’s reliable partner for both power tool sales and rentals.  
-        We help builders, creators, and DIY makers get the right tools without stress —  
-        whether you’re purchasing professional-grade equipment or renting for a short project.
+      <h2 style="font-size:36px;margin:0 0 12px 0;">About FixitBW</h2>
+      <p style="color:#d0d0d0;line-height:1.7;">
+        FixitBW helps builders, creators and homeowners get the right tools — when they need them.
+        We combine a friendly local service with dependable equipment so your projects finish on time.
       </p>
+      <div style="margin-top:18px;">
+        <a class="nav-cta" href="about.html" style="text-decoration:none;">Learn More</a>
+      </div>
     </div>
 
-    <!-- Right -->
-    <div class="spotlight spotlight-border p-10" style="min-height:200px; border-radius:12px;">
-      <p style="color:#ccc; line-height:1.7;">
-        Our commitment is simple: dependable tools, transparent pricing, and support that
-        helps you finish your work efficiently. FixitBW empowers your projects with 
-        trustworthy equipment and accessible service.
-      </p>
+    <div class="spotlight" style="padding:20px;border-radius:14px;">
+      <h3 style="margin:0 0 8px 0;">Why Choose Us</h3>
+      <ul style="color:#cfcfcf;line-height:1.7;margin:0;padding-left:18px;">
+        <li>Locally owned and operated in Botswana</li>
+        <li>Fair prices and clear terms</li>
+        <li>Well-maintained equipment</li>
+      </ul>
     </div>
   </div>
 </section>
 
-
-<!-- MARQUEE -->
-<section style="padding:80px 0;">
-  <div class="overflow-hidden">
-    <div class="marquee-content">
-      <span class="text-3xl font-bold" style="color:#fff;">Power Tools</span>
-      <span class="text-3xl font-bold" style="color:#f97316;">•</span>
-      <span class="text-3xl font-bold" style="color:#fff;">Rentals</span>
-      <span class="text-3xl font-bold" style="color:#f97316;">•</span>
-      <span class="text-3xl font-bold" style="color:#fff;">Construction</span>
-      <span class="text-3xl font-bold" style="color:#f97316;">•</span>
-      <span class="text-3xl font-bold" style="color:#fff;">DIY</span>
-      <span class="text-3xl font-bold" style="color:#f97316;">•</span>
-      <span class="text-3xl font-bold" style="color:#fff;">FixitBW</span>
+<!-- MARQUEE (subtle) -->
+<section style="padding:18px 0;border-top:1px solid rgba(255,255,255,0.02);border-bottom:1px solid rgba(255,255,255,0.02);">
+  <div class="max-w-center" style="overflow:hidden;">
+    <div class="marquee-content" aria-hidden="true" style="display:flex;gap:36px;align-items:center;">
+      <div style="font-weight:800;color:#bdbdbd;">DRILLS</div>
+      <div style="font-weight:800;color:#aaa;">GRINDERS</div>
+      <div style="font-weight:800;color:#bdbdbd;">SAWS</div>
+      <div style="font-weight:800;color:#aaa;">GENERATORS</div>
+      <div style="font-weight:800;color:#bdbdbd;">CUTTERS</div>
+      <div style="font-weight:800;color:#aaa;">ACCESSORIES</div>
     </div>
   </div>
 </section>
 
+<!-- CTA -->
+<section style="padding:46px 0;text-align:center;">
+  <h2 style="color:#c7c7c7;font-size:26px;margin:0 0 18px 0;">Tools you can <span style="color:#fff;font-weight:800;">trust</span>.</h2>
+  <div>
+    <a class="nav-cta" href="https://wa.me/26773318758" target="_blank" rel="noopener noreferrer" style="text-decoration:none;">Contact Us Today</a>
+  </div>
+</section>
 
-<!-- FOOTER with your contacts -->
-<footer id="contact" class="max-w-center" style="padding:50px 0 60px;">
+<!-- FOOTER -->
+<footer id="contact">
   <div class="footer-inner">
-    <h2 style="color:white;font-size:32px;margin-bottom:10px;text-align:center;">
-      Contact FixitBW
-    </h2>
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;width:100%;">
+      <div style="display:flex;align-items:center;gap:12px;">
+        <span style="font-weight:800;font-size:18px;color:#fff;">Fixit</span>
+        <span style="width:28px;height:28px;display:inline-flex;align-items:center;justify-content:center;">
+          <iconify-icon icon="lucide:hammer" width="22" style="color:var(--accent)"></iconify-icon>
+        </span>
+        <span style="font-weight:900;font-size:18px;color:#fff;">BW</span>
+      </div>
 
-    <div style="margin-bottom:30px;text-align:center;">
-      <p style="color:#aaa;font-size:16px;margin-bottom:4px;">WhatsApp:</p>
-      <a href="https://wa.me/26773318758" style="
-          color:#f97316;
-          font-size:20px;
-          text-decoration:none;">
-        +267 73318758
-      </a>
+      <div style="display:flex;align-items:center;gap:18px;">
+        <a href="https://wa.me/26773318758" style="color:#f97316;font-weight:700;text-decoration:none;">+267 73318758</a>
+        <a href="https://www.tiktok.com/@prodmoroka" target="_blank" style="color:#bbb;text-decoration:none;">TikTok</a>
+        <a href="https://www.facebook.com/profile.php?id=61556143019845" target="_blank" style="color:#bbb;text-decoration:none;">Facebook</a>
+        <a class="visit-btn" href="https://www.tiktok.com/@prodmoroka" target="_blank" style="text-decoration:none;">Visit FixitBW</a>
+      </div>
     </div>
 
-    <div style="display:flex;justify-content:center;gap:25px;margin-bottom:40px;">
-      <a href="https://www.tiktok.com/@prodmoroka" target="_blank" style="color:#bbb;font-size:14px;">TikTok</a>
-      <a href="https://www.facebook.com/profile.php?id=61556143019845" target="_blank" style="color:#bbb;font-size:14px;">Facebook</a>
-      <a href="https://wa.me/26773318758" target="_blank" style="color:#bbb;font-size:14px;">WhatsApp</a>
-    </div>
-
-    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;color:#bbb;font-size:14px;">
-      <div><strong>Fixit</strong> <iconify-icon icon="lucide:hammer" width="18" style="color:#f97316;margin:0 4px;"></iconify-icon> BW • Botswana • Sales & Rentals</div>
-      <div>© 2024 FixitBW Botswana</div>
-    </div>
-
-    <div style="text-align:center;margin-top:25px;">
-      <a class="visit-btn" href="https://www.tiktok.com/@prodmoroka" target="_blank">
-        Visit FixitBW →
-      </a>
-    </div>
+    <div style="text-align:center;color:#777;margin-top:12px;">© 2024 Fixit 🔨 BW. All rights reserved.</div>
   </div>
 </footer>
 
-<!-- END PART 2/3 -->
-<!-- Next: PART 3/3 (all scripts, animations, optimized WebGL) -->
-<!-- index.html — PART 3/3 (SCRIPTS + WEBGL + ANIMATIONS) -->
+<!-- END PART 2/6 -->
+<!-- NEXT: PART 3/6 — GSAP/Lenis, cursor, spotlight JS (performance-tuned) -->
+<!-- index-optionA.html — PART 3/6 (GSAP, LENIS, CURSOR, SPOTLIGHT, MARQUEE SCRIPT) -->
 
 <script>
-/* ============================
-   CUSTOM CURSOR
-============================ */
-const dot = document.querySelector(".cursor-dot");
-const circle = document.querySelector(".cursor-circle");
-
-document.addEventListener("mousemove", (e) => {
-  if (!dot || !circle) return;
-  dot.style.left = e.clientX + "px";
-  dot.style.top = e.clientY + "px";
-
-  gsap.to(circle, {
-    x: e.clientX,
-    y: e.clientY,
-    duration: 0.18,
-    ease: "power3.out"
-  });
-});
-
-document.querySelectorAll("a, button, .cta, .nav-cta").forEach((el) => {
-  el.addEventListener("mouseenter", () => circle.classList.add("active"));
-  el.addEventListener("mouseleave", () => circle.classList.remove("active"));
-});
-</script>
-
-
-<script>
-/* ============================
-   SPOTLIGHT HOVER EFFECT
-============================ */
-document.querySelectorAll(".spotlight").forEach((card) => {
-  card.onmousemove = (e) => {
-    const rect = card.getBoundingClientRect();
-    card.style.setProperty("--mouse-x", e.clientX - rect.left + "px");
-    card.style.setProperty("--mouse-y", e.clientY - rect.top + "px");
-  };
-});
-</script>
-
-
-<script>
-/* ============================
-   PAGE LOADER ANIMATION
-============================ */
-const loaderWrap = document.querySelector(".loader-wrap");
-const loaderBar = document.querySelector(".loader-bar");
-const counterEl = document.querySelector(".counter");
-
-let counter = 0;
-const interval = setInterval(() => {
-  counter += 1;
-  counterEl.textContent = counter.toString().padStart(3, "0");
-  loaderBar.style.height = counter + "%";
-
-  if (counter >= 100) {
-    clearInterval(interval);
-    gsap.to(loaderWrap, {
-      opacity: 0,
-      duration: 0.6,
-      onComplete: () => loaderWrap.style.display = "none"
-    });
-    gsap.to("#webgl", { opacity: 1, duration: 1 });
-  }
-}, 12);
-</script>
-
-
-<script>
-/* ============================
-   LENIS SMOOTH SCROLL
-============================ */
+/* ------------------------------
+   LENIS SMOOTH SCROLLING
+------------------------------ */
 const lenis = new Lenis({
-  duration: 1.2,
+  duration: 1.15,
+  easing: t => Math.min(1, 1 - Math.pow(2, -10 * t)),
   smooth: true
 });
 
-function raf(time) {
+function raf(time){
   lenis.raf(time);
   requestAnimationFrame(raf);
 }
 requestAnimationFrame(raf);
-</script>
 
 
-<script>
-/* ============================
-   GSAP TEXT REVEAL (HERO)
-============================ */
-gsap.utils.toArray(".char").forEach((char, i) => {
+/* ------------------------------
+   GSAP ANIMATIONS
+------------------------------ */
+gsap.registerPlugin(ScrollTrigger);
+
+/* Loader animation */
+gsap.to(".loader-bar", {
+  height: "100%",
+  duration: 1.2,
+  ease: "power2.inOut",
+  onComplete: () => {
+    gsap.to(".loader-wrap", { opacity: 0, duration: 0.5, pointerEvents: "none" });
+  }
+});
+
+/* Text reveal (hero) */
+document.querySelectorAll(".char").forEach((char, i) => {
   gsap.to(char, {
-    y: 0,
-    duration: 1.2,
-    delay: i * 0.03,
+    y: "0%",
+    duration: 1,
+    delay: i * 0.06,
     ease: "power3.out"
   });
 });
-</script>
 
-
-<script>
-/* ============================
-   OPTIMIZED WEBGL BACKGROUND
-============================ */
-let scene, camera, renderer, particles;
-
-function initWebGL() {
-  const canvas = document.getElementById("webgl");
-
-  scene = new THREE.Scene();
-  camera = new THREE.PerspectiveCamera(
-    75, window.innerWidth / window.innerHeight, 0.1, 1000
-  );
-  camera.position.z = 90;
-
-  renderer = new THREE.WebGLRenderer({
-    canvas,
-    alpha: true,
-    antialias: false
-  });
-
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
-
-  // LIGHTER PARTICLE SYSTEM (800 particles instead of 2000)
-  const particleCount = 800;
-  const geometry = new THREE.BufferGeometry();
-  const positions = new Float32Array(particleCount * 3);
-
-  for (let i = 0; i < particleCount * 3; i++) {
-    positions[i] = (Math.random() - 0.5) * 300; 
+/* Card fade-in */
+gsap.from(".card", {
+  y: 30,
+  opacity: 0,
+  duration: 0.9,
+  stagger: 0.15,
+  ease: "power2.out",
+  scrollTrigger: {
+    trigger: ".services-grid",
+    start: "top 85%"
   }
-
-  geometry.setAttribute("position", new THREE.BufferAttribute(positions, 3));
-
-  const material = new THREE.PointsMaterial({
-    color: 0xf97316,
-    size: 1.2,
-    transparent: true,
-    opacity: 0.65
-  });
-
-  particles = new THREE.Points(geometry, material);
-  scene.add(particles);
-
-  animateWebGL();
-}
-
-function animateWebGL() {
-  requestAnimationFrame(animateWebGL);
-
-  particles.rotation.y += 0.0008;
-  particles.rotation.x += 0.0003;
-
-  renderer.render(scene, camera);
-}
-
-window.addEventListener("resize", () => {
-  camera.aspect = window.innerWidth / window.innerHeight;
-  camera.updateProjectionMatrix();
-  renderer.setSize(window.innerWidth, window.innerHeight);
 });
 
-initWebGL();
-</script>
+/* About section fade */
+gsap.from(".spotlight", {
+  y: 40,
+  opacity: 0,
+  duration: 0.9,
+  stagger: 0.12,
+  ease: "power2.out",
+  scrollTrigger: {
+    trigger: "section",
+    start: "top 88%"
+  }
+});
 
+
+/* ------------------------------
+   CURSOR (DESKTOP ONLY)
+------------------------------ */
+const dot = document.querySelector('.cursor-dot');
+const circle = document.querySelector('.cursor-circle');
+
+function isMobile(){
+  return window.innerWidth <= 1024;
+}
+
+if (!isMobile()) {
+  document.addEventListener("mousemove", e => {
+    gsap.to(dot, { x: e.clientX, y: e.clientY, duration: 0.08 });
+    gsap.to(circle, { x: e.clientX, y: e.clientY, duration: 0.2 });
+  });
+
+  document.querySelectorAll("a, button, .spotlight, .card").forEach(el => {
+    el.addEventListener("mouseenter", () => circle.classList.add("active"));
+    el.addEventListener("mouseleave", () => circle.classList.remove("active"));
+  });
+} else {
+  dot.style.display = "none";
+  circle.style.display = "none";
+}
+
+
+/* ------------------------------
+   SPOTLIGHT HOVER / TAP
+------------------------------ */
+document.addEventListener("mousemove", e => {
+  document.querySelectorAll(".spotlight").forEach(card => {
+    const rect = card.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    card.style.setProperty("--mouse-x", `${x}px`);
+    card.style.setProperty("--mouse-y", `${y}px`);
+  });
+});
+
+/* Mobile spotlight tap */
+document.querySelectorAll(".spotlight").forEach(card => {
+  card.addEventListener("touchstart", e => {
+    const rect = card.getBoundingClientRect();
+    const x = e.touches[0].clientX - rect.left;
+    const y = e.touches[0].clientY - rect.top;
+    card.style.setProperty("--mouse-x", `${x}px`);
+    card.style.setProperty("--mouse-y", `${y}px`);
+  });
+});
+
+
+/* ------------------------------
+   MARQUEE ANIMATION
+------------------------------ */
+const marquee = document.querySelector(".marquee-content");
+let marqueeOffset = 0;
+
+function animateMarquee(){
+  marqueeOffset -= 1;
+  if (Math.abs(marqueeOffset) > marquee.scrollWidth / 2) marqueeOffset = 0;
+  marquee.style.transform = `translateX(${marqueeOffset}px)`;
+  requestAnimationFrame(animateMarquee);
+}
+animateMarquee();
+
+</script>
 
 </body>
 </html>
+
+<!-- END OF OPTION A FULL PAGE (PART 3/6) -->
+<!-- NEXT: PART 4/6 (OPTION C FULL PAGE — HEAD & STYLES) -->
