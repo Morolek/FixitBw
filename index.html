@@ -1,168 +1,631 @@
-<!-- index-optionA.html — PART 1/6 (HEAD, STYLES, NAV) -->
+<!-- index-optionC.html — PART 1/6 (HEAD, STYLES, NAV) -->
 <!doctype html>
 <html lang="en" class="lenis">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Fixit 🔨 BW | Power Tools Botswana — Option A (Gradient)</title>
+  <title>Fixit 🔨 BW | Power Tools Botswana — Option C (Floating Shapes)</title>
 
-  <!-- Tailwind utilities -->
+  <!-- Tailwind -->
   <script src="https://cdn.tailwindcss.com"></script>
 
   <!-- Fonts -->
   <link href="https://api.fontshare.com/v2/css?f[]=clash-display@200,300,400,500,600,700&f[]=general-sans@200,300,400,500,600&display=swap" rel="stylesheet">
 
-  <!-- Libraries -->
+  <!-- GSAP + Lenis + Iconify -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
   <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.29/bundled/lenis.min.js"></script>
   <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
 
-  <meta name="description" content="Fixit 🔨 BW — Power tool sales & rentals across Botswana. Rent or buy drills, saws, grinders, generators and more. Contact +267 73318758.">
-
   <style>
     :root{
       --accent:#f97316;
       --bg:#030303;
-      --muted:#a9a9a9;
+      --muted:#adadad;
     }
 
-    html,body{height:100%;margin:0;}
     body{
+      margin:0;
       background:var(--bg);
       color:#fff;
-      font-family:"General Sans",system-ui,-apple-system,"Segoe UI",Roboto,Arial;
-      -webkit-font-smoothing:antialiased;
-      -moz-osx-font-smoothing:grayscale;
+      font-family:'General Sans',sans-serif;
       overflow-x:hidden;
       cursor:none;
     }
-    ::selection{background:var(--accent); color:#000;}
 
-    /* BACKGROUND (Option A uses animated gradient) */
-    #background {
+    /* ---------- FLOATING SHAPES BACKGROUND ---------- */
+    #background{
       position:fixed;
       inset:0;
       z-index:-1;
-      background: linear-gradient(130deg, #0d0d0d, #141414, #0f0f0f);
-      background-size: 400% 400%;
-      animation: gradientShift 18s ease infinite;
+      background:#0a0a0a;
+      overflow:hidden;
     }
-    @keyframes gradientShift {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
+    .blob{
+      position:absolute;
+      width:420px;
+      height:420px;
+      background:radial-gradient(circle, rgba(249,115,22,0.25), transparent 60%);
+      filter:blur(60px);
+      border-radius:50%;
+      animation:floatBlobs 18s ease-in-out infinite alternate;
+    }
+    @keyframes floatBlobs{
+      0%{ transform:translate(-50%,-50%) scale(1); }
+      100%{ transform:translate(-50%,-50%) scale(1.3); }
     }
 
-    /* Noise layer */
-    .noise { position: fixed; inset: 0; pointer-events: none; z-index: 10; opacity: 0.04;
-      background:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E"); }
+    .noise{
+      position:fixed;
+      inset:0;
+      z-index:3;
+      opacity:0.04;
+      pointer-events:none;
+      background:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+    }
 
-    /* Cursor */
+    /* ---------- Cursor ---------- */
     .cursor-dot{width:6px;height:6px;background:var(--accent);position:fixed;top:0;left:0;border-radius:50%;z-index:9999;pointer-events:none;transform:translate(-50%,-50%);}
-    .cursor-circle{width:40px;height:40px;border:1px solid rgba(255,255,255,0.14);position:fixed;top:0;left:0;border-radius:50%;z-index:9998;pointer-events:none;transform:translate(-50%,-50%);transition:all .22s;}
-    .cursor-circle.active{width:60px;height:60px;background:rgba(249,115,22,0.08);border-color:var(--accent);backdrop-filter: blur(2px);}
+    .cursor-circle{width:40px;height:40px;border:1px solid rgba(255,255,255,0.18);position:fixed;top:0;left:0;border-radius:50%;z-index:9998;pointer-events:none;transform:translate(-50%,-50%);transition:all .25s;}
+    .cursor-circle.active{width:60px;height:60px;background:rgba(249,115,22,0.08);border-color:var(--accent);}
 
-    /* Spotlight */
-    .spotlight{position:relative;overflow:hidden;border-radius:12px;background:rgba(255,255,255,0.02);}
-    .spotlight::before{content:'';position:absolute;inset:0;background:radial-gradient(600px circle at var(--mouse-x) var(--mouse-y), rgba(249,115,22,0.06), transparent 34%);pointer-events:none;transition:opacity .18s;}
-
-    /* Reveal helpers */
-    .reveal-text { display:inline-block; overflow:hidden; }
-    .char{display:inline-block; transform:translateY(110%); will-change:transform;}
-
-    /* Layout utilities */
-    .max-w-center{max-width:1400px;margin:0 auto;padding:0 18px;}
-    nav{position:fixed;top:0;left:0;width:100%;z-index:100;padding:14px 18px;display:flex;justify-content:center;background:linear-gradient(180deg, rgba(0,0,0,0.35), transparent);}
-    .nav-inner{width:100%;max-width:1400px;display:flex;align-items:center;justify-content:space-between;gap:12px;}
-    .logo{display:flex;align-items:center;gap:8px;text-decoration:none;color:#fff;}
-    .logo .brand{font-weight:800;font-size:18px;}
-    .logo .hammer{display:inline-flex;width:28px;height:28px;align-items:center;justify-content:center;}
-
-    .nav-links{display:flex;gap:12px;align-items:center;}
-    .nav-links a{color:#d1d1d1;text-decoration:none;font-weight:700;font-size:13px;padding:8px 10px;border-radius:8px;}
-    .nav-links a:hover{color:#fff;background:rgba(255,255,255,0.02);}
-
-    .nav-cta{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:10px;background:rgba(0,0,0,0.45);border:1px solid rgba(255,255,255,0.04);color:#fff;text-decoration:none;font-weight:800;}
-    .nav-cta:hover{border-color:var(--accent);}
-
-    header{min-height:92vh;display:flex;align-items:center;justify-content:center;padding:0 20px;}
-    h1.big{font-family:'Clash Display',sans-serif;font-size:clamp(34px,9vw,100px);line-height:0.9;text-align:center;margin:0;letter-spacing:-0.02em;}
-    p.lead{color:#c7c7c7;font-size:17px;max-width:920px;margin:16px auto 0;text-align:center;}
-
-    /* Cards / Services */
-    .services-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;}
-    .card{padding:28px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));box-shadow:0 6px 20px rgba(0,0,0,0.35);}
-
-    /* Footer */
-    footer{background:transparent;padding:48px 20px;color:#d0d0d0;border-top:1px solid rgba(255,255,255,0.03);}
-    .footer-inner{max-width:1200px;margin:0 auto;display:flex;flex-direction:column;gap:14px;align-items:center;}
-
-    /* Responsive tweaks: MOBILE = 1-column stack (M1) */
-    @media (max-width: 1024px){
-      .services-grid{grid-template-columns:1fr;}
-      header{min-height:80vh;padding-top:110px;}
+    /* ---------- Spotlight ---------- */
+    .spotlight{
+      position:relative;
+      overflow:hidden;
+      border-radius:12px;
+      background:rgba(255,255,255,0.02);
     }
-    @media (max-width:640px){
+    .spotlight::before{
+      content:'';
+      position:absolute;
+      inset:0;
+      background:radial-gradient(600px circle at var(--mouse-x) var(--mouse-y), rgba(249,115,22,0.05), transparent 50%);
+      pointer-events:none;
+    }
+
+    /* ---------- Navigation ---------- */
+    nav{
+      position:fixed;
+      top:0;left:0;
+      width:100%;
+      z-index:100;
+      padding:14px 18px;
+      background:linear-gradient(180deg, rgba(0,0,0,0.35), transparent);
+    }
+    .nav-inner{
+      max-width:1400px;
+      margin:0 auto;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:14px;
+    }
+    .logo{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      text-decoration:none;
+      color:#fff;
+    }
+    .logo .brand{
+      font-weight:800;
+      font-size:18px;
+    }
+    .nav-links{
+      display:flex;
+      gap:16px;
+    }
+    .nav-links a{
+      color:#d1d1d1;
+      font-weight:700;
+      font-size:13px;
+      text-decoration:none;
+      padding:8px 10px;
+      border-radius:8px;
+    }
+    .nav-links a:hover{
+      color:#fff;
+      background:rgba(255,255,255,0.04);
+    }
+
+    .nav-cta{
+      display:flex;
+      align-items:center;
+      gap:6px;
+      padding:10px 14px;
+      border-radius:10px;
+      background:rgba(0,0,0,0.45);
+      border:1px solid rgba(255,255,255,0.05);
+      text-decoration:none;
+      font-weight:800;
+      font-size:13px;
+      color:#fff;
+    }
+
+    header{
+      min-height:92vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:0 18px;
+    }
+
+    h1.big{
+      font-family:'Clash Display';
+      font-size:clamp(38px,9vw,100px);
+      line-height:0.9;
+      margin:0;
+      text-align:center;
+    }
+
+    /* Mobile improvements */
+    @media(max-width:1024px){ header{padding-top:110px;} }
+    @media(max-width:640px){
       .nav-links{display:none;}
-      .logo .brand{font-size:16px;}
-      header{min-height:72vh;padding-top:90px;}
-      h1.big{font-size:34px;}
-      .card{padding:20px;}
+      header{padding-top:90px;}
+      h1.big{font-size:36px;}
     }
   </style>
 </head>
-<body>
-  <!-- Background & noise -->
-  <div id="background" aria-hidden="true"></div>
-  <div class="noise" aria-hidden="true"></div>
+<!-- OPTION C — PART 5/6 (HTML STRUCTURE ELEMENTS) -->
 
-  <!-- Cursor elements (desktop) -->
-  <div class="cursor-dot"></div>
-  <div class="cursor-circle"></div>
+<!-- FLOATING SHAPE BACKGROUND (lightweight animated squares) -->
+<div class="shape-container"></div>
 
-  <!-- Loader (light) -->
-  <div class="loader-wrap" aria-hidden="true" style="position:fixed;inset:0;z-index:9998;display:flex;align-items:center;justify-content:center;pointer-events:none;">
-    <div style="width:2px;height:0;background:var(--accent);" class="loader-bar"></div>
-  </div>
+<!-- CUSTOM CURSOR -->
+<div class="cursor-dot hidden md:block"></div>
+<div class="cursor-circle hidden md:block"></div>
 
-  <!-- NAVIGATION -->
-  <nav role="navigation" aria-label="Main navigation">
-    <div class="nav-inner max-w-center">
-      <a class="logo" href="index.html" aria-label="Fixit BW home">
-        <span class="brand">Fixit</span>
-        <span class="hammer" aria-hidden="true"><iconify-icon icon="lucide:hammer" width="26" style="color:var(--accent)"></iconify-icon></span>
-        <span class="brand" style="font-weight:900">BW</span>
-      </a>
+<!-- NAVIGATION -->
+<nav class="top-nav" style="
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%;
+  z-index: 1000;
+  padding: 18px 0;
+  background: linear-gradient(180deg, rgba(0,0,0,0.35), transparent);
+  backdrop-filter: blur(6px);
+">
+  <div class="nav-inner" style="
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 18px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  ">
+    
+    <!-- LOGO -->
+    <a href="index.html" class="logo" style="display:flex;align-items:center;gap:8px;text-decoration:none;">
+      <span style="font-weight:800;color:#fff;font-size:18px;">Fixit</span>
+      <span style="width:22px;height:22px;display:flex;align-items:center;justify-content:center;">
+        <iconify-icon icon="lucide:hammer" width="20" style="color:var(--accent);"></iconify-icon>
+      </span>
+      <span style="font-weight:900;color:#fff;font-size:18px;">BW</span>
+    </a>
 
-      <div class="nav-links" role="navigation" aria-label="site links">
-        <a href="about.html">About</a>
-        <a href="sales.html">Sales & Rentals</a>
-        <a href="promise.html">Our Promise</a>
-      </div>
-
-      <a class="nav-cta" id="get-tools-cta" href="https://wa.me/26773318758" target="_blank" rel="noopener noreferrer">
-        Contact Us Today
-        <iconify-icon icon="lucide:arrow-right" width="14" style="transform:translateY(1px)"></iconify-icon>
-      </a>
+    <!-- NAV LINKS -->
+    <div class="nav-links" style="display:flex;align-items:center;gap:14px;">
+      <a href="index.html" style="color:#d5d5d5;font-weight:700;text-decoration:none;">Home</a>
+      <a href="about.html" style="color:#d5d5d5;font-weight:700;text-decoration:none;">About</a>
+      <a href="sales.html" style="color:#d5d5d5;font-weight:700;text-decoration:none;">Sales & Rentals</a>
+      <a href="promise.html" style="color:#d5d5d5;font-weight:700;text-decoration:none;">Our Promise</a>
     </div>
-  </nav>
 
-  <!-- PART 1/6 END -->
-  <!-- NEXT: PART 2/6 — HERO section + CTA (will keep cards unchanged) -->
-<!-- index-optionA.html — PART 2/6 (HERO, SERVICES, ABOUT GRID, MARQUEE, FOOTER) -->
+  </div>
+</nav>
 
-<!-- HERO -->
+<body>
+<!-- OPTION C — PART 5/6 (HTML STRUCTURE ELEMENTS) -->
+
+<!-- FLOATING SHAPE BACKGROUND (lightweight animated squares) -->
+<div class="shape-container"></div>
+
+<!-- CUSTOM CURSOR -->
+<div class="cursor-dot hidden md:block"></div>
+<div class="cursor-circle hidden md:block"></div>
+
+<!-- NAVIGATION -->
+<nav class="top-nav" style="
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%;
+  z-index: 1000;
+  padding: 18px 0;
+  background: linear-gradient(180deg, rgba(0,0,0,0.35), transparent);
+  backdrop-filter: blur(6px);
+">
+  <div class="nav-inner" style="
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 18px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  ">
+    
+    <!-- LOGO -->
+    <a href="index.html" class="logo" style="display:flex;align-items:center;gap:8px;text-decoration:none;">
+      <span style="font-weight:800;color:#fff;font-size:18px;">Fixit</span>
+      <span style="width:22px;height:22px;display:flex;align-items:center;justify-content:center;">
+        <iconify-icon icon="lucide:hammer" width="20" style="color:var(--accent);"></iconify-icon>
+      </span>
+      <span style="font-weight:900;color:#fff;font-size:18px;">BW</span>
+    </a>
+
+    <!-- NAV LINKS -->
+    <div class="nav-links" style="display:flex;align-items:center;gap:14px;">
+      <a href="index.html" style="color:#d5d5d5;font-weight:700;text-decoration:none;">Home</a>
+      <a href="about.html" style="color:#d5d5d5;font-weight:700;text-decoration:none;">About</a>
+      <a href="sales.html" style="color:#d5d5d5;font-weight:700;text-decoration:none;">Sales & Rentals</a>
+      <a href="promise.html" style="color:#d5d5d5;font-weight:700;text-decoration:none;">Our Promise</a>
+    </div>
+
+  </div>
+</nav>
+
+<!-- BACKGROUND -->
+<div id="background">
+  <div class="blob" style="--x:20%; --y:30%; top:20%; left:20%; animation-delay:0s;"></div>
+  <div class="blob" style="--x:70%; --y:70%; top:70%; left:70%; animation-delay:4s;"></div>
+  <div class="blob" style="--x:50%; --y:90%; top:90%; left:50%; animation-delay:2s;"></div>
+</div>
+<div class="noise"></div>
+
+<!-- CURSOR -->
+<div class="cursor-dot"></div>
+<div class="cursor-circle"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <a class="logo" href="index.html">
+      <span class="brand">Fixit</span>
+      <span><iconify-icon icon="lucide:hammer" width="22" style="color:var(--accent)"></iconify-icon></span>
+      <span class="brand" style="font-weight:900">BW</span>
+    </a>
+
+    <div class="nav-links">
+      <a href="about.html">About</a>
+      <a href="sales.html">Sales & Rentals</a>
+      <a href="promise.html">Our Promise</a>
+    </div>
+
+    <a class="nav-cta" href="https://wa.me/26773318758" target="_blank">
+      Contact Us
+      <iconify-icon icon="lucide:arrow-right" width="14"></iconify-icon>
+    </a>
+  </div>
+</nav>
+
+<!-- END OF PART 1/6 -->
+<!-- Next: PART 2/6 (Hero + original cards with icons on LEFT) -->
+<!-- index-optionC.html — PART 2/6 (HERO + ORIGINAL SIMPLE CARDS with LEFT ICONS + ABOUT + MARQUEE + FOOTER) -->
+
+<!-- HERO --><!-- OPTION C — PART 5/6 (HTML STRUCTURE ELEMENTS) -->
+
+<!-- FLOATING SHAPE BACKGROUND (lightweight animated squares) -->
+<div class="shape-container"></div>
+
+<!-- CUSTOM CURSOR -->
+<div class="cursor-dot hidden md:block"></div>
+<div class="cursor-circle hidden md:block"></div>
+
+<!-- NAVIGATION -->
+<nav class="top-nav" style="
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%;
+  z-index: 1000;
+  padding: 18px 0;
+  background: linear-gradient(180deg, rgba(0,0,0,0.35), transparent);
+  backdrop-filter: blur(6px);
+">
+  <div class="nav-inner" style="
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 18px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  ">
+    
+    <!-- LOGO -->
+    <a href="index.html" class="logo" style="display:flex;align-items:center;gap:8px;text-decoration:none;">
+      <span style="font-weight:800;color:#fff;font-size:18px;">Fixit</span>
+      <span style="width:22px;height:22px;display:flex;align-items:center;justify-content:center;">
+        <iconify-icon icon="lucide:hammer" width="20" style="color:var(--accent);"></iconify-icon>
+      </span>
+      <span style="font-weight:900;color:#fff;font-size:18px;">BW</span>
+    </a>
+
+    <!-- NAV LINKS -->
+    <div class="nav-links" style="display:flex;align-items:center;gap:14px;">
+      <a href="index.html" style="color:#d5d5d5;font-weight:700;text-decoration:none;">Home</a>
+      <a href="about.html" style="color:#d5d5d5;font-weight:700;text-decoration:none;">About</a>
+      <a href="sales.html" style="color:#d5d5d5;font-weight:700;text-decoration:none;">Sales & Rentals</a>
+      <a href="promise.html" style="color:#d5d5d5;font-weight:700;text-decoration:none;">Our Promise</a>
+    </div>
+
+  </div>
+</nav>
+
 <header class="max-w-center" style="padding-top:140px;">
-  <style>
-    @media (min-width: 1024px) {
-      header.max-w-center { padding-top: 180px !important; }
-    }
+  <style>/* ---------------------------------------------------------
+   OPTION C — PART 6/6
+   FINAL POLISH + MOBILE SPACING FIXES + OVERLAYS
+---------------------------------------------------------- */
+
+/* Safe padding so hero never collides with navbar */
+header.max-w-center {
+  padding-top: 160px !important;
+}
+
+@media (max-width: 768px) {
+  header.max-w-center {
+    padding-top: 130px !important;
+  }
+}
+
+/* Improve nav link hitbox (easier to tap on mobile) */
+.nav-links a {
+  padding: 6px 4px;
+}
+
+/* Mobile nav spacing */
+@media (max-width: 720px) {
+  .nav-links {
+    gap: 10px !important;
+  }
+  .nav-links a {
+    font-size: 14px;
+    font-weight: 600;
+  }
+}
+
+/* Ensure shapes never overlap text */
+.shape-container {
+  z-index: 0 !important;
+}
+
+/* Hero always sits above shapes */
+header,
+section,
+footer {
+  position: relative;
+  z-index: 10;
+}
+
+/* Mobile improvement: slight dark overlay to increase contrast */
+@media (max-width: 720px) {
+  body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(
+      circle at 50% 60%,
+      rgba(0,0,0,0.45),
+      rgba(0,0,0,0.72)
+    );
+    pointer-events: none;
+    z-index: 2;
+  }
+}
+
+/* Fix spotlight brightness on mobile */
+@media (max-width: 720px) {
+  .spotlight::before {
+    background: radial-gradient(
+      400px circle at var(--mouse-x) var(--mouse-y),
+      rgba(249,115,22,0.06),
+      transparent 55%
+    );
+  }
+}
+
+/* Smoothen shape animation - less jitter */
+.float-shape {
+  will-change: transform, opacity;
+  mix-blend-mode: overlay;
+}
+
+/* Footer spacing fix */
+footer#contact {
+  padding-bottom: 60px;
+}
+
+/* Fix card border clarity on low-end screens */
+.card {
+  backdrop-filter: blur(2px);
+}
+
+    @media (min-width:1024px) { header.max-w-center { padding-top:180px !important; } } /* ---------------------------------------------------------
+   OPTION C — PART 4/6 (CSS)
+   FLOATING SHAPES + MOBILE LAYOUT + CARDS + CURSOR
+---------------------------------------------------------- */
+
+/* Reset + base spacing for sections */
+section {
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+/* Floating shape background container */
+.shape-container {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Floating shapes — lightweight animated squares */
+.float-shape {
+  position: absolute;
+  bottom: -60px;
+  width: 40px;
+  height: 40px;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 6px;
+  filter: blur(1px);
+  animation: floatUp linear infinite;
+  opacity: 0.5;
+}
+
+@keyframes floatUp {
+  0% {
+    transform: translateY(0) rotate(0deg);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.45;
+  }
+  100% {
+    transform: translateY(-120vh) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+/* CARD GRID LAYOUT (PC + Tablet) */
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+}
+
+/* CARD STYLE (original simple + icons on left) */
+.card {
+  padding: 18px;
+  background: #050505;
+  border-radius: 10px;
+  transition: border 0.25s, background 0.25s;
+  border: 1px solid rgba(255,255,255,0.05);
+}
+
+/* Spotlight built-in fade */
+.card.spotlight::before {
+  background: radial-gradient(
+    600px circle at var(--mouse-x) var(--mouse-y),
+    rgba(249,115,22,0.05),
+    transparent 40%
+  );
+}
+
+/* MOBILE FRIENDLY CARD GRID */
+@media (max-width: 940px) {
+  .services-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .card {
+    padding: 22px;
+  }
+}
+
+/* ABOUT section responsive */
+@media (max-width: 900px) {
+  section .max-w-center > div {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* HERO TEXT FIX FOR MOBILE */
+.big {
+  font-size: 58px;
+  text-align: center;
+  line-height: 1.05;
+}
+@media (max-width: 880px) {
+  .big {
+    font-size: 44px;
+  }
+}
+@media (max-width: 650px) {
+  .big {
+    font-size: 36px;
+    line-height: 1.1;
+  }
+}
+
+/* HERO SUBTEXT */
+.lead {
+  font-size: 16px;
+  color: #bdbdbd;
+}
+@media (max-width: 600px) {
+  .lead {
+    font-size: 14px;
+  }
+}
+
+/* NAV BUTTON */
+.nav-cta {
+  background: #fff;
+  color: #000;
+  font-weight: 700;
+  padding: 10px 18px;
+  border-radius: 10px;
+  display: inline-block;
+}
+
+/* Custom visit button in footer */
+.visit-btn {
+  background: #fff;
+  color: #000;
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-weight: 700;
+}
+
+/* Cursor visuals */
+.cursor-dot {
+  width: 6px;
+  height: 6px;
+  background: var(--accent);
+  border-radius: 50%;
+  position: fixed;
+  top: 0; left: 0;
+  z-index: 9999;
+  transform: translate(-50%, -50%);
+}
+.cursor-circle {
+  width: 40px;
+  height: 40px;
+  border: 1px solid rgba(255,255,255,0.18);
+  border-radius: 50%;
+  position: fixed;
+  top: 0; left: 0;
+  z-index: 9998;
+  transform: translate(-50%, -50%);
+  transition: 0.25s;
+}
+.cursor-circle.active {
+  width: 60px;
+  height: 60px;
+  background: rgba(249,115,22,0.08);
+  border-color: var(--accent);
+}
+
+/* Footer mobile layout */
+@media (max-width: 850px) {
+  .footer-inner > div:first-child {
+    flex-direction: column;
+    gap: 10px;
+  }
+}
+
+/* Prevent text selection glow while scrolling */
+body {
+  user-select: none;
+}
+
   </style>
 
   <div style="text-align:center;z-index:10;">
     <div style="opacity:0.95;">
-      <p class="lead" style="text-transform:uppercase;letter-spacing:0.25em;color:#ffb88b;font-weight:700;font-size:12px;">
+      <p class="lead" style="text-transform:uppercase;letter-spacing:0.22em;color:#ffb88b;font-weight:700;font-size:12px;">
         Botswana's Trusted Source
       </p>
     </div>
@@ -173,90 +636,87 @@
       <span class="char">Create. <em style="font-weight:400">Fixit.</em></span>
     </h1>
 
-    <p class="lead" style="margin-top:14px;">
+    <p class="lead" style="margin-top:12px;max-width:880px;">
       Whether you're building, repairing, or creating, we provide the tools that help you get the job done right.
-      Rent or buy with ease, supported by dependable quality.
+      Rent or buy with ease, supported by dependable quality across Botswana.
     </p>
 
-    <div style="margin-top:22px;">
+    <div style="margin-top:20px;">
       <a class="nav-cta" href="sales.html" style="text-decoration:none;">View Tools</a>
     </div>
   </div>
 </header>
 
-<!-- SERVICES (3 cards) -->
-<section class="max-w-center" style="padding:80px 0 40px;">
-  <h2 style="font-family:'Clash Display';font-size:44px;text-align:center;margin-bottom:36px;">What We Offer</h2>
+<!-- SERVICES — ORIGINAL SIMPLE CARDS (icons LEFT of title) -->
+<section class="max-w-center" style="padding:72px 0 36px;">
+  <h2 style="font-family:'Clash Display';font-size:40px;text-align:center;margin-bottom:28px;">What We Offer</h2>
 
-  <div class="services-grid">
-    <!-- Card: Sales -->
-    <article class="card spotlight" aria-labelledby="sales-title">
-      <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
-        <div style="width:46px;height:46px;border-radius:10px;background:rgba(255,255,255,0.02);display:flex;align-items:center;justify-content:center;">
+  <div class="services-grid" style="grid-template-columns:repeat(3,1fr);">
+    <!-- Card 1 -->
+    <article class="card spotlight" aria-labelledby="sales-title" style="display:flex;flex-direction:column;gap:10px;">
+      <div style="display:flex;gap:14px;align-items:flex-start;">
+        <div style="min-width:42px;min-height:42px;display:flex;align-items:center;justify-content:center;border-radius:10px;background:rgba(0,0,0,0.25);">
           <iconify-icon icon="lucide:drill" width="20"></iconify-icon>
         </div>
         <div>
-          <h3 id="sales-title" style="margin:0;font-size:20px;font-weight:800;">Power Tool Sales</h3>
-          <div style="color:var(--muted);font-size:12px;text-transform:uppercase;margin-top:4px;">Own it. Keep it.</div>
+          <h3 id="sales-title" style="margin:0;font-size:18px;font-weight:800;">Power Tool Sales</h3>
         </div>
       </div>
-      <p style="color:#cfcfcf;line-height:1.6;">
-        Build your arsenal with reliable drills, saws, grinders, cutters and generators. We stock quality brands suited for professionals and home users.
+      <p style="color:#cfcfcf;line-height:1.6;margin:0;">
+        Build your own toolkit — we sell reliable drills, saws, grinders, cutters and generators from trusted brands.
       </p>
     </article>
 
-    <!-- Card: Rentals -->
-    <article class="card spotlight" aria-labelledby="rentals-title">
-      <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
-        <div style="width:46px;height:46px;border-radius:10px;background:rgba(255,255,255,0.02);display:flex;align-items:center;justify-content:center;">
+    <!-- Card 2 -->
+    <article class="card spotlight" aria-labelledby="rentals-title" style="display:flex;flex-direction:column;gap:10px;">
+      <div style="display:flex;gap:14px;align-items:flex-start;">
+        <div style="min-width:42px;min-height:42px;display:flex;align-items:center;justify-content:center;border-radius:10px;background:rgba(0,0,0,0.25);">
           <iconify-icon icon="lucide:tool" width="20"></iconify-icon>
         </div>
         <div>
-          <h3 id="rentals-title" style="margin:0;font-size:20px;font-weight:800;">Tool Rentals</h3>
-          <div style="color:var(--muted);font-size:12px;text-transform:uppercase;margin-top:4px;">Short & long-term</div>
+          <h3 id="rentals-title" style="margin:0;font-size:18px;font-weight:800;">Tool Rentals</h3>
         </div>
       </div>
-      <p style="color:#cfcfcf;line-height:1.6;">
-        Need a tool for a day or a project? Rent well-maintained equipment at fair rates — flexible pick-up and return options across Botswana.
+      <p style="color:#cfcfcf;line-height:1.6;margin:0;">
+        Rent by the day or for the whole project — affordable, flexible options and well-maintained equipment.
       </p>
     </article>
 
-    <!-- Card: Trusted -->
-    <article class="card spotlight" aria-labelledby="trusted-title">
-      <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
-        <div style="width:46px;height:46px;border-radius:10px;background:rgba(255,255,255,0.02);display:flex;align-items:center;justify-content:center;">
+    <!-- Card 3 -->
+    <article class="card spotlight" aria-labelledby="trusted-title" style="display:flex;flex-direction:column;gap:10px;">
+      <div style="display:flex;gap:14px;align-items:flex-start;">
+        <div style="min-width:42px;min-height:42px;display:flex;align-items:center;justify-content:center;border-radius:10px;background:rgba(0,0,0,0.25);">
           <iconify-icon icon="lucide:shield-check" width="20"></iconify-icon>
         </div>
         <div>
-          <h3 id="trusted-title" style="margin:0;font-size:20px;font-weight:800;">Trusted Quality</h3>
-          <div style="color:var(--muted);font-size:12px;text-transform:uppercase;margin-top:4px;">Inspected & ready</div>
+          <h3 id="trusted-title" style="margin:0;font-size:18px;font-weight:800;">Trusted Quality</h3>
         </div>
       </div>
-      <p style="color:#cfcfcf;line-height:1.6;">
-        All tools are inspected and serviced before rentals and carefully selected for sales — we stand behind everything we offer.
+      <p style="color:#cfcfcf;line-height:1.6;margin:0;">
+        Every item is inspected and serviced before rental — we stand behind the tools we sell and rent.
       </p>
     </article>
   </div>
 </section>
 
-<!-- ABOUT GRID / PROMO -->
-<section class="max-w-center" style="padding:40px 0 60px;">
-  <div style="display:grid;grid-template-columns:1fr 420px;gap:26px;align-items:center;">
+<!-- ABOUT PREVIEW -->
+<section class="max-w-center" style="padding:36px 0 48px;">
+  <div style="display:grid;grid-template-columns:1fr 420px;gap:22px;align-items:start;">
     <div>
-      <h2 style="font-size:36px;margin:0 0 12px 0;">About FixitBW</h2>
-      <p style="color:#d0d0d0;line-height:1.7;">
-        FixitBW helps builders, creators and homeowners get the right tools — when they need them.
-        We combine a friendly local service with dependable equipment so your projects finish on time.
+      <h2 style="font-size:34px;margin:0 0 10px 0;">About FixitBW</h2>
+      <p style="color:#d0d0d0;line-height:1.75;">
+        Locally owned in Botswana, FixitBW provides accessible, dependable power tools for builders, contractors and DIY enthusiasts.
+        We focus on clear pricing, dependable equipment and friendly local service.
       </p>
-      <div style="margin-top:18px;">
+      <div style="margin-top:14px;">
         <a class="nav-cta" href="about.html" style="text-decoration:none;">Learn More</a>
       </div>
     </div>
 
-    <div class="spotlight" style="padding:20px;border-radius:14px;">
-      <h3 style="margin:0 0 8px 0;">Why Choose Us</h3>
+    <div class="spotlight" style="padding:18px;border-radius:12px;">
+      <h3 style="margin:0 0 6px 0;">Why Choose Us</h3>
       <ul style="color:#cfcfcf;line-height:1.7;margin:0;padding-left:18px;">
-        <li>Locally owned and operated in Botswana</li>
+        <li>Locally available tools</li>
         <li>Fair prices and clear terms</li>
         <li>Well-maintained equipment</li>
       </ul>
@@ -264,7 +724,7 @@
   </div>
 </section>
 
-<!-- MARQUEE (subtle) -->
+<!-- MARQUEE -->
 <section style="padding:18px 0;border-top:1px solid rgba(255,255,255,0.02);border-bottom:1px solid rgba(255,255,255,0.02);">
   <div class="max-w-center" style="overflow:hidden;">
     <div class="marquee-content" aria-hidden="true" style="display:flex;gap:36px;align-items:center;">
@@ -279,21 +739,21 @@
 </section>
 
 <!-- CTA -->
-<section style="padding:46px 0;text-align:center;">
-  <h2 style="color:#c7c7c7;font-size:26px;margin:0 0 18px 0;">Tools you can <span style="color:#fff;font-weight:800;">trust</span>.</h2>
-  <div>
+<section style="padding:40px 0;text-align:center;">
+  <h2 style="color:#c7c7c7;font-size:24px;margin:0 0 12px 0;">Tools you can <span style="color:#fff;font-weight:800;">trust</span>.</h2>
+  <div style="margin-top:12px;">
     <a class="nav-cta" href="https://wa.me/26773318758" target="_blank" rel="noopener noreferrer" style="text-decoration:none;">Contact Us Today</a>
   </div>
 </section>
 
 <!-- FOOTER -->
-<footer id="contact">
-  <div class="footer-inner">
-    <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;width:100%;">
+<footer id="contact" style="padding:44px 20px 80px;">
+  <div class="footer-inner" style="max-width:1200px;margin:0 auto;display:flex;flex-direction:column;gap:12px;align-items:center;">
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:20px;width:100%;flex-wrap:wrap;">
       <div style="display:flex;align-items:center;gap:12px;">
         <span style="font-weight:800;font-size:18px;color:#fff;">Fixit</span>
-        <span style="width:28px;height:28px;display:inline-flex;align-items:center;justify-content:center;">
-          <iconify-icon icon="lucide:hammer" width="22" style="color:var(--accent)"></iconify-icon>
+        <span style="width:26px;height:26px;display:inline-flex;align-items:center;justify-content:center;">
+          <iconify-icon icon="lucide:hammer" width="20" style="color:var(--accent)"></iconify-icon>
         </span>
         <span style="font-weight:900;font-size:18px;color:#fff;">BW</span>
       </div>
@@ -306,152 +766,9 @@
       </div>
     </div>
 
-    <div style="text-align:center;color:#777;margin-top:12px;">© 2024 Fixit 🔨 BW. All rights reserved.</div>
+    <div style="text-align:center;color:#777;margin-top:12px;">© 2024 Fixit 🔨 BW</div>
   </div>
 </footer>
 
 <!-- END PART 2/6 -->
-<!-- NEXT: PART 3/6 — GSAP/Lenis, cursor, spotlight JS (performance-tuned) -->
-<!-- index-optionA.html — PART 3/6 (GSAP, LENIS, CURSOR, SPOTLIGHT, MARQUEE SCRIPT) -->
-
-<script>
-/* ------------------------------
-   LENIS SMOOTH SCROLLING
------------------------------- */
-const lenis = new Lenis({
-  duration: 1.15,
-  easing: t => Math.min(1, 1 - Math.pow(2, -10 * t)),
-  smooth: true
-});
-
-function raf(time){
-  lenis.raf(time);
-  requestAnimationFrame(raf);
-}
-requestAnimationFrame(raf);
-
-
-/* ------------------------------
-   GSAP ANIMATIONS
------------------------------- */
-gsap.registerPlugin(ScrollTrigger);
-
-/* Loader animation */
-gsap.to(".loader-bar", {
-  height: "100%",
-  duration: 1.2,
-  ease: "power2.inOut",
-  onComplete: () => {
-    gsap.to(".loader-wrap", { opacity: 0, duration: 0.5, pointerEvents: "none" });
-  }
-});
-
-/* Text reveal (hero) */
-document.querySelectorAll(".char").forEach((char, i) => {
-  gsap.to(char, {
-    y: "0%",
-    duration: 1,
-    delay: i * 0.06,
-    ease: "power3.out"
-  });
-});
-
-/* Card fade-in */
-gsap.from(".card", {
-  y: 30,
-  opacity: 0,
-  duration: 0.9,
-  stagger: 0.15,
-  ease: "power2.out",
-  scrollTrigger: {
-    trigger: ".services-grid",
-    start: "top 85%"
-  }
-});
-
-/* About section fade */
-gsap.from(".spotlight", {
-  y: 40,
-  opacity: 0,
-  duration: 0.9,
-  stagger: 0.12,
-  ease: "power2.out",
-  scrollTrigger: {
-    trigger: "section",
-    start: "top 88%"
-  }
-});
-
-
-/* ------------------------------
-   CURSOR (DESKTOP ONLY)
------------------------------- */
-const dot = document.querySelector('.cursor-dot');
-const circle = document.querySelector('.cursor-circle');
-
-function isMobile(){
-  return window.innerWidth <= 1024;
-}
-
-if (!isMobile()) {
-  document.addEventListener("mousemove", e => {
-    gsap.to(dot, { x: e.clientX, y: e.clientY, duration: 0.08 });
-    gsap.to(circle, { x: e.clientX, y: e.clientY, duration: 0.2 });
-  });
-
-  document.querySelectorAll("a, button, .spotlight, .card").forEach(el => {
-    el.addEventListener("mouseenter", () => circle.classList.add("active"));
-    el.addEventListener("mouseleave", () => circle.classList.remove("active"));
-  });
-} else {
-  dot.style.display = "none";
-  circle.style.display = "none";
-}
-
-
-/* ------------------------------
-   SPOTLIGHT HOVER / TAP
------------------------------- */
-document.addEventListener("mousemove", e => {
-  document.querySelectorAll(".spotlight").forEach(card => {
-    const rect = card.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    card.style.setProperty("--mouse-x", `${x}px`);
-    card.style.setProperty("--mouse-y", `${y}px`);
-  });
-});
-
-/* Mobile spotlight tap */
-document.querySelectorAll(".spotlight").forEach(card => {
-  card.addEventListener("touchstart", e => {
-    const rect = card.getBoundingClientRect();
-    const x = e.touches[0].clientX - rect.left;
-    const y = e.touches[0].clientY - rect.top;
-    card.style.setProperty("--mouse-x", `${x}px`);
-    card.style.setProperty("--mouse-y", `${y}px`);
-  });
-});
-
-
-/* ------------------------------
-   MARQUEE ANIMATION
------------------------------- */
-const marquee = document.querySelector(".marquee-content");
-let marqueeOffset = 0;
-
-function animateMarquee(){
-  marqueeOffset -= 1;
-  if (Math.abs(marqueeOffset) > marquee.scrollWidth / 2) marqueeOffset = 0;
-  marquee.style.transform = `translateX(${marqueeOffset}px)`;
-  requestAnimationFrame(animateMarquee);
-}
-animateMarquee();
-
-</script>
-
-</body>
-</html>
-
-<!-- END OF OPTION A FULL PAGE (PART 3/6) -->
-<!-- NEXT: PART 4/6 (OPTION C FULL PAGE — HEAD & STYLES) -->
+<!-- NEXT: PART 3/6 — Scripts: Lenis, GSAP animations, cursor, spotlight (mobile-friendly) -->
