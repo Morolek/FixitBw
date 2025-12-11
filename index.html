@@ -1,12 +1,11 @@
-<!-- index-optionA.html — PART 1/6 (HEAD, STYLES, NAV) -->
 <!doctype html>
 <html lang="en" class="lenis">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Fixit 🔨 BW | Power Tools Botswana — Option A (Gradient)</title>
+  <title>Fixit 🔨 BW | Power Tools Botswana</title>
 
-  <!-- Tailwind utilities -->
+  <!-- Tailwind (utility, optional) -->
   <script src="https://cdn.tailwindcss.com"></script>
 
   <!-- Fonts -->
@@ -22,11 +21,12 @@
 
   <style>
     :root{
-      --accent:#f97316;
-      --bg:#030303;
-      --muted:#a9a9a9;
+      --accent: #f97316;
+      --bg: #030303;
+      --muted: #bfbfbf;
     }
 
+    /* -------------------- Base -------------------- */
     html,body{height:100%;margin:0;}
     body{
       background:var(--bg);
@@ -39,103 +39,122 @@
     }
     ::selection{background:var(--accent); color:#000;}
 
-    /* BACKGROUND (Option A uses animated gradient) */
-    #background {
-      position:fixed;
-      inset:0;
-      z-index:-1;
-      background: linear-gradient(130deg, #0d0d0d, #141414, #0f0f0f);
-      background-size: 400% 400%;
-      animation: gradientShift 18s ease infinite;
+    /* ---------- Floating Shapes Background (Option C) ---------- */
+    #background { position: fixed; inset: 0; z-index: -2; background: #0a0a0a; overflow: hidden; }
+    .shape-container { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
+    .float-shape {
+      position: absolute;
+      bottom: -60px;
+      width: 40px;
+      height: 40px;
+      background: rgba(249,115,22,0.12);
+      border-radius: 8px;
+      filter: blur(6px);
+      opacity: 0.45;
+      animation: floatUp linear infinite;
+      mix-blend-mode: overlay;
     }
-    @keyframes gradientShift {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
+    @keyframes floatUp {
+      0% { transform: translateY(0) rotate(0deg); opacity: 0; }
+      10% { opacity: 0.35; }
+      100% { transform: translateY(-120vh) rotate(360deg); opacity: 0; }
     }
 
-    /* Noise layer */
-    .noise { position: fixed; inset: 0; pointer-events: none; z-index: 10; opacity: 0.04;
-      background:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E"); }
+    /* subtle noise texture */
+    .noise { position: fixed; inset: 0; pointer-events: none; z-index: 1; opacity: 0.03;
+      background:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+    }
 
-    /* Cursor */
+    /* ---------- Cursor (desktop) ---------- */
     .cursor-dot{width:6px;height:6px;background:var(--accent);position:fixed;top:0;left:0;border-radius:50%;z-index:9999;pointer-events:none;transform:translate(-50%,-50%);}
     .cursor-circle{width:40px;height:40px;border:1px solid rgba(255,255,255,0.14);position:fixed;top:0;left:0;border-radius:50%;z-index:9998;pointer-events:none;transform:translate(-50%,-50%);transition:all .22s;}
-    .cursor-circle.active{width:60px;height:60px;background:rgba(249,115,22,0.08);border-color:var(--accent);backdrop-filter: blur(2px);}
+    .cursor-circle.active{width:64px;height:64px;background:rgba(249,115,22,0.08);border-color:var(--accent);backdrop-filter: blur(2px);}
 
-    /* Spotlight */
-    .spotlight{position:relative;overflow:hidden;border-radius:12px;background:rgba(255,255,255,0.02);}
-    .spotlight::before{content:'';position:absolute;inset:0;background:radial-gradient(600px circle at var(--mouse-x) var(--mouse-y), rgba(249,115,22,0.06), transparent 34%);pointer-events:none;transition:opacity .18s;}
-
-    /* Reveal helpers */
-    .reveal-text { display:inline-block; overflow:hidden; }
-    .char{display:inline-block; transform:translateY(110%); will-change:transform;}
-
-    /* Layout utilities */
-    .max-w-center{max-width:1400px;margin:0 auto;padding:0 18px;}
-    nav{position:fixed;top:0;left:0;width:100%;z-index:100;padding:14px 18px;display:flex;justify-content:center;background:linear-gradient(180deg, rgba(0,0,0,0.35), transparent);}
-    .nav-inner{width:100%;max-width:1400px;display:flex;align-items:center;justify-content:space-between;gap:12px;}
-    .logo{display:flex;align-items:center;gap:8px;text-decoration:none;color:#fff;}
+    /* ---------- Nav ---------- */
+    nav{position:fixed;top:0;left:0;width:100%;z-index:1000;padding:14px 18px;background:linear-gradient(180deg, rgba(0,0,0,0.35), transparent);}
+    .nav-inner{max-width:1400px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:0 12px;}
+    .logo{display:flex;align-items:center;gap:10px;text-decoration:none;color:#fff;}
     .logo .brand{font-weight:800;font-size:18px;}
-    .logo .hammer{display:inline-flex;width:28px;height:28px;align-items:center;justify-content:center;}
-
-    .nav-links{display:flex;gap:12px;align-items:center;}
+    .logo .hammer{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;}
+    .nav-links{display:flex;gap:14px;align-items:center;}
     .nav-links a{color:#d1d1d1;text-decoration:none;font-weight:700;font-size:13px;padding:8px 10px;border-radius:8px;}
     .nav-links a:hover{color:#fff;background:rgba(255,255,255,0.02);}
-
     .nav-cta{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:10px;background:rgba(0,0,0,0.45);border:1px solid rgba(255,255,255,0.04);color:#fff;text-decoration:none;font-weight:800;}
     .nav-cta:hover{border-color:var(--accent);}
 
-    header{min-height:92vh;display:flex;align-items:center;justify-content:center;padding:0 20px;}
-    h1.big{font-family:'Clash Display',sans-serif;font-size:clamp(34px,9vw,100px);line-height:0.9;text-align:center;margin:0;letter-spacing:-0.02em;}
-    p.lead{color:#c7c7c7;font-size:17px;max-width:920px;margin:16px auto 0;text-align:center;}
+    /* ---------- Header / Hero ---------- */
+    header.max-w-center{min-height:92vh;display:flex;align-items:center;justify-content:center;padding:0 18px;padding-top:160px;}
+    @media (max-width: 768px){ header.max-w-center{padding-top:130px;} }
 
-    /* Cards / Services */
-    .services-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;}
-    .card{padding:28px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));box-shadow:0 6px 20px rgba(0,0,0,0.35);}
+    h1.big{font-family:'Clash Display',sans-serif;font-size: clamp(36px,9vw,100px);line-height:0.9;text-align:center;margin:0;letter-spacing:-0.02em;}
+    .lead{color:#c7c7c7;font-size:17px;max-width:920px;margin:16px auto 0;text-align:center;}
 
-    /* Footer */
-    footer{background:transparent;padding:48px 20px;color:#d0d0d0;border-top:1px solid rgba(255,255,255,0.03);}
-    .footer-inner{max-width:1200px;margin:0 auto;display:flex;flex-direction:column;gap:14px;align-items:center;}
+    /* ---------- Services / Cards ---------- */
+    .max-w-center{max-width:1200px;margin:0 auto;padding:0 18px;}
+    .services-section{padding:70px 0;}
+    .services-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;align-items:start;}
+    .card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:20px;border-radius:12px;border:1px solid rgba(255,255,255,0.04);box-shadow:0 8px 30px rgba(0,0,0,0.4);}
+    .card .card-top{display:flex;gap:14px;align-items:flex-start;margin-bottom:8px;}
+    .card .icon-wrap{width:56px;height:56px;display:flex;align-items:center;justify-content:center;border-radius:10px;background:linear-gradient(180deg, rgba(249,115,22,0.12), rgba(249,115,22,0.06));}
+    .card h3{margin:0;font-size:18px;font-weight:800;}
+    .card p{color:#d0d0d0;line-height:1.6;margin:0;margin-top:6px;}
 
-    /* Responsive tweaks: MOBILE = 1-column stack (M1) */
+    /* ---------- Spotlight effect ---------- */
+    .spotlight{position:relative;overflow:hidden;border-radius:12px;background:transparent;}
+    .spotlight::before{content:'';position:absolute;inset:0;background:radial-gradient(600px circle at var(--mouse-x) var(--mouse-y), rgba(249,115,22,0.06), transparent 36%);pointer-events:none;transition:opacity .2s;}
+
+    /* ---------- Marquee ---------- */
+    .marquee{padding:18px 0;border-top:1px solid rgba(255,255,255,0.02);border-bottom:1px solid rgba(255,255,255,0.02);overflow:hidden;}
+    .marquee-inner{display:flex;gap:36px;align-items:center;white-space:nowrap;transform:translateX(0);}
+
+    /* ---------- Footer ---------- */
+    footer{padding:44px 18px 80px;color:#d0d0d0;border-top:1px solid rgba(255,255,255,0.03);position:relative;z-index:10;}
+    .footer-inner{max-width:1200px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap;}
+    .footer-inner a{color:#bbb;text-decoration:none;}
+
+    /* ---------- Responsiveness (M1: 1-column mobile) ---------- */
     @media (max-width: 1024px){
       .services-grid{grid-template-columns:1fr;}
-      header{min-height:80vh;padding-top:110px;}
+      header.max-w-center{min-height:80vh;padding-top:130px;}
     }
     @media (max-width:640px){
       .nav-links{display:none;}
-      .logo .brand{font-size:16px;}
-      header{min-height:72vh;padding-top:90px;}
+      header.max-w-center{min-height:72vh;padding-top:100px;}
       h1.big{font-size:34px;}
-      .card{padding:20px;}
+      .card{padding:18px;}
     }
+
+    /* ---------- Performance tweaks ---------- */
+    .float-shape { will-change: transform, opacity; }
+    html,body { -webkit-tap-highlight-color: transparent; user-select:none; -webkit-user-select:none; -ms-user-select:none; }
   </style>
 </head>
+
 <body>
-  <!-- Background & noise -->
+  <!-- BACKGROUND LAYERS -->
   <div id="background" aria-hidden="true"></div>
+  <div class="shape-container" aria-hidden="true"></div>
   <div class="noise" aria-hidden="true"></div>
 
-  <!-- Cursor elements (desktop) -->
-  <div class="cursor-dot"></div>
-  <div class="cursor-circle"></div>
+  <!-- CURSOR (desktop) -->
+  <div class="cursor-dot" aria-hidden="true"></div>
+  <div class="cursor-circle" aria-hidden="true"></div>
 
-  <!-- Loader (light) -->
+  <!-- LOADER (light) -->
   <div class="loader-wrap" aria-hidden="true" style="position:fixed;inset:0;z-index:9998;display:flex;align-items:center;justify-content:center;pointer-events:none;">
-    <div style="width:2px;height:0;background:var(--accent);" class="loader-bar"></div>
+    <div class="loader-bar" style="width:2px;height:0;background:var(--accent);"></div>
   </div>
 
-  <!-- NAVIGATION -->
+  <!-- NAV -->
   <nav role="navigation" aria-label="Main navigation">
-    <div class="nav-inner max-w-center">
-      <a class="logo" href="index.html" aria-label="Fixit BW home">
+    <div class="nav-inner">
+      <a class="logo" href="index.html" aria-label="FixitBW home">
         <span class="brand">Fixit</span>
         <span class="hammer" aria-hidden="true"><iconify-icon icon="lucide:hammer" width="26" style="color:var(--accent)"></iconify-icon></span>
         <span class="brand" style="font-weight:900">BW</span>
       </a>
 
-      <div class="nav-links" role="navigation" aria-label="site links">
+      <div class="nav-links" role="navigation" aria-label="Site links">
         <a href="about.html">About</a>
         <a href="sales.html">Sales & Rentals</a>
         <a href="promise.html">Our Promise</a>
@@ -148,310 +167,305 @@
     </div>
   </nav>
 
-  <!-- PART 1/6 END -->
-  <!-- NEXT: PART 2/6 — HERO section + CTA (will keep cards unchanged) -->
-<!-- index-optionA.html — PART 2/6 (HERO, SERVICES, ABOUT GRID, MARQUEE, FOOTER) -->
-
-<!-- HERO -->
-<header class="max-w-center" style="padding-top:140px;">
-  <style>
-    @media (min-width: 1024px) {
-      header.max-w-center { padding-top: 180px !important; }
-    }
-  </style>
-
-  <div style="text-align:center;z-index:10;">
-    <div style="opacity:0.95;">
-      <p class="lead" style="text-transform:uppercase;letter-spacing:0.25em;color:#ffb88b;font-weight:700;font-size:12px;">
-        Botswana's Trusted Source
-      </p>
-    </div>
-
-    <h1 class="big reveal-text" style="margin-top:14px;">
-      <span class="char">Build.</span><br>
-      <span class="char">Repair.</span><br>
-      <span class="char">Create. <em style="font-weight:400">Fixit.</em></span>
-    </h1>
-
-    <p class="lead" style="margin-top:14px;">
-      Whether you're building, repairing, or creating, we provide the tools that help you get the job done right.
-      Rent or buy with ease, supported by dependable quality.
-    </p>
-
-    <div style="margin-top:22px;">
-      <a class="nav-cta" href="sales.html" style="text-decoration:none;">View Tools</a>
-    </div>
-  </div>
-</header>
-
-<!-- SERVICES (3 cards) -->
-<section class="max-w-center" style="padding:80px 0 40px;">
-  <h2 style="font-family:'Clash Display';font-size:44px;text-align:center;margin-bottom:36px;">What We Offer</h2>
-
-  <div class="services-grid">
-    <!-- Card: Sales -->
-    <article class="card spotlight" aria-labelledby="sales-title">
-      <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
-        <div style="width:46px;height:46px;border-radius:10px;background:rgba(255,255,255,0.02);display:flex;align-items:center;justify-content:center;">
-          <iconify-icon icon="lucide:drill" width="20"></iconify-icon>
-        </div>
-        <div>
-          <h3 id="sales-title" style="margin:0;font-size:20px;font-weight:800;">Power Tool Sales</h3>
-          <div style="color:var(--muted);font-size:12px;text-transform:uppercase;margin-top:4px;">Own it. Keep it.</div>
-        </div>
+  <!-- HERO -->
+  <header class="max-w-center" role="banner" aria-label="Hero section">
+    <div style="text-align:center;z-index:10;">
+      <div style="opacity:0.95;">
+        <p class="lead" style="text-transform:uppercase;letter-spacing:0.22em;color:#ffb88b;font-weight:700;font-size:12px;">
+          Botswana's Trusted Source
+        </p>
       </div>
-      <p style="color:#cfcfcf;line-height:1.6;">
-        Build your arsenal with reliable drills, saws, grinders, cutters and generators. We stock quality brands suited for professionals and home users.
-      </p>
-    </article>
 
-    <!-- Card: Rentals -->
-    <article class="card spotlight" aria-labelledby="rentals-title">
-      <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
-        <div style="width:46px;height:46px;border-radius:10px;background:rgba(255,255,255,0.02);display:flex;align-items:center;justify-content:center;">
-          <iconify-icon icon="lucide:tool" width="20"></iconify-icon>
-        </div>
-        <div>
-          <h3 id="rentals-title" style="margin:0;font-size:20px;font-weight:800;">Tool Rentals</h3>
-          <div style="color:var(--muted);font-size:12px;text-transform:uppercase;margin-top:4px;">Short & long-term</div>
-        </div>
-      </div>
-      <p style="color:#cfcfcf;line-height:1.6;">
-        Need a tool for a day or a project? Rent well-maintained equipment at fair rates — flexible pick-up and return options across Botswana.
-      </p>
-    </article>
+      <h1 class="big reveal-text" style="margin-top:14px;">
+        <span class="char">Build.</span><br>
+        <span class="char">Repair.</span><br>
+        <span class="char">Create. <em style="font-weight:400">Fixit.</em></span>
+      </h1>
 
-    <!-- Card: Trusted -->
-    <article class="card spotlight" aria-labelledby="trusted-title">
-      <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
-        <div style="width:46px;height:46px;border-radius:10px;background:rgba(255,255,255,0.02);display:flex;align-items:center;justify-content:center;">
-          <iconify-icon icon="lucide:shield-check" width="20"></iconify-icon>
-        </div>
-        <div>
-          <h3 id="trusted-title" style="margin:0;font-size:20px;font-weight:800;">Trusted Quality</h3>
-          <div style="color:var(--muted);font-size:12px;text-transform:uppercase;margin-top:4px;">Inspected & ready</div>
-        </div>
-      </div>
-      <p style="color:#cfcfcf;line-height:1.6;">
-        All tools are inspected and serviced before rentals and carefully selected for sales — we stand behind everything we offer.
+      <p class="lead" style="margin-top:12px;max-width:880px;">
+        Whether you're building, repairing, or creating, we provide the tools that help you get the job done right.
+        Rent or buy with ease, supported by dependable quality across Botswana.
       </p>
-    </article>
-  </div>
-</section>
 
-<!-- ABOUT GRID / PROMO -->
-<section class="max-w-center" style="padding:40px 0 60px;">
-  <div style="display:grid;grid-template-columns:1fr 420px;gap:26px;align-items:center;">
-    <div>
-      <h2 style="font-size:36px;margin:0 0 12px 0;">About FixitBW</h2>
-      <p style="color:#d0d0d0;line-height:1.7;">
-        FixitBW helps builders, creators and homeowners get the right tools — when they need them.
-        We combine a friendly local service with dependable equipment so your projects finish on time.
-      </p>
-      <div style="margin-top:18px;">
-        <a class="nav-cta" href="about.html" style="text-decoration:none;">Learn More</a>
+      <div style="margin-top:22px;">
+        <a class="nav-cta" href="sales.html" style="text-decoration:none;">View Tools</a>
       </div>
     </div>
+  </header>
 
-    <div class="spotlight" style="padding:20px;border-radius:14px;">
-      <h3 style="margin:0 0 8px 0;">Why Choose Us</h3>
-      <ul style="color:#cfcfcf;line-height:1.7;margin:0;padding-left:18px;">
-        <li>Locally owned and operated in Botswana</li>
-        <li>Fair prices and clear terms</li>
-        <li>Well-maintained equipment</li>
-      </ul>
+  <!-- SERVICES (original simple cards + icons on LEFT, large colorful icons) -->
+  <section class="services-section" aria-labelledby="what-we-offer">
+    <div class="max-w-center">
+      <h2 id="what-we-offer" style="font-family:'Clash Display';font-size:40px;text-align:center;margin-bottom:28px;">What We Offer</h2>
+
+      <div class="services-grid" role="list">
+        <!-- Card 1: Sales -->
+        <article class="card spotlight" role="listitem" aria-labelledby="sales-title">
+          <div class="card-top">
+            <div class="icon-wrap" aria-hidden="true" style="background:linear-gradient(180deg, rgba(249,115,22,0.22), rgba(249,115,22,0.12));">
+              <!-- large colorful icon (drill) -->
+              <iconify-icon icon="eva:flash-fill" width="28" height="28" style="color:#fff"></iconify-icon>
+            </div>
+            <div>
+              <h3 id="sales-title">Power Tool Sales</h3>
+            </div>
+          </div>
+          <p>Build your own toolkit — we sell reliable drills, saws, grinders, cutters and generators from trusted brands.</p>
+        </article>
+
+        <!-- Card 2: Rentals -->
+        <article class="card spotlight" role="listitem" aria-labelledby="rentals-title">
+          <div class="card-top">
+            <div class="icon-wrap" aria-hidden="true" style="background:linear-gradient(180deg, rgba(37,99,235,0.12), rgba(59,130,246,0.06));">
+              <!-- large colorful icon (wrench/tool) -->
+              <iconify-icon icon="mdi:tools" width="28" height="28" style="color:#fff"></iconify-icon>
+            </div>
+            <div>
+              <h3 id="rentals-title">Tool Rentals</h3>
+            </div>
+          </div>
+          <p>Rent by the day or for the whole project — affordable, flexible options and well-maintained equipment.</p>
+        </article>
+
+        <!-- Card 3: Trusted Quality -->
+        <article class="card spotlight" role="listitem" aria-labelledby="trusted-title">
+          <div class="card-top">
+            <div class="icon-wrap" aria-hidden="true" style="background:linear-gradient(180deg, rgba(16,185,129,0.12), rgba(34,197,94,0.06));">
+              <!-- large colorful icon (shield/check) -->
+              <iconify-icon icon="mdi:shield-check" width="28" height="28" style="color:#fff"></iconify-icon>
+            </div>
+            <div>
+              <h3 id="trusted-title">Trusted Quality</h3>
+            </div>
+          </div>
+          <p>Every item is inspected and serviced before rental — we stand behind the tools we sell and rent.</p>
+        </article>
+      </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- MARQUEE (subtle) -->
-<section style="padding:18px 0;border-top:1px solid rgba(255,255,255,0.02);border-bottom:1px solid rgba(255,255,255,0.02);">
-  <div class="max-w-center" style="overflow:hidden;">
-    <div class="marquee-content" aria-hidden="true" style="display:flex;gap:36px;align-items:center;">
-      <div style="font-weight:800;color:#bdbdbd;">DRILLS</div>
-      <div style="font-weight:800;color:#aaa;">GRINDERS</div>
-      <div style="font-weight:800;color:#bdbdbd;">SAWS</div>
-      <div style="font-weight:800;color:#aaa;">GENERATORS</div>
-      <div style="font-weight:800;color:#bdbdbd;">CUTTERS</div>
-      <div style="font-weight:800;color:#aaa;">ACCESSORIES</div>
+  <!-- ABOUT PREVIEW -->
+  <section style="padding:36px 0 48px;">
+    <div class="max-w-center" style="display:grid;grid-template-columns:1fr 420px;gap:22px;align-items:start;">
+      <div>
+        <h2 style="font-size:34px;margin:0 0 10px 0;">About FixitBW</h2>
+        <p style="color:#d0d0d0;line-height:1.75;">
+          Locally owned in Botswana, FixitBW provides accessible, dependable power tools for builders, contractors and DIY enthusiasts.
+          We focus on clear pricing, dependable equipment and friendly local service.
+        </p>
+        <div style="margin-top:14px;">
+          <a class="nav-cta" href="about.html" style="text-decoration:none;">Learn More</a>
+        </div>
+      </div>
+
+      <div class="spotlight" style="padding:18px;border-radius:12px;">
+        <h3 style="margin:0 0 6px 0;">Why Choose Us</h3>
+        <ul style="color:#cfcfcf;line-height:1.7;margin:0;padding-left:18px;">
+          <li>Locally available tools</li>
+          <li>Fair prices and clear terms</li>
+          <li>Well-maintained equipment</li>
+        </ul>
+      </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- CTA -->
-<section style="padding:46px 0;text-align:center;">
-  <h2 style="color:#c7c7c7;font-size:26px;margin:0 0 18px 0;">Tools you can <span style="color:#fff;font-weight:800;">trust</span>.</h2>
-  <div>
-    <a class="nav-cta" href="https://wa.me/26773318758" target="_blank" rel="noopener noreferrer" style="text-decoration:none;">Contact Us Today</a>
-  </div>
-</section>
+  <!-- MARQUEE -->
+  <section class="marquee" aria-hidden="true">
+    <div class="max-w-center">
+      <div class="marquee-inner" id="marqueeInner">
+        <div style="font-weight:800;color:#bdbdbd;">DRILLS</div>
+        <div style="font-weight:800;color:#aaa;">GRINDERS</div>
+        <div style="font-weight:800;color:#bdbdbd;">SAWS</div>
+        <div style="font-weight:800;color:#aaa;">GENERATORS</div>
+        <div style="font-weight:800;color:#bdbdbd;">CUTTERS</div>
+        <div style="font-weight:800;color:#aaa;">ACCESSORIES</div>
+        <!-- duplicated for smooth loop -->
+        <div style="font-weight:800;color:#bdbdbd;">DRILLS</div>
+        <div style="font-weight:800;color:#aaa;">GRINDERS</div>
+        <div style="font-weight:800;color:#bdbdbd;">SAWS</div>
+      </div>
+    </div>
+  </section>
 
-<!-- FOOTER -->
-<footer id="contact">
-  <div class="footer-inner">
-    <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;width:100%;">
+  <!-- CTA -->
+  <section style="padding:40px 0;text-align:center;">
+    <h2 style="color:#c7c7c7;font-size:24px;margin:0 0 12px 0;">Tools you can <span style="color:#fff;font-weight:800;">trust</span>.</h2>
+    <div style="margin-top:12px;">
+      <a class="nav-cta" href="https://wa.me/26773318758" target="_blank" rel="noopener noreferrer" style="text-decoration:none;">Contact Us Today</a>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer id="contact">
+    <div class="footer-inner">
       <div style="display:flex;align-items:center;gap:12px;">
         <span style="font-weight:800;font-size:18px;color:#fff;">Fixit</span>
-        <span style="width:28px;height:28px;display:inline-flex;align-items:center;justify-content:center;">
-          <iconify-icon icon="lucide:hammer" width="22" style="color:var(--accent)"></iconify-icon>
-        </span>
+        <span><iconify-icon icon="lucide:hammer" width="20" style="color:var(--accent)"></iconify-icon></span>
         <span style="font-weight:900;font-size:18px;color:#fff;">BW</span>
       </div>
 
       <div style="display:flex;align-items:center;gap:18px;">
-        <a href="https://wa.me/26773318758" style="color:#f97316;font-weight:700;text-decoration:none;">+267 73318758</a>
+        <a href="https://wa.me/26773318758" style="color:var(--accent);font-weight:700;text-decoration:none;">+267 73318758</a>
         <a href="https://www.tiktok.com/@prodmoroka" target="_blank" style="color:#bbb;text-decoration:none;">TikTok</a>
         <a href="https://www.facebook.com/profile.php?id=61556143019845" target="_blank" style="color:#bbb;text-decoration:none;">Facebook</a>
-        <a class="visit-btn" href="https://www.tiktok.com/@prodmoroka" target="_blank" style="text-decoration:none;">Visit FixitBW</a>
+        <a class="visit-btn" href="https://www.tiktok.com/@prodmoroka" target="_blank" style="background:#fff;color:#000;padding:10px 14px;border-radius:8px;font-weight:700;text-decoration:none;">Visit FixitBW</a>
       </div>
     </div>
 
     <div style="text-align:center;color:#777;margin-top:12px;">© 2024 Fixit 🔨 BW. All rights reserved.</div>
-  </div>
-</footer>
+  </footer>
 
-<!-- END PART 2/6 -->
-<!-- NEXT: PART 3/6 — GSAP/Lenis, cursor, spotlight JS (performance-tuned) -->
-<!-- index-optionA.html — PART 3/6 (GSAP, LENIS, CURSOR, SPOTLIGHT, MARQUEE SCRIPT) -->
+  <!-- SCRIPTS: Lenis, GSAP, Cursor, Spotlight, shapes, marquee -->
+  <script>
+    /* ======= Lenis smooth scrolling ======= */
+    const lenis = new Lenis({
+      duration: 1.2,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      smooth: true
+    });
+    function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
+    requestAnimationFrame(raf);
 
-<script>
-/* ------------------------------
-   LENIS SMOOTH SCROLLING
------------------------------- */
-const lenis = new Lenis({
-  duration: 1.15,
-  easing: t => Math.min(1, 1 - Math.pow(2, -10 * t)),
-  smooth: true
-});
+    /* ======= GSAP reveals & ScrollTrigger ======= */
+    gsap.registerPlugin(ScrollTrigger);
 
-function raf(time){
-  lenis.raf(time);
-  requestAnimationFrame(raf);
-}
-requestAnimationFrame(raf);
+    // hero text reveal (split by chars in markup already)
+    document.querySelectorAll('.reveal-text .char, .reveal-text').forEach((el, i) => {
+      // if char wrappers exist, GSAP animates them; otherwise fallback simple fade
+      if (el.classList && el.classList.contains('char')) {
+        gsap.fromTo(el, { y: '110%' }, { y: '0%', duration: 0.9, delay: i * 0.05, ease: "power3.out" });
+      } else {
+        gsap.from(el, { opacity: 0, y: 16, duration: 0.9, ease: "power2.out" });
+      }
+    });
 
+    // card reveal
+    gsap.from(".card", {
+      y: 30,
+      opacity: 0,
+      duration: 0.9,
+      stagger: 0.14,
+      ease: "power2.out",
+      scrollTrigger: { trigger: ".services-section", start: "top 85%" }
+    });
 
-/* ------------------------------
-   GSAP ANIMATIONS
------------------------------- */
-gsap.registerPlugin(ScrollTrigger);
+    // section reveals
+    gsap.from("section", {
+      opacity: 0,
+      y: 28,
+      duration: 0.85,
+      stagger: 0.12,
+      ease: "power2.out",
+      scrollTrigger: { trigger: "section", start: "top 88%" }
+    });
 
-/* Loader animation */
-gsap.to(".loader-bar", {
-  height: "100%",
-  duration: 1.2,
-  ease: "power2.inOut",
-  onComplete: () => {
-    gsap.to(".loader-wrap", { opacity: 0, duration: 0.5, pointerEvents: "none" });
-  }
-});
+    /* ======= Cursor (desktop only) ======= */
+    const dot = document.querySelector('.cursor-dot');
+    const circle = document.querySelector('.cursor-circle');
 
-/* Text reveal (hero) */
-document.querySelectorAll(".char").forEach((char, i) => {
-  gsap.to(char, {
-    y: "0%",
-    duration: 1,
-    delay: i * 0.06,
-    ease: "power3.out"
-  });
-});
+    function isMobile() { return window.innerWidth <= 768; }
 
-/* Card fade-in */
-gsap.from(".card", {
-  y: 30,
-  opacity: 0,
-  duration: 0.9,
-  stagger: 0.15,
-  ease: "power2.out",
-  scrollTrigger: {
-    trigger: ".services-grid",
-    start: "top 85%"
-  }
-});
+    function updateCursorVisibility() {
+      if (isMobile()) {
+        dot.style.display = 'none';
+        circle.style.display = 'none';
+      } else {
+        dot.style.display = 'block';
+        circle.style.display = 'block';
+      }
+    }
+    updateCursorVisibility();
+    window.addEventListener('resize', updateCursorVisibility);
 
-/* About section fade */
-gsap.from(".spotlight", {
-  y: 40,
-  opacity: 0,
-  duration: 0.9,
-  stagger: 0.12,
-  ease: "power2.out",
-  scrollTrigger: {
-    trigger: "section",
-    start: "top 88%"
-  }
-});
+    if (!isMobile()) {
+      document.addEventListener('mousemove', (e) => {
+        gsap.to(dot, { x: e.clientX, y: e.clientY, duration: 0.06, ease: 'power2.out' });
+        gsap.to(circle, { x: e.clientX, y: e.clientY, duration: 0.18, ease: 'power2.out' });
+      });
 
+      document.querySelectorAll('a, button, .spotlight, .card').forEach(el => {
+        el.addEventListener('mouseenter', () => circle.classList.add('active'));
+        el.addEventListener('mouseleave', () => circle.classList.remove('active'));
+      });
+    }
 
-/* ------------------------------
-   CURSOR (DESKTOP ONLY)
------------------------------- */
-const dot = document.querySelector('.cursor-dot');
-const circle = document.querySelector('.cursor-circle');
+    /* ======= Spotlight mousetracking + mobile tap ======= */
+    document.addEventListener('mousemove', (e) => {
+      document.querySelectorAll('.spotlight').forEach(card => {
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        card.style.setProperty('--mouse-x', `${x}px`);
+        card.style.setProperty('--mouse-y', `${y}px`);
+      });
+    });
 
-function isMobile(){
-  return window.innerWidth <= 1024;
-}
+    // mobile tap updates the spotlight center
+    document.querySelectorAll('.spotlight').forEach(card => {
+      card.addEventListener('touchstart', (ev) => {
+        const rect = card.getBoundingClientRect();
+        const x = ev.touches[0].clientX - rect.left;
+        const y = ev.touches[0].clientY - rect.top;
+        card.style.setProperty('--mouse-x', `${x}px`);
+        card.style.setProperty('--mouse-y', `${y}px`);
+      }, { passive: true });
+    });
 
-if (!isMobile()) {
-  document.addEventListener("mousemove", e => {
-    gsap.to(dot, { x: e.clientX, y: e.clientY, duration: 0.08 });
-    gsap.to(circle, { x: e.clientX, y: e.clientY, duration: 0.2 });
-  });
+    /* ======= Floating shapes generator (lightweight) ======= */
+    (function createShapes(){
+      const container = document.querySelector('.shape-container');
+      if (!container) return;
+      const maxShapes = window.innerWidth < 768 ? 8 : 14; // fewer shapes on mobile
+      for (let i = 0; i < maxShapes; i++) {
+        const el = document.createElement('div');
+        el.className = 'float-shape';
+        // randomize start-left and size
+        const left = Math.random() * 100; // vw
+        const delay = Math.random() * 8;
+        const duration = 12 + Math.random() * 14;
+        const size = (window.innerWidth < 600) ? (20 + Math.random()*30) : (30 + Math.random()*60);
+        el.style.left = left + 'vw';
+        el.style.width = size + 'px';
+        el.style.height = size + 'px';
+        el.style.animationDuration = duration + 's';
+        el.style.animationDelay = delay + 's';
+        el.style.opacity = 0.25 + Math.random() * 0.35;
+        container.appendChild(el);
+      }
+    })();
 
-  document.querySelectorAll("a, button, .spotlight, .card").forEach(el => {
-    el.addEventListener("mouseenter", () => circle.classList.add("active"));
-    el.addEventListener("mouseleave", () => circle.classList.remove("active"));
-  });
-} else {
-  dot.style.display = "none";
-  circle.style.display = "none";
-}
+    /* ======= Marquee loop (simple) ======= */
+    (function marqueeLoop(){
+      const marquee = document.getElementById('marqueeInner') || document.querySelector('.marquee-inner');
+      if (!marquee) return;
+      let pos = 0;
+      const speed = 0.3; // px per frame, tuned for low-end devices
+      function step() {
+        pos -= speed;
+        // reset when scrolled past half (we duplicated items)
+        if (Math.abs(pos) > marquee.scrollWidth / 2) pos = 0;
+        marquee.style.transform = `translateX(${pos}px)`;
+        requestAnimationFrame(step);
+      }
+      requestAnimationFrame(step);
+    })();
 
+    /* ======= Small accessibility/keyboard fallback ======= */
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Tab') {
+        document.body.classList.add('user-tabbed');
+      }
+    });
 
-/* ------------------------------
-   SPOTLIGHT HOVER / TAP
------------------------------- */
-document.addEventListener("mousemove", e => {
-  document.querySelectorAll(".spotlight").forEach(card => {
-    const rect = card.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    card.style.setProperty("--mouse-x", `${x}px`);
-    card.style.setProperty("--mouse-y", `${y}px`);
-  });
-});
-
-/* Mobile spotlight tap */
-document.querySelectorAll(".spotlight").forEach(card => {
-  card.addEventListener("touchstart", e => {
-    const rect = card.getBoundingClientRect();
-    const x = e.touches[0].clientX - rect.left;
-    const y = e.touches[0].clientY - rect.top;
-    card.style.setProperty("--mouse-x", `${x}px`);
-    card.style.setProperty("--mouse-y", `${y}px`);
-  });
-});
-
-
-/* ------------------------------
-   MARQUEE ANIMATION
------------------------------- */
-const marquee = document.querySelector(".marquee-content");
-let marqueeOffset = 0;
-
-function animateMarquee(){
-  marqueeOffset -= 1;
-  if (Math.abs(marqueeOffset) > marquee.scrollWidth / 2) marqueeOffset = 0;
-  marquee.style.transform = `translateX(${marqueeOffset}px)`;
-  requestAnimationFrame(animateMarquee);
-}
-animateMarquee();
-
-</script>
-
+    /* resize handler to adjust shapes if needed (lightweight) */
+    let resizeTimer;
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => {
+        // If you want to reflow shapes on big resizes, you could rebuild them here
+        // but to avoid jank on low-end devices we keep shapes as-is
+      }, 120);
+    });
+  </script>
 </body>
 </html>
-
-<!-- END OF OPTION A FULL PAGE (PART 3/6) -->
-<!-- NEXT: PART 4/6 (OPTION C FULL PAGE — HEAD & STYLES) -->
