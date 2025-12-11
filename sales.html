@@ -1,9 +1,10 @@
 <!doctype html>
 <html lang="en" class="lenis">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Sales & Rentals | Fixit 🔨 BW</title>
+  <link rel="icon" type="image/png" href="logo.png">
 
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://api.fontshare.com/v2/css?f[]=clash-display@200,300,400,500,600,700&f[]=general-sans@200,300,400,500,600&display=swap" rel="stylesheet">
@@ -12,153 +13,132 @@
   <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.29/bundled/lenis.min.js"></script>
   <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
 
+  <meta name="description" content="Sales & Rentals at FixitBW — Rent or buy power tools across Botswana.">
+
   <style>
-    :root{--accent:#f97316;}
-    body{margin:0;background:#030303;color:#fff;font-family:'General Sans',system-ui;cursor:none;overflow-x:hidden;}
+    :root{--accent:#f97316;--bg:#030303;--nav-h:72px}
+    html,body{height:100%;margin:0}
+    body{background:var(--bg);color:#fff;font-family:"General Sans",system-ui;overflow-x:hidden;cursor:none;-webkit-font-smoothing:antialiased}
+    ::selection{background:var(--accent);color:#000}
+    nav{position:fixed;top:0;left:0;width:100%;height:var(--nav-h);display:flex;align-items:center;z-index:1000;padding:12px 18px;background:linear-gradient(180deg, rgba(0,0,0,0.35), transparent)}
+    .nav-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:0 12px}
+    .logo{display:flex;align-items:center;gap:10px}
+    .logo img{width:26px;height:26px;object-fit:contain}
+    .nav-links{display:flex;gap:14px}
+    .nav-cta{display:inline-flex;align-items:center;padding:8px 12px;border-radius:10px;background:rgba(0,0,0,0.45);border:1px solid rgba(255,255,255,0.04);color:#fff;text-decoration:none}
 
-    /* --- ADDED/CORRECTED: Custom Cursor Styles --- */
-    .cursor-dot,
-    .cursor-circle {
-        position: fixed;
-        top: 0; left: 0;
-        transform: translate(-50%, -50%); /* Centers the cursor on the mouse point */
-        border-radius: 50%;
-        z-index: 9999; 
-        pointer-events: none; /* ESSENTIAL: Allows clicking through the cursor */
-    }
+    /* background */
+    #background{position:fixed;inset:0;z-index:-2;background:#0a0a0a;overflow:hidden}
+    .shape-container{position:fixed;inset:0;z-index:0;pointer-events:none}
+    .float-shape{position:absolute;bottom:-60px;width:40px;height:40px;border-radius:8px;filter:blur(6px);opacity:0.45;animation:floatUp linear infinite;mix-blend-mode:overlay;background:rgba(249,115,22,0.12)}
+    @keyframes floatUp{0%{transform:translateY(0) rotate(0deg);opacity:0}10%{opacity:0.35}100%{transform:translateY(-120vh) rotate(360deg);opacity:0}}
+    .noise{position:fixed;inset:0;pointer-events:none;z-index:1;opacity:0.03;background:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
 
-    .cursor-dot {
-        width: 8px;
-        height: 8px;
-        background-color: var(--accent);
-    }
+    /* cursor */
+    .cursor-dot{width:6px;height:6px;background:var(--accent);position:fixed;top:0;left:0;border-radius:50%;z-index:9999;pointer-events:none;transform:translate(-50%,-50%)}
+    .cursor-circle{width:40px;height:40px;border:1px solid rgba(255,255,255,0.14);position:fixed;top:0;left:0;border-radius:50%;z-index:9998;pointer-events:none;transform:translate(-50%,-50%);transition:all .22s}
+    .cursor-circle.active{width:64px;height:64px;background:rgba(249,115,22,0.08);border-color:var(--accent)}
 
-    .cursor-circle {
-        width: 40px;
-        height: 40px;
-        border: 1px solid rgba(255, 255, 255, 0.5);
-        transition: width 0.25s, height 0.25s, border-color 0.25s; 
-    }
+    main{max-width:1080px;margin:0 auto;padding:calc(var(--nav-h) + 18px) 18px 80px;position:relative;z-index:10}
+    h1{font-size:32px;margin:0 0 10px 0}
+    .lead{color:#bdbdbd;line-height:1.7}
 
-    /* Hover effect */
-    .cursor-circle.active { 
-        width: 55px; 
-        height: 55px; 
-        border-color: var(--accent);
-        background-color: rgba(249,115,22,0.1);
-    }
-    /* --- END Custom Cursor Styles --- */
+    .spotlight{position:relative;overflow:hidden;border-radius:12px;background:rgba(255,255,255,0.02);padding:18px}
+    .spotlight::before{content:'';position:absolute;inset:0;background:radial-gradient(600px circle at var(--mouse-x) var(--mouse-y), rgba(249,115,22,0.05), transparent 40%);pointer-events:none}
 
-    nav{position:fixed;top:0;left:0;width:100%;z-index:100;padding:18px;background:linear-gradient(180deg, rgba(0,0,0,0.35), transparent);}
-    .nav-inner{max-width:1200px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;padding:0 16px;}
-    .nav-inner a{color:#cfcfcf;text-decoration:none;margin-left:12px;font-weight:700;}
-    .container{max-width:1080px;margin:120px auto;padding:20px;}
-    h1{font-size:40px;margin-bottom:8px;}
-    .spotlight{position:relative;overflow:hidden;background:#050505;padding:18px;border-radius:8px;}
-    .spotlight::before{content:'';position:absolute;inset:0;background:radial-gradient(600px circle at var(--mouse-x) var(--mouse-y), rgba(249,115,22,0.04), transparent 40%);pointer-events:none;}
-    footer{margin-top:60px;padding:24px;color:#777;border-top:1px solid #111;}
+    footer{padding:34px 18px 80px;color:#d0d0d0;border-top:1px solid rgba(255,255,255,0.03);position:relative;z-index:10}
+    .footer-inner{max-width:1080px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+
+    @media(max-width:1024px){.nav-links{display:none}}
+    @media(max-width:640px){main{padding:calc(var(--nav-h) + 12px) 14px 60px}h1{font-size:26px}}
   </style>
 </head>
 <body>
+  <div id="background" aria-hidden="true"></div>
+  <div class="shape-container" aria-hidden="true"></div>
+  <div class="noise" aria-hidden="true"></div>
 
-  <div class="cursor-dot hidden md:block"></div>
-  <div class="cursor-circle hidden md:block"></div>
+  <div class="cursor-dot" aria-hidden="true"></div>
+  <div class="cursor-circle" aria-hidden="true"></div>
 
   <nav>
     <div class="nav-inner">
-      <a href="index.html" class="logo" style="display:flex;align-items:center;gap:10px;"><span style="font-weight:800;color:#fff;">Fixit</span><iconify-icon icon="lucide:hammer" width="18" style="color:var(--accent)"></iconify-icon><span style="font-weight:900;color:#fff;">BW</span></a>
-      <div>
-        <a href="index.html">Home</a>
-        <a href="about.html">About</a>
-        <a href="sales.html">Sales & Rentals</a>
-        <a href="promise.html">Our Promise</a>
-      </div>
+      <a class="logo" href="index.html"><span style="font-weight:800;font-size:18px;color:#fff">Fixit</span><img src="logo.png" alt="logo" style="width:26px;height:26px;object-fit:contain"><span style="font-weight:900;font-size:18px;color:#fff">BW</span></a>
+      <div class="nav-links"><a href="index.html">Home</a><a href="about.html">About</a><a href="sales.html">Sales & Rentals</a><a href="promise.html">Our Promise</a></div>
+      <a class="nav-cta" href="https://wa.me/26773318758" target="_blank">Contact</a>
     </div>
   </nav>
 
-  <main class="container">
-    <section id="sales">
+  <main>
+    <section>
       <h1>Power Tool Sales</h1>
-      <p style="color:#bfbfbf;max-width:920px;">
-        Build your own arsenal. We sell high-quality drills, grinders, saws, cutters, and more. Our tools include trusted, premium brands to ensure durability and excellent performance.
-      </p>
-
-      <h2 style="margin-top:18px;">Why Buy From Us</h2>
-      <ul style="color:#bdbdbd;margin-left:18px;">
-        <li>Wide range of tools for every job</li>
-        <li>Quality brands you can trust</li>
-        <li>Affordable and reliable equipment</li>
-      </ul>
+      <p class="lead">Build your own arsenal. We sell high-quality drills, grinders, saws, cutters and more. Our tools include trusted, premium brands to ensure durability and excellent performance.</p>
     </section>
 
-    <section id="rentals" style="margin-top:32px;display:grid;grid-template-columns:repeat(2,1fr);gap:18px;">
-      <div class="spotlight">
-        <h2 style="margin-top:0;">Tool Rentals</h2>
-        <p style="color:#bdbdbd;">Need a tool for a specific job? We offer short-term and long-term rentals on well-maintained equipment. From heavy-duty generators to precision saws, get what you need without the upfront cost.</p>
-      </div>
+    <section style="margin-top:22px;">
+      <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:18px;">
+        <div class="spotlight">
+          <h3 style="margin-top:0">Why Buy From Us</h3>
+          <ul style="color:#bdbdbd;">
+            <li>Wide range of tools for every job</li>
+            <li>Quality brands you can trust</li>
+            <li>Affordable and reliable equipment</li>
+          </ul>
+        </div>
 
-      <div class="spotlight">
-        <h3 style="margin-top:0;">Rental Options</h3>
-        <ul style="color:#bdbdbd;">
-          <li>Short-Term: Daily and Weekly Rentals</li>
-          <li>Long-Term: Project-Based Rentals</li>
-        </ul>
+        <div class="spotlight">
+          <h3 style="margin-top:0">Accessories</h3>
+          <p style="color:#bdbdbd;">We stock bits, blades, discs and other consumables so you can keep working without delay.</p>
+        </div>
+      </div>
+    </section>
+
+    <section style="margin-top:28px;">
+      <h2 style="margin:0 0 10px 0">Tool Rentals</h2>
+      <p style="color:#bdbdbd;max-width:880px;">Need a tool for a specific job? We offer short-term and long-term rentals on well-maintained equipment. From heavy-duty generators to precision saws, get what you need without the upfront cost.</p>
+      <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:18px;margin-top:12px;">
+        <div class="spotlight"><h4 style="margin:0 0 6px 0">Short-Term</h4><p style="color:#bdbdbd;margin:0">Daily and weekly rentals for quick jobs.</p></div>
+        <div class="spotlight"><h4 style="margin:0 0 6px 0">Long-Term</h4><p style="color:#bdbdbd;margin:0">Project-based rentals with flexible return options.</p></div>
       </div>
     </section>
   </main>
 
-  <footer id="contact" style="padding:24px;">
-    <div style="max-width:1000px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;">
-      <div style="display:flex;align-items:center;gap:10px;"><span style="font-weight:800;color:#fff;">Fixit</span><iconify-icon icon="lucide:hammer" width="18" style="color:var(--accent)"></iconify-icon><span style="font-weight:900;color:#fff;">BW</span></div>
-      <div style="text-align:right;">
-        <div style="margin-bottom:6px;"><a href="https://wa.me/26773318758" style="color:#f97316;text-decoration:none;font-weight:700;">+267 73318758</a></div>
-        <div style="display:flex;gap:12px;justify-content:flex-end;">
-          <a href="https://www.tiktok.com/@prodmoroka" target="_blank" rel="noopener noreferrer">TikTok</a>
-          <a href="https://www.facebook.com/profile.php?id=61556143019845" target="_blank" rel="noopener noreferrer">Facebook</a>
-          <a class="visit-btn" href="https://www.tiktok.com/@prodmoroka" target="_blank" rel="noopener noreferrer" style="background:#fff;color:#000;padding:10px 14px;border-radius:8px;font-weight:700;text-decoration:none;">Visit Fixit</a>
-        </div>
-      </div>
+  <footer id="contact">
+    <div class="footer-inner">
+      <div style="display:flex;align-items:center;gap:12px;"><span style="font-weight:800;font-size:18px;color:#fff">Fixit</span><img src="logo.png" alt="logo" style="width:20px;height:20px;object-fit:contain"><span style="font-weight:900;font-size:18px;color:#fff">BW</span></div>
+      <div style="display:flex;align-items:center;gap:12px;"><a href="https://wa.me/26773318758" style="color:var(--accent);font-weight:700;text-decoration:none">+267 73318758</a><a href="https://www.tiktok.com/@prodmoroka" target="_blank" style="color:#bbb;text-decoration:none">TikTok</a></div>
     </div>
-    <div style="text-align:center;color:#666;margin-top:12px;">© 2024 Fixit 🔨 BW</div>
+    <div style="text-align:center;color:#777;margin-top:12px">© 2024 Fixit 🔨 BW</div>
   </footer>
 
   <script>
-    // LENIS
-    const lenis = new Lenis({ duration:1.2, easing:(t)=>Math.min(1,1.001-Math.pow(2,-10*t)), smooth:true });
-    function raf(time){ lenis.raf(time); requestAnimationFrame(raf); } requestAnimationFrame(raf);
+    // Lenis
+    const lenis = new Lenis({ duration:1.2, smooth:true });
+    function raf(t){lenis.raf(t);requestAnimationFrame(raf)}requestAnimationFrame(raf);
 
     // GSAP
     gsap.registerPlugin(ScrollTrigger);
-    gsap.from('main section', { y:30, opacity:0, duration:0.8, stagger:0.12, ease:"power2.out", scrollTrigger:{ trigger:'main', start:'top 85%' } });
+    gsap.from("main section", { y:30, opacity:0, duration:0.8, stagger:0.12, ease:"power2.out", scrollTrigger:{ trigger:"main", start:"top 85%" } });
 
-    // Cursor (FIXED FOR SMOOTHNESS)
-    const cursorDot = document.querySelector('.cursor-dot');
-    const cursorCircle = document.querySelector('.cursor-circle');
-    document.addEventListener('mousemove', e => {
-      if(!cursorDot || !cursorCircle) return;
-      
-      // FIX: Use gsap.set for instant positioning of the dot
-      gsap.set(cursorDot, { x:e.clientX, y:e.clientY }); 
-      // FIX: Use gsap.to for the smooth trailing effect of the circle
-      gsap.to(cursorCircle, { x:e.clientX, y:e.clientY, duration:0.25 });
-    });
-    
-    // Hover effects
-    document.querySelectorAll('a, button, .spotlight, .visit-btn').forEach(el => {
-      el.addEventListener('mouseenter', ()=> { document.querySelector('.cursor-circle')?.classList?.add('active'); });
-      el.addEventListener('mouseleave', ()=> { document.querySelector('.cursor-circle')?.classList?.remove('active'); });
-    });
+    // Cursor
+    const dot=document.querySelector('.cursor-dot'), circle=document.querySelector('.cursor-circle');
+    function isMobile(){return window.innerWidth<=768}
+    function updateCursor(){ if(isMobile()){ dot.style.display='none'; circle.style.display='none'; } else { dot.style.display='block'; circle.style.display='block'; } }
+    updateCursor(); window.addEventListener('resize', updateCursor);
 
-    // Spotlight hover effect
+    if(!isMobile()){
+      document.addEventListener('mousemove', e=>{ gsap.to(dot,{x:e.clientX,y:e.clientY,duration:0.06}); gsap.to(circle,{x:e.clientX,y:e.clientY,duration:0.18}) });
+      document.querySelectorAll('a,button,.spotlight').forEach(el=>{ el.addEventListener('mouseenter', ()=> circle.classList.add('active')); el.addEventListener('mouseleave', ()=> circle.classList.remove('active')); });
+    }
+
+    // Spotlight
     document.addEventListener('mousemove', e=>{
-      document.querySelectorAll('.spotlight').forEach(card=>{
-        const rect = card.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
-        card.style.setProperty('--mouse-x', `${x}px`);
-        card.style.setProperty('--mouse-y', `${y}px`);
-      });
+      document.querySelectorAll('.spotlight').forEach(card=>{ const rect=card.getBoundingClientRect(); card.style.setProperty('--mouse-x', `${e.clientX-rect.left}px`); card.style.setProperty('--mouse-y', `${e.clientY-rect.top}px`)});
     });
+    document.querySelectorAll('.spotlight').forEach(card=>card.addEventListener('touchstart', ev=>{ const rect=card.getBoundingClientRect(); card.style.setProperty('--mouse-x', `${ev.touches[0].clientX-rect.left}px`); card.style.setProperty('--mouse-y', `${ev.touches[0].clientY-rect.top}px`)}, {passive:true}));
+
+    // Floating shapes
+    (function createShapes(){ const c=document.querySelector('.shape-container'); if(!c) return; const max=window.innerWidth<768?8:14; for(let i=0;i<max;i++){ const el=document.createElement('div'); el.className='float-shape'; const left=Math.random()*100, delay=Math.random()*8, duration=12+Math.random()*14, size=(window.innerWidth<600)?(20+Math.random()*30):(30+Math.random()*60); el.style.left=left+'vw'; el.style.width=size+'px'; el.style.height=size+'px'; el.style.animationDuration=duration+'s'; el.style.animationDelay=delay+'s'; el.style.opacity=0.25+Math.random()*0.35; c.appendChild(el);} })();
   </script>
 </body>
 </html>
