@@ -3,10 +3,12 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>About | Fixit 🔨 BW</title>
+  <title>About | FIXIT 🔨 BW</title>
+
+  <!-- Favicon - make sure logo.png (transparent) is in the same folder -->
   <link rel="icon" type="image/png" href="logo.png">
 
-  <!-- Tailwind optional -->
+  <!-- Tailwind (optional utilities) -->
   <script src="https://cdn.tailwindcss.com"></script>
 
   <!-- Fonts & libs -->
@@ -16,172 +18,242 @@
   <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.29/bundled/lenis.min.js"></script>
   <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
 
-  <meta name="description" content="About FixitBW — Power tool sales & rentals across Botswana. Contact +267 73318758.">
+  <meta name="description" content="About FIXITBW — Power tool sales & rentals across Botswana. Contact +267 73318758.">
 
   <style>
     :root{
-      --accent:#f97316;
-      --bg:#030303;
-      --nav-h:72px; /* nav height used to offset content */
+      --accent: #f97316;
+      --bg: #030303;
+      --muted: #bdbdbd;
+      --nav-h: 76px; /* nav height used for offset */
     }
 
+    /* --- Base --- */
     html,body{height:100%;margin:0}
     body{
       background:var(--bg);
       color:#fff;
       font-family:"General Sans",system-ui,-apple-system,"Segoe UI",Roboto,Arial;
       -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
       overflow-x:hidden;
       cursor:none;
     }
-    ::selection{background:var(--accent);color:#000}
+    ::selection{background:var(--accent); color:#000}
 
-    /* NAV */
-    nav{position:fixed;top:0;left:0;width:100%;height:var(--nav-h);display:flex;align-items:center;z-index:1000;padding:12px 18px;background:linear-gradient(180deg, rgba(0,0,0,0.35), transparent);}
-    .nav-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:0 12px;}
-    .logo{display:flex;align-items:center;gap:10px;color:#fff;text-decoration:none}
-    .logo img{width:26px;height:26px;object-fit:contain}
-    .nav-links{display:flex;gap:14px}
-    .nav-links a{color:#d1d1d1;text-decoration:none;font-weight:700;padding:8px 10px;border-radius:8px}
-    .nav-cta{display:inline-flex;align-items:center;padding:8px 12px;border-radius:10px;background:rgba(0,0,0,0.45);border:1px solid rgba(255,255,255,0.04);color:#fff;text-decoration:none}
-
-    /* BACKGROUND layers */
+    /* --- Background layers --- */
     #background{position:fixed;inset:0;z-index:-2;background:#0a0a0a;overflow:hidden}
     .shape-container{position:fixed;inset:0;z-index:0;pointer-events:none}
-    .float-shape{position:absolute;bottom:-60px;width:40px;height:40px;border-radius:8px;filter:blur(6px);opacity:0.45;animation:floatUp linear infinite;mix-blend-mode:overlay;background:rgba(249,115,22,0.12)}
+    .float-shape{position:absolute;bottom:-60px;width:36px;height:36px;background:rgba(249,115,22,0.12);border-radius:8px;filter:blur(6px);opacity:0.45;animation:floatUp linear infinite;mix-blend-mode:overlay}
     @keyframes floatUp{0%{transform:translateY(0) rotate(0deg);opacity:0}10%{opacity:0.35}100%{transform:translateY(-120vh) rotate(360deg);opacity:0}}
     .noise{position:fixed;inset:0;pointer-events:none;z-index:1;opacity:0.03;background:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
 
-    /* Cursor */
+    /* --- Cursor --- */
     .cursor-dot{width:6px;height:6px;background:var(--accent);position:fixed;top:0;left:0;border-radius:50%;z-index:9999;pointer-events:none;transform:translate(-50%,-50%)}
     .cursor-circle{width:40px;height:40px;border:1px solid rgba(255,255,255,0.14);position:fixed;top:0;left:0;border-radius:50%;z-index:9998;pointer-events:none;transform:translate(-50%,-50%);transition:all .22s}
-    .cursor-circle.active{width:64px;height:64px;background:rgba(249,115,22,0.08);border-color:var(--accent)}
+    .cursor-circle.active{width:64px;height:64px;background:rgba(249,115,22,0.08);border-color:var(--accent);backdrop-filter:blur(2px)}
 
-    /* main content - offset so content visible immediately under fixed nav */
+    /* --- Nav (fixed) --- */
+    nav{
+      position:fixed;top:0;left:0;width:100%;height:var(--nav-h);display:flex;align-items:center;
+      z-index:1000;padding:8px 20px;background:linear-gradient(180deg, rgba(0,0,0,0.45), transparent);
+      backdrop-filter: blur(6px);
+    }
+    .nav-inner{max-width:1300px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;width:100%;gap:12px}
+    .brand-wrap{display:flex;align-items:center;gap:12px;text-decoration:none;color:#fff;font-weight:800}
+    .brand-text{font-family:'Clash Display',sans-serif;font-size:18px;letter-spacing:0.02em}
+    .brand-logo{height:56px;width:auto;display:inline-block;vertical-align:middle}
+    .nav-links{display:flex;gap:14px;align-items:center}
+    .nav-links a{color:#d1d1d1;text-decoration:none;font-weight:700;font-size:13px;padding:8px 10px;border-radius:8px}
+    .nav-links a:hover{color:#fff;background:rgba(255,255,255,0.02)}
+    .nav-cta{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:10px;background:rgba(0,0,0,0.45);border:1px solid rgba(255,255,255,0.04);color:#fff;text-decoration:none;font-weight:800}
+
+    /* --- main container offset so content appears under navbar --- */
     main{max-width:1000px;margin:0 auto;padding:calc(var(--nav-h) + 18px) 18px 80px;position:relative;z-index:10}
-    h1{font-size:32px;margin:0 0 10px 0}
-    p.lead{color:#bdbdbd;line-height:1.7}
 
-    /* spotlight */
+    /* --- content styles --- */
+    h1{font-size:36px;margin:0 0 8px 0}
+    .lead{color:var(--muted);line-height:1.7}
+
+    /* --- spotlight card --- */
     .spotlight{position:relative;overflow:hidden;border-radius:12px;background:rgba(255,255,255,0.02);padding:18px}
-    .spotlight::before{content:'';position:absolute;inset:0;background:radial-gradient(600px circle at var(--mouse-x) var(--mouse-y), rgba(249,115,22,0.05), transparent 40%);pointer-events:none;transition:opacity .18s}
+    .spotlight::before{content:'';position:absolute;inset:0;background:radial-gradient(600px circle at var(--mouse-x) var(--mouse-y), rgba(249,115,22,0.05), transparent 36%);pointer-events:none;transition:opacity .18s}
 
-    /* footer */
+    /* --- footer --- */
     footer{padding:34px 18px 80px;color:#d0d0d0;border-top:1px solid rgba(255,255,255,0.03);position:relative;z-index:10}
     .footer-inner{max-width:1000px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
 
-    /* responsive */
-    @media (max-width:1024px){ .nav-links{display:none} }
-    @media (max-width:640px){ main{padding:calc(var(--nav-h) + 12px) 14px 60px } h1{font-size:26px}}
+    .socials a{color:var(--accent);text-decoration:none;font-weight:700}
+
+    /* --- responsive adjustments --- */
+    @media(max-width:1024px){ .nav-links{display:none} }
+    @media(max-width:700px){
+      .brand-logo{height:44px}
+      main{padding:calc(var(--nav-h) + 12px) 14px 60px}
+      h1{font-size:28px}
+    }
+
+    /* small helper */
+    .muted{color:var(--muted)}
   </style>
 </head>
 <body>
-  <!-- backgrounds -->
+  <!-- background layers -->
   <div id="background" aria-hidden="true"></div>
   <div class="shape-container" aria-hidden="true"></div>
   <div class="noise" aria-hidden="true"></div>
 
-  <!-- cursor -->
+  <!-- custom cursor -->
   <div class="cursor-dot" aria-hidden="true"></div>
   <div class="cursor-circle" aria-hidden="true"></div>
 
-  <!-- nav -->
-  <nav role="navigation" aria-label="Main navigation">
+  <!-- NAVBAR -->
+  <nav role="navigation" aria-label="Top navigation">
     <div class="nav-inner">
-      <a class="logo" href="index.html" aria-label="FixitBW home">
-        <span style="font-weight:800;font-size:18px;color:#fff">Fixit</span>
-        <img src="logo.png" alt="FixitBW" style="width:26px;height:26px;object-fit:contain">
-        <span style="font-weight:900;font-size:18px;color:#fff">BW</span>
+      <!-- BRAND: FIXIT [BIG HAMMER LOGO] BW -->
+      <a class="brand-wrap" href="index.html" aria-label="FixitBW home">
+        <span class="brand-text" style="font-weight:800;">FIXIT</span>
+        <!-- BIG hammer logo between FIXIT and BW; height tuned for Option 3 -->
+        <img src="logo.png" alt="Fixit hammer logo" class="brand-logo" style="height:64px;">
+        <span class="brand-text" style="font-weight:900;">BW</span>
       </a>
 
+      <!-- NAV LINKS -->
       <div class="nav-links" role="navigation" aria-label="Site links">
         <a href="index.html">Home</a>
-        <a href="about.html">About</a>
+        <a href="about.html" style="color:#fff;border-bottom:2px solid var(--accent);padding-bottom:6px">About</a>
         <a href="sales.html">Sales & Rentals</a>
         <a href="promise.html">Our Promise</a>
       </div>
 
-      <a class="nav-cta" href="https://wa.me/26773318758" target="_blank" rel="noopener noreferrer">Contact</a>
+      <!-- Social + CTA -->
+      <div style="display:flex;gap:10px;align-items:center;">
+        <!-- WhatsApp contact CTA -->
+        <a class="nav-cta" href="https://wa.me/26773318758" target="_blank" rel="noopener noreferrer">Contact / Quote</a>
+      </div>
     </div>
   </nav>
 
-  <!-- main content starts immediately (no hero) -->
-  <main>
+  <!-- MAIN CONTENT (starts immediately under navbar) -->
+  <main role="main" aria-labelledby="about-heading">
     <section>
-      <h1>Who We Are</h1>
+      <h1 id="about-heading">Who We Are</h1>
       <p class="lead">Fixit 🔨 BW is a locally owned power tools business committed to serving Botswana’s builders, creators, and professionals. We provide high-quality power tools for sale and rentals, making reliable equipment accessible to everyone — from construction companies to DIY homeowners.</p>
     </section>
 
     <section style="display:grid;grid-template-columns:repeat(2,1fr);gap:18px;margin-top:22px;">
       <div class="spotlight">
         <h3 style="margin-top:0;">Our Mission</h3>
-        <p style="color:#bdbdbd;">To empower builders, creators, and craftsmen across Botswana with the tools they need to work efficiently, safely, and confidently.</p>
+        <p class="muted">To empower builders, creators, and craftsmen across Botswana with the tools they need to work efficiently, safely, and confidently.</p>
       </div>
 
       <div class="spotlight">
         <h3 style="margin-top:0;">What We Offer</h3>
-        <ul style="color:#bdbdbd;">
+        <ul class="muted">
           <li>Power tool sales: drills, saws, grinders, generators and more</li>
           <li>Short-term and long-term rentals</li>
           <li>Accessories and consumables</li>
         </ul>
       </div>
     </section>
+
+    <!-- CTA area with WhatsApp links -->
+    <section style="margin-top:28px;text-align:center;">
+      <a href="https://wa.me/26773318758" target="_blank" rel="noopener noreferrer" class="nav-cta" style="margin-right:12px;">Contact Us (WhatsApp)</a>
+      <a href="https://wa.me/26773318758" target="_blank" rel="noopener noreferrer" class="nav-cta" style="background:transparent;border:1px solid var(--accent);color:var(--accent);">Request Quote</a>
+    </section>
+
+    <!-- Founder section -->
+    <section style="margin-top:36px;display:grid;grid-template-columns:1fr 420px;gap:22px;align-items:start;">
+      <div>
+        <h2 style="font-size:28px;margin:0 0 8px 0;">Built by Builders</h2>
+        <p class="muted">FIXITBW was created to solve the real problem contractors and small businesses face: access to dependable tools without the frustration. We keep reliable equipment local, affordable, and ready-to-use.</p>
+
+        <!-- Founder (name replaced) -->
+        <div style="margin-top:20px;display:flex;gap:12px;align-items:center;">
+          <!-- avatar using initials as fallback -->
+          <img src="https://ui-avatars.com/api/?name=Lekgotla+M&background=18181b&color=f97316&size=128" alt="Founder avatar" style="width:64px;height:64px;border-radius:999px;border:1px solid rgba(255,255,255,0.04);object-fit:cover">
+          <div>
+            <div style="font-weight:700;font-size:16px;">Lekgotla M.</div>
+            <div style="font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;">Founder & Head Technician</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="spotlight" style="padding:20px;">
+        <h3 style="margin-top:0;">Why choose FIXITBW</h3>
+        <ul class="muted">
+          <li>Locally available tools</li>
+          <li>Fair prices and clear terms</li>
+          <li>Well-maintained equipment</li>
+        </ul>
+      </div>
+    </section>
   </main>
 
+  <!-- FOOTER -->
   <footer id="contact">
     <div class="footer-inner">
       <div style="display:flex;align-items:center;gap:12px;">
-        <span style="font-weight:800;font-size:18px;color:#fff">Fixit</span>
-        <img src="logo.png" alt="hammer" style="width:20px;height:20px;object-fit:contain">
-        <span style="font-weight:900;font-size:18px;color:#fff">BW</span>
+        <!-- BRAND repeated in footer -->
+        <span style="font-weight:800;font-size:18px">FIXIT</span>
+        <img src="logo.png" alt="Fixit hammer logo" style="height:48px;object-fit:contain">
+        <span style="font-weight:900;font-size:18px">BW</span>
       </div>
 
-      <div style="display:flex;align-items:center;gap:12px;">
-        <a href="https://wa.me/26773318758" style="color:var(--accent);font-weight:700;text-decoration:none;">+267 73318758</a>
-        <a href="https://www.tiktok.com/@prodmoroka" target="_blank" style="color:#bbb;text-decoration:none;">TikTok</a>
-        <a href="https://www.facebook.com/profile.php?id=61556143019845" target="_blank" style="color:#bbb;text-decoration:none;">Facebook</a>
+      <div class="socials" style="display:flex;gap:18px;align-items:center;">
+        <a href="https://wa.me/26773318758" target="_blank" rel="noopener noreferrer">WhatsApp</a>
+        <a href="https://www.tiktok.com/@prodmoroka" target="_blank" rel="noopener noreferrer">TikTok</a>
+        <a href="https://www.facebook.com/profile.php?id=61556143019845" target="_blank" rel="noopener noreferrer">Facebook</a>
       </div>
     </div>
-    <div style="text-align:center;color:#777;margin-top:12px;">© 2024 Fixit 🔨 BW</div>
+
+    <div style="text-align:center;color:#777;margin-top:12px;">© 2024 FIXITBW. All rights reserved.</div>
   </footer>
 
-  <!-- scripts: Lenis, GSAP, cursor, spotlight, shapes -->
+  <!-- SCRIPTS: Lenis, GSAP, Cursor, Spotlight, Floating shapes -->
   <script>
-    // Lenis
+    // LENIS smooth scrolling
     const lenis = new Lenis({ duration: 1.2, smooth: true });
-    function raf(t){ lenis.raf(t); requestAnimationFrame(raf); } requestAnimationFrame(raf);
+    function raf(time){ lenis.raf(time); requestAnimationFrame(raf); } requestAnimationFrame(raf);
 
     // GSAP
     gsap.registerPlugin(ScrollTrigger);
     gsap.from("main section", { y:30, opacity:0, duration:0.8, stagger:0.12, ease:"power2.out", scrollTrigger:{ trigger:"main", start:"top 85%" } });
 
-    // cursor
+    // Cursor
     const dot = document.querySelector('.cursor-dot');
     const circle = document.querySelector('.cursor-circle');
+
     function isMobile(){ return window.innerWidth <= 768; }
-    function updateCursor(){ if(isMobile()){ dot.style.display='none'; circle.style.display='none'; } else { dot.style.display='block'; circle.style.display='block'; } }
-    updateCursor(); window.addEventListener('resize', updateCursor);
+    function updateCursor(){ if(isMobile()){ if(dot) dot.style.display='none'; if(circle) circle.style.display='none'; } else { if(dot) dot.style.display='block'; if(circle) circle.style.display='block'; } }
+    updateCursor();
+    window.addEventListener('resize', updateCursor);
 
     if (!isMobile()){
       document.addEventListener('mousemove', e => {
-        gsap.to(dot, { x: e.clientX, y: e.clientY, duration: 0.06 });
-        gsap.to(circle, { x: e.clientX, y: e.clientY, duration: 0.18 });
+        gsap.to(dot, { x: e.clientX, y: e.clientY, duration: 0.06, ease: 'power2.out' });
+        gsap.to(circle, { x: e.clientX, y: e.clientY, duration: 0.18, ease: 'power2.out' });
       });
-      document.querySelectorAll('a, button, .spotlight').forEach(el => {
+
+      document.querySelectorAll('a, button, .spotlight, .card').forEach(el => {
         el.addEventListener('mouseenter', ()=> circle.classList.add('active'));
         el.addEventListener('mouseleave', ()=> circle.classList.remove('active'));
       });
     }
 
-    // spotlight tracking & mobile tap
+    // Spotlight position for hover
     document.addEventListener('mousemove', e => {
       document.querySelectorAll('.spotlight').forEach(card => {
         const rect = card.getBoundingClientRect();
-        card.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`);
-        card.style.setProperty('--mouse-y', `${e.clientY - rect.top}px`);
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        card.style.setProperty('--mouse-x', `${x}px`);
+        card.style.setProperty('--mouse-y', `${y}px`);
       });
     });
+
+    // Mobile touch for spotlight
     document.querySelectorAll('.spotlight').forEach(card => {
       card.addEventListener('touchstart', ev => {
         const rect = card.getBoundingClientRect();
@@ -190,21 +262,29 @@
       }, { passive: true });
     });
 
-    // floating shapes (light)
+    // Floating shapes (light)
     (function createShapes(){
-      const container = document.querySelector('.shape-container'); if(!container) return;
-      const maxShapes = window.innerWidth < 768 ? 8 : 14;
-      for (let i=0;i<maxShapes;i++){
-        const el = document.createElement('div'); el.className='float-shape';
-        const left = Math.random()*100, delay = Math.random()*8, duration = 12 + Math.random()*14;
-        const size = (window.innerWidth<600)?(20+Math.random()*30):(30+Math.random()*60);
-        el.style.left = left+'vw'; el.style.width = size+'px'; el.style.height = size+'px';
-        el.style.animationDuration = duration+'s'; el.style.animationDelay = delay+'s';
-        el.style.opacity = 0.2 + Math.random()*0.35;
+      const container = document.querySelector('.shape-container');
+      if (!container) return;
+      const maxShapes = window.innerWidth < 768 ? 8 : 12;
+      for (let i = 0; i < maxShapes; i++){
+        const el = document.createElement('div');
+        el.className = 'float-shape';
+        const left = Math.random() * 100;
+        const delay = Math.random() * 8;
+        const duration = 12 + Math.random() * 14;
+        const size = (window.innerWidth < 600) ? (18 + Math.random()*22) : (26 + Math.random()*44);
+        el.style.left = left + 'vw';
+        el.style.width = size + 'px';
+        el.style.height = size + 'px';
+        el.style.animationDuration = duration + 's';
+        el.style.animationDelay = delay + 's';
+        el.style.opacity = 0.18 + Math.random() * 0.32;
         container.appendChild(el);
       }
     })();
+
+    // Small marquee (if required) — disabled by default
   </script>
 </body>
 </html>
-
