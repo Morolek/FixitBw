@@ -1,101 +1,7 @@
-<html lang="en" class="lenis">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>About | FIXIT Botswana</title>
-
-<script src="https://cdn.tailwindcss.com"></script>
-<link href="https://api.fontshare.com/v2/css?f[]=clash-display@200,300,400,500,600,700&f[]=general-sans@200,300,400,500,600&display=swap" rel="stylesheet">
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
-<script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.29/bundled/lenis.min.js"></script>
-<script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
-
-<script>
-tailwind.config = {
-theme: {
-extend: {
-fontFamily: {
-display: ['Clash Display', 'sans-serif'],
-body: ['General Sans', 'sans-serif'],
-},
-colors: {
-'accent': '#f97316',
-'glass': 'rgba(255, 255, 255, 0.03)',
-'glass-border': 'rgba(255, 255, 255, 0.08)',
-}
-}
-}
-}
-</script>
-
-<style>
-:root { --cursor-size: 20px; }
-body { background-color: #030303; color: #ffffff; cursor: none; }
-::selection { background: #f97316; color: #000; }
-</style>
-</head>
-
-<body>
-
-<!-- Navigation -->
-<nav class="fixed top-0 left-0 w-full z-[100] px-6 py-6 border-b border-white/5 bg-black/80 backdrop-blur-md">
-<div class="flex justify-between items-center max-w-[1800px] mx-auto">
-
-<a href="index.html" class="flex items-center gap-1 group magnetic">
-<span class="font-display font-semibold text-2xl tracking-tight text-white">FI</span>
-<div class="relative w-6 h-6 flex items-center justify-center">
-<iconify-icon icon="lucide:screwdriver" class="absolute text-white text-xl rotate-[45deg]"></iconify-icon>
-<iconify-icon icon="lucide:wrench" class="absolute text-white text-xl -rotate-[225deg] bg-black rounded-full p-[2px]"></iconify-icon>
-</div>
-<span class="font-display font-semibold text-2xl tracking-tight text-white">IT</span>
-</a>
-
-<div class="hidden md:flex gap-2">
-<a href="#" class="magnetic px-5 py-2 text-xs font-body font-medium uppercase tracking-widest text-white border-b border-accent">About</a>
-<a href="sales-and-rentals.html" class="magnetic px-5 py-2 text-xs font-body font-medium uppercase tracking-widest text-zinc-400 hover:text-white transition-colors">Sales & Rentals</a>
-<a href="promise.html" class="magnetic px-5 py-2 text-xs font-body font-medium uppercase tracking-widest text-zinc-400 hover:text-white transition-colors">Our Promise</a>
-</div>
-
-<!-- REQUEST QUOTE → WHATSAPP -->
-<a href="https://wa.me/267XXXXXXXX" target="_blank"
-class="magnetic hidden md:flex items-center gap-2 border border-white/20 px-6 py-2 rounded-sm hover:bg-accent hover:border-accent hover:text-black transition-all duration-300">
-<span class="text-xs font-body font-semibold uppercase tracking-widest">Request Quote</span>
-</a>
-
-</div>
-</nav>
-
-<!-- CTA -->
-<section class="py-32 px-6 text-center">
-<div class="max-w-2xl mx-auto anim-entry">
-<h2 class="text-4xl md:text-5xl font-display text-white mb-6">Ready to get to work?</h2>
-<p class="text-zinc-500 mb-8">Browse our catalog or visit our showroom to see the tools in person.</p>
-
-<div class="flex items-center justify-center gap-4">
-<a href="catalog.html"
-class="bg-white text-black px-8 py-3 rounded-sm text-xs font-bold uppercase tracking-widest hover:bg-zinc-200 transition-colors">
-View Catalog
-</a>
-
-<!-- CONTACT US → WHATSAPP -->
-<a href="https://wa.me/267XXXXXXXX" target="_blank"
-class="border border-white/20 text-white px-8 py-3 rounded-sm text-xs font-bold uppercase tracking-widest hover:bg-white/5 transition-colors">
-Contact Us
-</a>
-</div>
-</div>
-</section>
-
-</body>
-</html>
 <html lang="en" class="lenis"><head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About | Fixit 🔨 BW</title>
-
-    <!-- FAVICON -->
+    <title>About | FixitBw</title>
     <link rel="icon" type="image/png" href="logo.png">
     
     <!-- Tailwind CSS -->
@@ -132,67 +38,336 @@ Contact Us
         :root { --cursor-size: 20px; }
         body { background-color: #030303; color: #ffffff; cursor: none; }
         ::selection { background: #f97316; color: #000; }
-        .noise{position:fixed;inset:0;pointer-events:none;z-index:50;opacity:.05}
-        .cursor-dot{width:6px;height:6px;background:#f97316;position:fixed;border-radius:50%;z-index:9999;pointer-events:none;transform:translate(-50%,-50%)}
-        .cursor-circle{width:40px;height:40px;border:1px solid rgba(255,255,255,.2);position:fixed;border-radius:50%;z-index:9998;pointer-events:none;transform:translate(-50%,-50%)}
-        .cursor-circle.active{width:60px;height:60px;background:rgba(249,115,22,.1);border-color:#f97316}
-        .card-spotlight{background:rgba(255,255,255,.02);position:relative;overflow:hidden}
+
+        .noise {
+            position: fixed; inset: 0; pointer-events: none; z-index: 50; opacity: 0.05;
+            background: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+
+        /* Cursor */
+        .cursor-dot {
+            width: 6px; height: 6px; background: #f97316; position: fixed;
+            border-radius: 50%; z-index: 9999; pointer-events: none; transform: translate(-50%, -50%);
+        }
+        .cursor-circle {
+            width: 40px; height: 40px; border: 1px solid rgba(255, 255, 255, 0.2);
+            position: fixed; border-radius: 50%; z-index: 9998; pointer-events: none;
+            transform: translate(-50%, -50%); transition: width 0.3s, height 0.3s, background 0.3s;
+        }
+        .cursor-circle.active {
+            width: 60px; height: 60px; background-color: rgba(249, 115, 22, 0.1); border-color: #f97316;
+        }
+
+        /* Card Spotlight */
+        .card-spotlight {
+            background: rgba(255,255,255,0.02);
+            position: relative; overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+        .card-spotlight::before {
+            content: ''; position: absolute; inset: 0;
+            background: radial-gradient(800px circle at var(--mouse-x) var(--mouse-y), rgba(255,255,255,0.06), transparent 40%);
+            opacity: 0; transition: opacity 0.5s; pointer-events: none;
+        }
+        .card-spotlight:hover::before { opacity: 1; }
+        .card-spotlight:hover { transform: translateY(-4px); }
+
+        .anim-entry { opacity: 0; transform: translateY(20px); }
+        
+        .grid-bg {
+            background-image: linear-gradient(to right, rgba(255,255,255,0.03) 1px, transparent 1px),
+                              linear-gradient(to bottom, rgba(255,255,255,0.03) 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
     </style>
 </head>
 
 <body>
-<div class="noise"></div>
-<div class="cursor-dot hidden md:block"></div>
-<div class="cursor-circle hidden md:block"></div>
+    <div class="noise"></div>
+    <div class="cursor-dot hidden md:block"></div>
+    <div class="cursor-circle hidden md:block"></div>
 
-<!-- Navigation -->
-<nav class="fixed top-0 left-0 w-full z-[100] px-6 py-6 border-b border-white/5 bg-black/80 backdrop-blur-md">
-    <div class="flex justify-between items-center max-w-[1800px] mx-auto">
-        <a href="index.html" class="flex items-center gap-2">
-            <span class="font-display font-semibold text-2xl text-white">Fixit</span>
-            <img src="logo.png" alt="Fixit Hammer" class="w-7 h-7">
-            <span class="font-display font-semibold text-2xl text-white">BW</span>
-        </a>
+    <!-- Navigation -->
+    <nav class="fixed top-0 left-0 w-full z-[100] px-6 py-6 border-b border-white/5 bg-black/80 backdrop-blur-md">
+        <div class="flex justify-between items-center max-w-[1800px] mx-auto">
+            <a href="index.html" class="flex items-center gap-3 group magnetic">
+                <img src="logo.png" alt="FixitBw Logo" class="w-8 h-8 object-contain">
+                <span class="font-display font-semibold text-2xl tracking-tight text-white">FixitBw</span>
+            </a>
 
-        <div class="hidden md:flex gap-2">
-            <a href="#" class="px-5 py-2 text-xs uppercase tracking-widest text-white border-b border-accent">About</a>
-            <a href="sales-and-rentals.html" class="px-5 py-2 text-xs uppercase tracking-widest text-zinc-400">Sales &amp; Rentals</a>
-            <a href="promise.html" class="px-5 py-2 text-xs uppercase tracking-widest text-zinc-400">Our Promise</a>
+            <div class="hidden md:flex gap-2">
+                <a href="#" class="magnetic px-5 py-2 text-xs font-body font-medium uppercase tracking-widest text-white border-b border-accent">About</a>
+                <a href="sales-and-rentals.html" class="magnetic px-5 py-2 text-xs font-body font-medium uppercase tracking-widest text-zinc-400 hover:text-white transition-colors">Sales &amp; Rentals</a>
+                <a href="promise.html" class="magnetic px-5 py-2 text-xs font-body font-medium uppercase tracking-widest text-zinc-400 hover:text-white transition-colors">Our Promise</a>
+            </div>
+
+            <a href="mailto:lekgotlamoroka53@gmail.com" class="magnetic hidden md:flex items-center gap-2 border border-white/20 px-6 py-2 rounded-sm hover:bg-accent hover:border-accent hover:text-black transition-all duration-300">
+                <span class="text-xs font-body font-semibold uppercase tracking-widest">Request Quote</span>
+            </a>
         </div>
+    </nav>
 
-        <a href="https://wa.me/26773318758" class="hidden md:flex items-center gap-2 border border-white/20 px-6 py-2 rounded-sm hover:bg-accent hover:text-black transition">
-            <span class="text-xs uppercase tracking-widest">Request Quote</span>
-        </a>
-    </div>
-</nav>
+    <main class="min-h-screen">
+        
+        <!-- Hero Section -->
+        <section class="pt-40 pb-20 px-6 max-w-[1800px] mx-auto relative border-b border-white/5">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16">
+                <div class="anim-entry">
+                    <span class="inline-block px-3 py-1 bg-white/5 rounded-full text-[10px] font-mono uppercase tracking-widest text-accent mb-6">Since 2024</span>
+                    <h1 class="text-6xl md:text-8xl font-display font-medium text-white tracking-tighter mb-8 leading-[0.9]">
+                        Equipping<br>
+                        Botswana's<br>
+                        Builders.
+                    </h1>
+                    <p class="text-zinc-400 text-lg max-w-md leading-relaxed">
+                        We bridge the gap between industrial-grade requirements and accessibility. Whether you are building a home or a skyscraper, FIXIT ensures you have the right tool, right now.
+                    </p>
+                </div>
+                <div class="relative anim-entry grid-bg border-l border-white/5 p-8 lg:p-16 flex flex-col justify-end">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-accent/20 blur-[100px]"></div>
+                    <div class="grid grid-cols-2 gap-8">
+                        <div>
+                            <h3 class="text-4xl font-display text-white mb-2">500+</h3>
+                            <p class="text-xs font-mono text-zinc-500 uppercase tracking-wider">Tools in Stock</p>
+                        </div>
+                        <div>
+                            <h3 class="text-4xl font-display text-white mb-2">24/7</h3>
+                            <p class="text-xs font-mono text-zinc-500 uppercase tracking-wider">Support Line</p>
+                        </div>
+                        <div>
+                            <h3 class="text-4xl font-display text-white mb-2">0%</h3>
+                            <p class="text-xs font-mono text-zinc-500 uppercase tracking-wider">Rental Downtime</p>
+                        </div>
+                        <div>
+                            <h3 class="text-4xl font-display text-white mb-2">BW</h3>
+                            <p class="text-xs font-mono text-zinc-500 uppercase tracking-wider">Nationwide Service</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-<!-- Founder Section FIX -->
-<img src="https://ui-avatars.com/api/?name=Lekgotla+M&amp;background=18181b&amp;color=f97316&amp;size=64"
-     class="w-12 h-12 rounded-full border border-white/10 mb-4">
-<p class="text-white font-medium">Lekgotla M.</p>
+        <!-- Values Grid -->
+        <section class="px-6 max-w-[1800px] mx-auto py-24">
+            <div class="mb-12 anim-entry">
+                <h2 class="text-2xl font-display text-white mb-2">Why Professionals Choose Us</h2>
+                <p class="text-zinc-500 text-sm">The FIXIT Standard of Operation</p>
+            </div>
 
-<!-- CTA FIX -->
-<a href="https://wa.me/26773318758"
-   class="border border-white/20 text-white px-8 py-3 rounded-sm text-xs uppercase tracking-widest">
-    Contact Us
-</a>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-1">
+                <!-- Value 1 -->
+                <div class="card-spotlight border border-white/5 p-8 group anim-entry">
+                    <div class="w-12 h-12 bg-zinc-900 rounded-sm flex items-center justify-center mb-6 border border-white/5 group-hover:border-accent/50 transition-colors">
+                        <iconify-icon icon="lucide:shield-check" class="text-xl text-zinc-400 group-hover:text-accent transition-colors"></iconify-icon>
+                    </div>
+                    <h3 class="text-xl font-display text-white mb-3">Quality Assured</h3>
+                    <p class="text-zinc-500 text-sm leading-relaxed">
+                        Every tool in our inventory is inspected, serviced, and calibrated after every rental cycle. We stock only top-tier brands like Makita, Bosch, and DeWalt.
+                    </p>
+                </div>
 
-<!-- Footer -->
-<footer class="bg-zinc-950 pt-20 pb-12 px-6 border-t border-white/10 text-center">
-    <div class="flex justify-center items-center gap-2 mb-6">
-        <span class="font-display font-semibold text-xl text-white">Fixit</span>
-        <img src="logo.png" class="w-6 h-6">
-        <span class="font-display font-semibold text-xl text-white">BW</span>
-    </div>
+                <!-- Value 2 -->
+                <div class="card-spotlight border border-white/5 p-8 group anim-entry">
+                    <div class="w-12 h-12 bg-zinc-900 rounded-sm flex items-center justify-center mb-6 border border-white/5 group-hover:border-accent/50 transition-colors">
+                        <iconify-icon icon="lucide:zap" class="text-xl text-zinc-400 group-hover:text-accent transition-colors"></iconify-icon>
+                    </div>
+                    <h3 class="text-xl font-display text-white mb-3">Instant Deployment</h3>
+                    <p class="text-zinc-500 text-sm leading-relaxed">
+                        Time is money on a construction site. Our streamlined rental process gets tools in your hands in under 15 minutes. No complex paperwork.
+                    </p>
+                </div>
 
-    <div class="flex justify-center gap-6 text-xs mb-4">
-        <a href="https://wa.me/26773318758">WhatsApp</a>
-        <a href="https://www.tiktok.com/@prodmoroka" target="_blank">TikTok</a>
-        <a href="https://www.facebook.com/profile.php?id=61556143019845" target="_blank">Facebook</a>
-    </div>
+                <!-- Value 3 -->
+                <div class="card-spotlight border border-white/5 p-8 group anim-entry">
+                    <div class="w-12 h-12 bg-zinc-900 rounded-sm flex items-center justify-center mb-6 border border-white/5 group-hover:border-accent/50 transition-colors">
+                        <iconify-icon icon="lucide:coins" class="text-xl text-zinc-400 group-hover:text-accent transition-colors"></iconify-icon>
+                    </div>
+                    <h3 class="text-xl font-display text-white mb-3">Flexible Economics</h3>
+                    <p class="text-zinc-500 text-sm leading-relaxed">
+                        Rent for a day, a week, or buy outright. We offer transparent pricing structures designed to fit the cash flow of independent contractors.
+                    </p>
+                </div>
+            </div>
+        </section>
 
-    <p class="text-[10px] text-zinc-600">© 2024 Fixit 🔨 BW</p>
-</footer>
+        <!-- Team / Story -->
+        <section class="border-y border-white/5 bg-white/[0.01]">
+            <div class="max-w-[1800px] mx-auto grid grid-cols-1 lg:grid-cols-2">
+                <div class="p-8 lg:p-24 border-r border-white/5 anim-entry">
+                    <h2 class="text-4xl md:text-5xl font-display text-white mb-8 tracking-tight">Built by Builders.</h2>
+                    <div class="space-y-6 text-zinc-400 leading-relaxed">
+                        <p>
+                            FixitBw was born out of frustration. As contractors ourselves, we tired of the unreliable rental market in Gaborone. Tools were either broken, unavailable, or overpriced.
+                        </p>
+                        <p>
+                            We decided to fix it. We built the inventory we wished we had access to. A centralized hub where reliability isn't an upgrade—it's the standard.
+                        </p>
+                        <div class="pt-8">
+                            <img src="https://ui-avatars.com/api/?name=Lekgotla+M&amp;background=18181b&amp;color=f97316&amp;size=64" alt="Founder" class="w-12 h-12 rounded-full border border-white/10 mb-4">
+                            <p class="text-white font-medium">Lekgotla M.</p>
+                            <p class="text-xs font-mono uppercase text-zinc-600">Founder &amp; Head Technician</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-8 lg:p-24 flex items-center justify-center anim-entry relative overflow-hidden">
+                    <div class="absolute inset-0 grid-bg opacity-30"></div>
+                    <!-- Abstract Visualization -->
+                    <div class="relative w-full max-w-sm aspect-[4/5] border border-white/10 p-6 flex flex-col justify-between bg-black/40 backdrop-blur-sm">
+                        <div class="flex justify-between items-center">
+                            <iconify-icon icon="lucide:map-pin" class="text-accent text-2xl"></iconify-icon>
+                            <div class="h-[1px] flex-grow bg-white/10 mx-4"></div>
+                            <span class="text-xs font-mono text-zinc-500">HQ</span>
+                        </div>
+                        <div class="space-y-4">
+                            <div class="h-1 w-full bg-white/5 rounded overflow-hidden">
+                                <div class="h-full bg-accent w-3/4"></div>
+                            </div>
+                            <div class="h-1 w-full bg-white/5 rounded overflow-hidden">
+                                <div class="h-full bg-zinc-600 w-1/2"></div>
+                            </div>
+                            <div class="h-1 w-full bg-white/5 rounded overflow-hidden">
+                                <div class="h-full bg-zinc-800 w-full"></div>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-2xl font-display text-white">Gaborone</p>
+                            <p class="text-xs font-mono text-zinc-500">Main Workshop &amp; Showroom</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-</body>
-</html>
+        <!-- CTA -->
+        <section class="py-32 px-6 text-center">
+            <div class="max-w-2xl mx-auto anim-entry">
+                <h2 class="text-4xl md:text-5xl font-display text-white mb-6">Ready to get to work?</h2>
+                <p class="text-zinc-500 mb-8">Browse our catalog or visit our showroom to see the tools in person.</p>
+                <div class="flex items-center justify-center gap-4">
+                    <a href="catalog.html" class="bg-white text-black px-8 py-3 rounded-sm text-xs font-bold uppercase tracking-widest hover:bg-zinc-200 transition-colors">
+                        View Catalog
+                    </a>
+                    <a href="tel:+26773318758" class="border border-white/20 text-white px-8 py-3 rounded-sm text-xs font-bold uppercase tracking-widest hover:bg-white/5 transition-colors">
+                        Contact Us
+                    </a>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-zinc-950 pt-20 pb-12 px-6 border-t border-white/10 relative z-20">
+        <div class="max-w-[1600px] mx-auto text-center">
+            <div class="flex items-center justify-center gap-1 mb-8">
+                <span class="font-display font-semibold text-xl tracking-tight text-white">FI</span>
+                <iconify-icon icon="lucide:wrench" class="text-white text-lg bg-black rounded-full p-[1px] border border-white/20"></iconify-icon>
+                <span class="font-display font-semibold text-xl tracking-tight text-white">IT</span>
+            
+            <div class="mt-6 space-y-2 text-xs font-mono text-zinc-500">
+                <p>📞 +267 7331 8758</p>
+                <p>✉️ lekgotlamoroka53@gmail.com</p>
+                <p>
+                    TikTok:
+                    <a href="https://www.tiktok.com/@prodmoroka" target="_blank" class="text-accent hover:underline">
+                        @prodmoroka
+                    </a>
+                </p>
+            </div>
+
+            <p class="text-[10px] font-mono text-zinc-600 uppercase">© 2024 FixitBw. About Us.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Smooth Scroll
+        const lenis = new Lenis({
+            duration: 1.2,
+            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+            direction: 'vertical',
+            smooth: true,
+        });
+        function raf(time) {
+            lenis.raf(time);
+            requestAnimationFrame(raf);
+        }
+        requestAnimationFrame(raf);
+
+        // Animations
+        gsap.to(".anim-entry", {
+            y: 0,
+            opacity: 1,
+            duration: 1,
+            stagger: 0.1,
+            scrollTrigger: {
+                trigger: "body",
+                start: "top center",
+            },
+            ease: "power3.out"
+        });
+
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    gsap.to(entry.target, {
+                        y: 0,
+                        opacity: 1,
+                        duration: 1,
+                        ease: "power3.out"
+                    });
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.anim-entry').forEach((el) => {
+            observer.observe(el);
+        });
+
+        // Mouse Interactions
+        const cursorDot = document.querySelector('.cursor-dot');
+        const cursorCircle = document.querySelector('.cursor-circle');
+        const cards = document.querySelectorAll('.card-spotlight');
+
+        document.addEventListener('mousemove', (e) => {
+            gsap.to(cursorDot, { x: e.clientX, y: e.clientY, duration: 0.1 });
+            gsap.to(cursorCircle, { x: e.clientX, y: e.clientY, duration: 0.4 });
+            
+            // Card Spotlights
+            cards.forEach(card => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                card.style.setProperty('--mouse-x', `${x}px`);
+                card.style.setProperty('--mouse-y', `${y}px`);
+            });
+        });
+
+        const interactables = document.querySelectorAll('a, button, input, .custom-checkbox, .card-spotlight');
+        interactables.forEach(el => {
+            el.addEventListener('mouseenter', () => cursorCircle.classList.add('active'));
+            el.addEventListener('mouseleave', () => cursorCircle.classList.remove('active'));
+        });
+
+        // Magnetic Nav
+        const magnets = document.querySelectorAll('.magnetic');
+        magnets.forEach(btn => {
+            btn.addEventListener('mousemove', (e) => {
+                const rect = btn.getBoundingClientRect();
+                const x = e.clientX - rect.left - rect.width / 2;
+                const y = e.clientY - rect.top - rect.height / 2;
+                gsap.to(btn, { x: x * 0.3, y: y * 0.3, duration: 0.3 });
+            });
+            btn.addEventListener('mouseleave', () => {
+                gsap.to(btn, { x: 0, y: 0, duration: 0.3 });
+            });
+        });
+    </script>
+
+</body></html>
