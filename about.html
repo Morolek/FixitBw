@@ -1,5 +1,4 @@
-
-<html lang="en" class="lenis"><head>
+<html lang="en"><head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>About | FixitBw</title>
@@ -14,7 +13,6 @@
     <!-- External Libraries -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.29/bundled/lenis.min.js"></script>
     <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
 
     <script>
@@ -92,6 +90,7 @@
     <nav class="fixed top-0 left-0 w-full z-[100] px-6 py-6 border-b border-white/5 bg-black/80 backdrop-blur-md">
         <div class="flex justify-between items-center max-w-[1800px] mx-auto">
             <a href="index.html" class="flex items-center gap-3 group magnetic">
+                <!-- Ensure your hammer image is saved as logo.png -->
                 <img src="logo.png" alt="FixitBw Logo" class="w-8 h-8 object-contain">
                 <span class="font-display font-semibold text-2xl tracking-tight text-white">FixitBw</span>
             </a>
@@ -262,8 +261,10 @@
         <div class="max-w-[1600px] mx-auto text-center">
             <div class="flex items-center justify-center gap-1 mb-8">
                 <span class="font-display font-semibold text-xl tracking-tight text-white">FI</span>
-                <iconify-icon icon="lucide:wrench" class="text-white text-lg bg-black rounded-full p-[1px] border border-white/20"></iconify-icon>
+                <!-- Replaced Wrench with Hammer to match your logo -->
+                <iconify-icon icon="mdi:hammer" class="text-white text-lg bg-black rounded-full p-[3px] border border-white/20"></iconify-icon>
                 <span class="font-display font-semibold text-xl tracking-tight text-white">IT</span>
+            </div>
             
             <div class="mt-6 space-y-2 text-xs font-mono text-zinc-500">
                 <p>📞 +267 7331 8758</p>
@@ -281,22 +282,6 @@
     </footer>
 
     <script>
-        // Smooth Scroll
-        const lenis = new Lenis({
-            duration: 1.1,
-            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-            direction: 'vertical',
-            smooth: true,
-            smoothWheel: true,
-            smoothTouch: true,
-            wheelMultiplier: 1
-        });
-        function raf(time) {
-            lenis.raf(time);
-            requestAnimationFrame(raf);
-        }
-        requestAnimationFrame(raf);
-
         // Animations
         gsap.to(".anim-entry", {
             y: 0,
