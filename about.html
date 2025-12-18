@@ -1,9 +1,9 @@
-<html lang="en"><head>
+<html lang="en">
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>About | FixitBw</title>
     <link rel="icon" type="image/png" href="logo.png">
-    
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://api.fontshare.com/v2/css?f[]=clash-display@200,300,400,500,600,700&amp;f[]=general-sans@200,300,400,500,600&amp;display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
@@ -11,66 +11,23 @@
     <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
 
     <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        display: ['Clash Display', 'sans-serif'],
-                        body: ['General Sans', 'sans-serif'],
-                    },
-                    colors: {
-                        'accent': '#f97316', 
-                        'glass': 'rgba(255, 255, 255, 0.03)',
-                        'glass-border': 'rgba(255, 255, 255, 0.08)',
-                    }
-                }
-            }
-        }
+        tailwind.config = { theme: { extend: { fontFamily: { display: ['Clash Display', 'sans-serif'], body: ['General Sans', 'sans-serif'], }, colors: { 'accent': '#f97316', } } } }
     </script>
 
     <style>
         :root { --cursor-size: 20px; }
         body { background-color: #030303; color: #ffffff; cursor: none; overflow-y: auto; }
         ::selection { background: #f97316; color: #000; }
-
-        .noise {
-            position: fixed; inset: 0; pointer-events: none; z-index: 50; opacity: 0.05;
-            background: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-        }
-
-        .cursor-dot {
-            width: 6px; height: 6px; background: #f97316; position: fixed;
-            border-radius: 50%; z-index: 9999; pointer-events: none; transform: translate(-50%, -50%);
-        }
-        .cursor-circle {
-            width: 40px; height: 40px; border: 1px solid rgba(255, 255, 255, 0.2);
-            position: fixed; border-radius: 50%; z-index: 9998; pointer-events: none;
-            transform: translate(-50%, -50%); transition: width 0.3s, height 0.3s, background 0.3s;
-        }
-        .cursor-circle.active {
-            width: 60px; height: 60px; background-color: rgba(249, 115, 22, 0.1); border-color: #f97316;
-        }
-
-        .card-spotlight {
-            background: rgba(255,255,255,0.02);
-            position: relative; overflow: hidden;
-            transition: transform 0.3s ease;
-        }
-        .card-spotlight::before {
-            content: ''; position: absolute; inset: 0;
-            background: radial-gradient(800px circle at var(--mouse-x) var(--mouse-y), rgba(255,255,255,0.06), transparent 40%);
-            opacity: 0; transition: opacity 0.5s; pointer-events: none;
-        }
+        .noise { position: fixed; inset: 0; pointer-events: none; z-index: 50; opacity: 0.05; background: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E"); }
+        .cursor-dot { width: 6px; height: 6px; background: #f97316; position: fixed; border-radius: 50%; z-index: 9999; pointer-events: none; transform: translate(-50%, -50%); }
+        .cursor-circle { width: 40px; height: 40px; border: 1px solid rgba(255, 255, 255, 0.2); position: fixed; border-radius: 50%; z-index: 9998; pointer-events: none; transform: translate(-50%, -50%); transition: width 0.3s, height 0.3s, background 0.3s; }
+        .cursor-circle.active { width: 60px; height: 60px; background-color: rgba(249, 115, 22, 0.1); border-color: #f97316; }
+        .card-spotlight { background: rgba(255,255,255,0.02); position: relative; overflow: hidden; transition: transform 0.3s ease; }
+        .card-spotlight::before { content: ''; position: absolute; inset: 0; background: radial-gradient(800px circle at var(--mouse-x) var(--mouse-y), rgba(255,255,255,0.06), transparent 40%); opacity: 0; transition: opacity 0.5s; pointer-events: none; }
         .card-spotlight:hover::before { opacity: 1; }
         .card-spotlight:hover { transform: translateY(-4px); }
-
         .anim-entry { opacity: 0; transform: translateY(20px); }
-        
-        .grid-bg {
-            background-image: linear-gradient(to right, rgba(255,255,255,0.03) 1px, transparent 1px),
-                              linear-gradient(to bottom, rgba(255,255,255,0.03) 1px, transparent 1px);
-            background-size: 40px 40px;
-        }
+        .grid-bg { background-image: linear-gradient(to right, rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,0.03) 1px, transparent 1px); background-size: 40px 40px; }
     </style>
 </head>
 
@@ -86,13 +43,14 @@
                 <img src="logo.png" alt="FixitBw Logo" class="w-8 h-8 object-contain">
                 <span class="font-display font-semibold text-2xl tracking-tight text-white">FixitBw</span>
             </a>
-
             <div class="hidden md:flex gap-2">
                 <a href="#" class="magnetic px-5 py-2 text-xs font-body font-medium uppercase tracking-widest text-white border-b border-accent">About</a>
-                <a href="sales-and-rentals.html" class="magnetic px-5 py-2 text-xs font-body font-medium uppercase tracking-widest text-zinc-400 hover:text-white transition-colors">Sales &amp; Rentals</a>
+                
+                <!-- LINK UPDATED HERE -->
+                <a href="catalog.html" class="magnetic px-5 py-2 text-xs font-body font-medium uppercase tracking-widest text-zinc-400 hover:text-white transition-colors">Sales &amp; Rentals</a>
+                
                 <a href="promise.html" class="magnetic px-5 py-2 text-xs font-body font-medium uppercase tracking-widest text-zinc-400 hover:text-white transition-colors">Our Promise</a>
             </div>
-
             <a href="mailto:lekgotlamoroka53@gmail.com" class="magnetic hidden md:flex items-center gap-2 border border-white/20 px-6 py-2 rounded-sm hover:bg-accent hover:border-accent hover:text-black transition-all duration-300">
                 <span class="text-xs font-body font-semibold uppercase tracking-widest">Request Quote</span>
             </a>
@@ -100,40 +58,20 @@
     </nav>
 
     <main class="min-h-screen">
-        
-        <!-- Hero Section -->
         <section class="pt-40 pb-20 px-6 max-w-[1800px] mx-auto relative border-b border-white/5">
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-16">
                 <div class="anim-entry">
                     <span class="inline-block px-3 py-1 bg-white/5 rounded-full text-[10px] font-mono uppercase tracking-widest text-accent mb-6">Since 2024</span>
-                    <h1 class="text-6xl md:text-8xl font-display font-medium text-white tracking-tighter mb-8 leading-[0.9]">
-                        Equipping<br>
-                        Botswana's<br>
-                        Builders.
-                    </h1>
-                    <p class="text-zinc-400 text-lg max-w-md leading-relaxed">
-                        We bridge the gap between industrial-grade requirements and accessibility. Whether you are building a home or a skyscraper, FIXIT ensures you have the right tool, right now.
-                    </p>
+                    <h1 class="text-6xl md:text-8xl font-display font-medium text-white tracking-tighter mb-8 leading-[0.9]">Equipping<br>Botswana's<br>Builders.</h1>
+                    <p class="text-zinc-400 text-lg max-w-md leading-relaxed">We bridge the gap between industrial-grade requirements and accessibility.</p>
                 </div>
                 <div class="relative anim-entry grid-bg border-l border-white/5 p-8 lg:p-16 flex flex-col justify-end">
                     <div class="absolute top-0 right-0 w-32 h-32 bg-accent/20 blur-[100px]"></div>
                     <div class="grid grid-cols-2 gap-8">
-                        <div>
-                            <h3 class="text-4xl font-display text-white mb-2">500+</h3>
-                            <p class="text-xs font-mono text-zinc-500 uppercase tracking-wider">Tools in Stock</p>
-                        </div>
-                        <div>
-                            <h3 class="text-4xl font-display text-white mb-2">24/7</h3>
-                            <p class="text-xs font-mono text-zinc-500 uppercase tracking-wider">Support Line</p>
-                        </div>
-                        <div>
-                            <h3 class="text-4xl font-display text-white mb-2">0%</h3>
-                            <p class="text-xs font-mono text-zinc-500 uppercase tracking-wider">Rental Downtime</p>
-                        </div>
-                        <div>
-                            <h3 class="text-4xl font-display text-white mb-2">BW</h3>
-                            <p class="text-xs font-mono text-zinc-500 uppercase tracking-wider">Nationwide Service</p>
-                        </div>
+                        <div><h3 class="text-4xl font-display text-white mb-2">500+</h3><p class="text-xs font-mono text-zinc-500 uppercase tracking-wider">Tools in Stock</p></div>
+                        <div><h3 class="text-4xl font-display text-white mb-2">24/7</h3><p class="text-xs font-mono text-zinc-500 uppercase tracking-wider">Support Line</p></div>
+                        <div><h3 class="text-4xl font-display text-white mb-2">0%</h3><p class="text-xs font-mono text-zinc-500 uppercase tracking-wider">Rental Downtime</p></div>
+                        <div><h3 class="text-4xl font-display text-white mb-2">BW</h3><p class="text-xs font-mono text-zinc-500 uppercase tracking-wider">Nationwide Service</p></div>
                     </div>
                 </div>
             </div>
@@ -145,52 +83,39 @@
                 <h2 class="text-2xl font-display text-white mb-2">Why Professionals Choose Us</h2>
                 <p class="text-zinc-500 text-sm">The FIXIT Standard of Operation</p>
             </div>
-
             <div class="grid grid-cols-1 md:grid-cols-3 gap-1">
                 <div class="card-spotlight border border-white/5 p-8 group anim-entry">
                     <div class="w-12 h-12 bg-zinc-900 rounded-sm flex items-center justify-center mb-6 border border-white/5 group-hover:border-accent/50 transition-colors">
                         <iconify-icon icon="lucide:shield-check" class="text-xl text-zinc-400 group-hover:text-accent transition-colors"></iconify-icon>
                     </div>
                     <h3 class="text-xl font-display text-white mb-3">Quality Assured</h3>
-                    <p class="text-zinc-500 text-sm leading-relaxed">
-                        Every tool in our inventory is inspected, serviced, and calibrated after every rental cycle. We stock only top-tier brands like Makita, Bosch, and DeWalt.
-                    </p>
+                    <p class="text-zinc-500 text-sm leading-relaxed">Every tool in our inventory is inspected, serviced, and calibrated after every rental cycle.</p>
                 </div>
-
                 <div class="card-spotlight border border-white/5 p-8 group anim-entry">
                     <div class="w-12 h-12 bg-zinc-900 rounded-sm flex items-center justify-center mb-6 border border-white/5 group-hover:border-accent/50 transition-colors">
                         <iconify-icon icon="lucide:zap" class="text-xl text-zinc-400 group-hover:text-accent transition-colors"></iconify-icon>
                     </div>
                     <h3 class="text-xl font-display text-white mb-3">Instant Deployment</h3>
-                    <p class="text-zinc-500 text-sm leading-relaxed">
-                        Time is money on a construction site. Our streamlined rental process gets tools in your hands in under 15 minutes. No complex paperwork.
-                    </p>
+                    <p class="text-zinc-500 text-sm leading-relaxed">Time is money. Our streamlined rental process gets tools in your hands in under 15 minutes.</p>
                 </div>
-
                 <div class="card-spotlight border border-white/5 p-8 group anim-entry">
                     <div class="w-12 h-12 bg-zinc-900 rounded-sm flex items-center justify-center mb-6 border border-white/5 group-hover:border-accent/50 transition-colors">
                         <iconify-icon icon="lucide:coins" class="text-xl text-zinc-400 group-hover:text-accent transition-colors"></iconify-icon>
                     </div>
                     <h3 class="text-xl font-display text-white mb-3">Flexible Economics</h3>
-                    <p class="text-zinc-500 text-sm leading-relaxed">
-                        Rent for a day, a week, or buy outright. We offer transparent pricing structures designed to fit the cash flow of independent contractors.
-                    </p>
+                    <p class="text-zinc-500 text-sm leading-relaxed">Rent for a day, a week, or buy outright. Transparent pricing.</p>
                 </div>
             </div>
         </section>
 
-        <!-- Team / Story -->
+        <!-- Team -->
         <section class="border-y border-white/5 bg-white/[0.01]">
             <div class="max-w-[1800px] mx-auto grid grid-cols-1 lg:grid-cols-2">
                 <div class="p-8 lg:p-24 border-r border-white/5 anim-entry">
                     <h2 class="text-4xl md:text-5xl font-display text-white mb-8 tracking-tight">Built by Builders.</h2>
                     <div class="space-y-6 text-zinc-400 leading-relaxed">
-                        <p>
-                            FixitBw was born out of frustration. As contractors ourselves, we tired of the unreliable rental market in Gaborone. Tools were either broken, unavailable, or overpriced.
-                        </p>
-                        <p>
-                            We decided to fix it. We built the inventory we wished we had access to. A centralized hub where reliability isn't an upgrade—it's the standard.
-                        </p>
+                        <p>FixitBw was born out of frustration. As contractors ourselves, we tired of the unreliable rental market in Gaborone.</p>
+                        <p>We decided to fix it. We built the inventory we wished we had access to.</p>
                         <div class="pt-8">
                             <img src="https://ui-avatars.com/api/?name=Lekgotla+M&amp;background=18181b&amp;color=f97316&amp;size=64" alt="Founder" class="w-12 h-12 rounded-full border border-white/10 mb-4">
                             <p class="text-white font-medium">Lekgotla M.</p>
@@ -201,26 +126,9 @@
                 <div class="p-8 lg:p-24 flex items-center justify-center anim-entry relative overflow-hidden">
                     <div class="absolute inset-0 grid-bg opacity-30"></div>
                     <div class="relative w-full max-w-sm aspect-[4/5] border border-white/10 p-6 flex flex-col justify-between bg-black/40 backdrop-blur-sm">
-                        <div class="flex justify-between items-center">
-                            <iconify-icon icon="lucide:map-pin" class="text-accent text-2xl"></iconify-icon>
-                            <div class="h-[1px] flex-grow bg-white/10 mx-4"></div>
-                            <span class="text-xs font-mono text-zinc-500">HQ</span>
-                        </div>
-                        <div class="space-y-4">
-                            <div class="h-1 w-full bg-white/5 rounded overflow-hidden">
-                                <div class="h-full bg-accent w-3/4"></div>
-                            </div>
-                            <div class="h-1 w-full bg-white/5 rounded overflow-hidden">
-                                <div class="h-full bg-zinc-600 w-1/2"></div>
-                            </div>
-                            <div class="h-1 w-full bg-white/5 rounded overflow-hidden">
-                                <div class="h-full bg-zinc-800 w-full"></div>
-                            </div>
-                        </div>
-                        <div class="text-right">
-                            <p class="text-2xl font-display text-white">Gaborone</p>
-                            <p class="text-xs font-mono text-zinc-500">Main Workshop &amp; Showroom</p>
-                        </div>
+                        <div class="flex justify-between items-center"><iconify-icon icon="lucide:map-pin" class="text-accent text-2xl"></iconify-icon><div class="h-[1px] flex-grow bg-white/10 mx-4"></div><span class="text-xs font-mono text-zinc-500">HQ</span></div>
+                        <div class="space-y-4"><div class="h-1 w-full bg-white/5 rounded overflow-hidden"><div class="h-full bg-accent w-3/4"></div></div><div class="h-1 w-full bg-white/5 rounded overflow-hidden"><div class="h-full bg-zinc-600 w-1/2"></div></div><div class="h-1 w-full bg-white/5 rounded overflow-hidden"><div class="h-full bg-zinc-800 w-full"></div></div></div>
+                        <div class="text-right"><p class="text-2xl font-display text-white">Gaborone</p><p class="text-xs font-mono text-zinc-500">Main Workshop &amp; Showroom</p></div>
                     </div>
                 </div>
             </div>
@@ -232,9 +140,12 @@
                 <h2 class="text-4xl md:text-5xl font-display text-white mb-6">Ready to get to work?</h2>
                 <p class="text-zinc-500 mb-8">Browse our catalog or visit our showroom to see the tools in person.</p>
                 <div class="flex items-center justify-center gap-4">
-                    <a href="sales-and-rentals.html" class="bg-white text-black px-8 py-3 rounded-sm text-xs font-bold uppercase tracking-widest hover:bg-zinc-200 transition-colors">
+                    
+                    <!-- LINK UPDATED HERE -->
+                    <a href="catalog.html" class="bg-white text-black px-8 py-3 rounded-sm text-xs font-bold uppercase tracking-widest hover:bg-zinc-200 transition-colors">
                         View Catalog
                     </a>
+                    
                     <a href="tel:+26773318758" class="border border-white/20 text-white px-8 py-3 rounded-sm text-xs font-bold uppercase tracking-widest hover:bg-white/5 transition-colors">
                         Contact Us
                     </a>
@@ -256,78 +167,33 @@
             <div class="mt-6 space-y-2 text-xs font-mono text-zinc-500">
                 <p>📞 +267 7331 8758</p>
                 <p>✉️ lekgotlamoroka53@gmail.com</p>
-                <p>
-                    TikTok:
-                    <a href="https://www.tiktok.com/@prodmoroka" target="_blank" class="text-accent hover:underline">
-                        @prodmoroka
-                    </a>
-                </p>
+                <p>TikTok: <a href="https://www.tiktok.com/@prodmoroka" target="_blank" class="text-accent hover:underline">@prodmoroka</a></p>
             </div>
-
             <p class="text-[10px] font-mono text-zinc-600 uppercase">© 2024 FixitBw. About Us.</p>
         </div>
     </footer>
 
     <script>
-        gsap.to(".anim-entry", {
-            y: 0,
-            opacity: 1,
-            duration: 1,
-            stagger: 0.1,
-            scrollTrigger: {
-                trigger: "body",
-                start: "top center",
-            },
-            ease: "power3.out"
-        });
-
-        const observerOptions = {
-            root: null,
-            rootMargin: '0px',
-            threshold: 0.1
-        };
-
-        const observer = new IntersectionObserver((entries, observer) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    gsap.to(entry.target, {
-                        y: 0,
-                        opacity: 1,
-                        duration: 1,
-                        ease: "power3.out"
-                    });
-                    observer.unobserve(entry.target);
-                }
-            });
-        }, observerOptions);
-
-        document.querySelectorAll('.anim-entry').forEach((el) => {
-            observer.observe(el);
-        });
-
+        gsap.to(".anim-entry", { y: 0, opacity: 1, duration: 1, stagger: 0.1, scrollTrigger: { trigger: "body", start: "top center" }, ease: "power3.out" });
+        const observer = new IntersectionObserver((entries, observer) => { entries.forEach(entry => { if (entry.isIntersecting) { gsap.to(entry.target, { y: 0, opacity: 1, duration: 1, ease: "power3.out" }); observer.unobserve(entry.target); } }); }, { threshold: 0.1 });
+        document.querySelectorAll('.anim-entry').forEach((el) => { observer.observe(el); });
         const cursorDot = document.querySelector('.cursor-dot');
         const cursorCircle = document.querySelector('.cursor-circle');
         const cards = document.querySelectorAll('.card-spotlight');
-
         document.addEventListener('mousemove', (e) => {
             gsap.to(cursorDot, { x: e.clientX, y: e.clientY, duration: 0.1 });
             gsap.to(cursorCircle, { x: e.clientX, y: e.clientY, duration: 0.4 });
-            
             cards.forEach(card => {
                 const rect = card.getBoundingClientRect();
-                const x = e.clientX - rect.left;
-                const y = e.clientY - rect.top;
-                card.style.setProperty('--mouse-x', `${x}px`);
-                card.style.setProperty('--mouse-y', `${y}px`);
+                card.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`);
+                card.style.setProperty('--mouse-y', `${e.clientY - rect.top}px`);
             });
         });
-
         const interactables = document.querySelectorAll('a, button, input, .custom-checkbox, .card-spotlight');
         interactables.forEach(el => {
             el.addEventListener('mouseenter', () => cursorCircle.classList.add('active'));
             el.addEventListener('mouseleave', () => cursorCircle.classList.remove('active'));
         });
-
         const magnets = document.querySelectorAll('.magnetic');
         magnets.forEach(btn => {
             btn.addEventListener('mousemove', (e) => {
@@ -336,10 +202,7 @@
                 const y = e.clientY - rect.top - rect.height / 2;
                 gsap.to(btn, { x: x * 0.3, y: y * 0.3, duration: 0.3 });
             });
-            btn.addEventListener('mouseleave', () => {
-                gsap.to(btn, { x: 0, y: 0, duration: 0.3 });
-            });
+            btn.addEventListener('mouseleave', () => { gsap.to(btn, { x: 0, y: 0, duration: 0.3 }); });
         });
     </script>
-
 </body></html>
