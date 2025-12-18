@@ -4,13 +4,8 @@
     <title>About | FixitBw</title>
     <link rel="icon" type="image/png" href="logo.png">
     
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- Fonts -->
     <link href="https://api.fontshare.com/v2/css?f[]=clash-display@200,300,400,500,600,700&amp;f[]=general-sans@200,300,400,500,600&amp;display=swap" rel="stylesheet">
-    
-    <!-- External Libraries -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
     <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
@@ -43,7 +38,6 @@
             background: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
         }
 
-        /* Cursor */
         .cursor-dot {
             width: 6px; height: 6px; background: #f97316; position: fixed;
             border-radius: 50%; z-index: 9999; pointer-events: none; transform: translate(-50%, -50%);
@@ -57,7 +51,6 @@
             width: 60px; height: 60px; background-color: rgba(249, 115, 22, 0.1); border-color: #f97316;
         }
 
-        /* Card Spotlight */
         .card-spotlight {
             background: rgba(255,255,255,0.02);
             position: relative; overflow: hidden;
@@ -90,7 +83,6 @@
     <nav class="fixed top-0 left-0 w-full z-[100] px-6 py-6 border-b border-white/5 bg-black/80 backdrop-blur-md">
         <div class="flex justify-between items-center max-w-[1800px] mx-auto">
             <a href="index.html" class="flex items-center gap-3 group magnetic">
-                <!-- Ensure your hammer image is saved as logo.png -->
                 <img src="logo.png" alt="FixitBw Logo" class="w-8 h-8 object-contain">
                 <span class="font-display font-semibold text-2xl tracking-tight text-white">FixitBw</span>
             </a>
@@ -155,7 +147,6 @@
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-1">
-                <!-- Value 1 -->
                 <div class="card-spotlight border border-white/5 p-8 group anim-entry">
                     <div class="w-12 h-12 bg-zinc-900 rounded-sm flex items-center justify-center mb-6 border border-white/5 group-hover:border-accent/50 transition-colors">
                         <iconify-icon icon="lucide:shield-check" class="text-xl text-zinc-400 group-hover:text-accent transition-colors"></iconify-icon>
@@ -166,7 +157,6 @@
                     </p>
                 </div>
 
-                <!-- Value 2 -->
                 <div class="card-spotlight border border-white/5 p-8 group anim-entry">
                     <div class="w-12 h-12 bg-zinc-900 rounded-sm flex items-center justify-center mb-6 border border-white/5 group-hover:border-accent/50 transition-colors">
                         <iconify-icon icon="lucide:zap" class="text-xl text-zinc-400 group-hover:text-accent transition-colors"></iconify-icon>
@@ -177,7 +167,6 @@
                     </p>
                 </div>
 
-                <!-- Value 3 -->
                 <div class="card-spotlight border border-white/5 p-8 group anim-entry">
                     <div class="w-12 h-12 bg-zinc-900 rounded-sm flex items-center justify-center mb-6 border border-white/5 group-hover:border-accent/50 transition-colors">
                         <iconify-icon icon="lucide:coins" class="text-xl text-zinc-400 group-hover:text-accent transition-colors"></iconify-icon>
@@ -211,7 +200,6 @@
                 </div>
                 <div class="p-8 lg:p-24 flex items-center justify-center anim-entry relative overflow-hidden">
                     <div class="absolute inset-0 grid-bg opacity-30"></div>
-                    <!-- Abstract Visualization -->
                     <div class="relative w-full max-w-sm aspect-[4/5] border border-white/10 p-6 flex flex-col justify-between bg-black/40 backdrop-blur-sm">
                         <div class="flex justify-between items-center">
                             <iconify-icon icon="lucide:map-pin" class="text-accent text-2xl"></iconify-icon>
@@ -244,7 +232,7 @@
                 <h2 class="text-4xl md:text-5xl font-display text-white mb-6">Ready to get to work?</h2>
                 <p class="text-zinc-500 mb-8">Browse our catalog or visit our showroom to see the tools in person.</p>
                 <div class="flex items-center justify-center gap-4">
-                    <a href="catalog.html" class="bg-white text-black px-8 py-3 rounded-sm text-xs font-bold uppercase tracking-widest hover:bg-zinc-200 transition-colors">
+                    <a href="sales-and-rentals.html" class="bg-white text-black px-8 py-3 rounded-sm text-xs font-bold uppercase tracking-widest hover:bg-zinc-200 transition-colors">
                         View Catalog
                     </a>
                     <a href="tel:+26773318758" class="border border-white/20 text-white px-8 py-3 rounded-sm text-xs font-bold uppercase tracking-widest hover:bg-white/5 transition-colors">
@@ -261,7 +249,6 @@
         <div class="max-w-[1600px] mx-auto text-center">
             <div class="flex items-center justify-center gap-1 mb-8">
                 <span class="font-display font-semibold text-xl tracking-tight text-white">FI</span>
-                <!-- Replaced Wrench with Hammer to match your logo -->
                 <iconify-icon icon="mdi:hammer" class="text-white text-lg bg-black rounded-full p-[3px] border border-white/20"></iconify-icon>
                 <span class="font-display font-semibold text-xl tracking-tight text-white">IT</span>
             </div>
@@ -282,7 +269,6 @@
     </footer>
 
     <script>
-        // Animations
         gsap.to(".anim-entry", {
             y: 0,
             opacity: 1,
@@ -319,7 +305,6 @@
             observer.observe(el);
         });
 
-        // Mouse Interactions
         const cursorDot = document.querySelector('.cursor-dot');
         const cursorCircle = document.querySelector('.cursor-circle');
         const cards = document.querySelectorAll('.card-spotlight');
@@ -328,7 +313,6 @@
             gsap.to(cursorDot, { x: e.clientX, y: e.clientY, duration: 0.1 });
             gsap.to(cursorCircle, { x: e.clientX, y: e.clientY, duration: 0.4 });
             
-            // Card Spotlights
             cards.forEach(card => {
                 const rect = card.getBoundingClientRect();
                 const x = e.clientX - rect.left;
@@ -344,7 +328,6 @@
             el.addEventListener('mouseleave', () => cursorCircle.classList.remove('active'));
         });
 
-        // Magnetic Nav
         const magnets = document.querySelectorAll('.magnetic');
         magnets.forEach(btn => {
             btn.addEventListener('mousemove', (e) => {
