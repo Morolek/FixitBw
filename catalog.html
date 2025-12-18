@@ -203,12 +203,12 @@
                     </div>
                 </div>
 
-                <!-- 5. Angle Grinder (FIXED with fallback) -->
+                <!-- 5. Angle Grinder (FIXED IMAGE) -->
                 <div class="card-spotlight group flex flex-col justify-between anim-entry bg-zinc-900/40 rounded-sm" data-id="grind-1" data-name="Angle Grinder" data-sell="P 890" data-rent="P 80/day" data-tags="sale rent">
                     <div class="p-5">
                         <div class="aspect-square bg-zinc-900 rounded-sm mb-4 relative overflow-hidden group-hover:border group-hover:border-accent/20 transition-all">
-                             <!-- Fixed: Added Fallback so it appears even if file is missing -->
-                            <img src="angle-grinder.jpg" onerror="this.src='https://images.unsplash.com/photo-1540305893333-3d0d54032d84?auto=format&fit=crop&q=80&w=500'" class="tool-img absolute inset-0 w-full h-full object-cover opacity-60 grayscale group-hover:opacity-100 group-hover:grayscale-0 group-hover:scale-105">
+                             <!-- ONLINE BACKUP LINK ADDED HERE -->
+                            <img src="https://images.unsplash.com/photo-1599358249675-9b8849646b5a?q=80&w=500&auto=format&fit=crop" class="tool-img absolute inset-0 w-full h-full object-cover opacity-60 grayscale group-hover:opacity-100 group-hover:grayscale-0 group-hover:scale-105">
                             <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-80 group-hover:opacity-40 transition-opacity"></div>
                         </div>
                         <h3 class="text-lg font-display font-medium text-white mb-1 group-hover:text-accent transition-colors">Angle Grinder</h3>
@@ -362,7 +362,7 @@
         const interactables = document.querySelectorAll('a, button, input, .custom-checkbox, .card-spotlight');
         interactables.forEach(el => { el.addEventListener('mouseenter', () => cursorCircle.classList.add('active')); el.addEventListener('mouseleave', () => cursorCircle.classList.remove('active')); });
         const magnets = document.querySelectorAll('.magnetic');
-        magnets.forEach(btn => { btn.addEventListener('mousemove', (e) => { const rect = btn.getBoundingClientRect(); gsap.to(btn, { x: (e.clientX - rect.left - rect.width/2) * 0.3, y: (e.clientY - rect.top - rect.height/2) * 0.3, duration: 0.3 }); }); btn.addEventListener('mouseleave', () => { gsap.to(btn, { x: 0, y: 0, duration: 0.3 }); }); });
+        magnets.forEach(btn => { btn.addEventListener('mousemove', (e) => { const rect = btn.getBoundingClientRect(); gsap.to(btn, { x: (e.clientX - rect.left - rect.width / 2) * 0.3, y: (e.clientY - rect.top - rect.height / 2) * 0.3, duration: 0.3 }); }); btn.addEventListener('mouseleave', () => { gsap.to(btn, { x: 0, y: 0, duration: 0.3 }); }); });
     </script>
 </body>
 </html>
