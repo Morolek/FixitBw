@@ -4,35 +4,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FIXIT | Power Tools Botswana</title>
     <link rel="icon" type="image/png" href="logo.png">
-
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- Fonts -->
     <link href="https://api.fontshare.com/v2/css?f[]=clash-display@200,300,400,500,600,700&amp;f[]=general-sans@200,300,400,500,600&amp;display=swap" rel="stylesheet">
-    
-    <!-- GSAP -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
 
     <script>
         tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        display: ['Clash Display', 'sans-serif'],
-                        body: ['General Sans', 'sans-serif'],
-                        mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'monospace'],
-                    },
-                    colors: {
-                        'accent': '#f97316', 
-                        'dark': '#050505',
-                    },
-                    animation: {
-                        'pulse-slow': 'pulse 8s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-                    }
-                }
-            }
+            theme: { extend: { fontFamily: { display: ['Clash Display', 'sans-serif'], body: ['General Sans', 'sans-serif'], mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'monospace'], }, colors: { 'accent': '#f97316', 'dark': '#050505', }, animation: { 'pulse-slow': 'pulse 8s cubic-bezier(0.4, 0, 0.6, 1) infinite', } } }
         }
     </script>
 
@@ -40,70 +19,29 @@
         :root { --cursor-size: 20px; }
         body { background-color: #030303; color: #ffffff; cursor: none; overflow-x: hidden; }
         ::selection { background: #f97316; color: #000; }
-
-        .noise {
-            position: fixed; inset: 0; pointer-events: none; z-index: 50; opacity: 0.04;
-            background: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-        }
-        
-        .grid-bg {
-            position: fixed; inset: 0; z-index: -1;
-            background-image: 
-                linear-gradient(to right, rgba(255,255,255,0.03) 1px, transparent 1px),
-                linear-gradient(to bottom, rgba(255,255,255,0.03) 1px, transparent 1px);
-            background-size: 50px 50px;
-            mask-image: radial-gradient(circle at center, black 30%, transparent 80%);
-        }
-
-        .ambient-glow {
-            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            width: 90vw; height: 90vw;
-            background: radial-gradient(circle, rgba(249, 115, 22, 0.06) 0%, rgba(0,0,0,0) 60%);
-            pointer-events: none; z-index: -1;
-        }
-
-        .cursor-dot {
-            width: 6px; height: 6px; background: #f97316; position: fixed;
-            border-radius: 50%; z-index: 9999; pointer-events: none; transform: translate(-50%, -50%);
-        }
-        .cursor-circle {
-            width: 40px; height: 40px; border: 1px solid rgba(255, 255, 255, 0.15);
-            position: fixed; border-radius: 50%; z-index: 9998; pointer-events: none;
-            transform: translate(-50%, -50%); transition: width 0.3s, height 0.3s, border-color 0.3s, background 0.3s;
-        }
-        .cursor-circle.active {
-            width: 60px; height: 60px; background-color: rgba(249, 115, 22, 0.05); border-color: #f97316;
-        }
-
+        .noise { position: fixed; inset: 0; pointer-events: none; z-index: 50; opacity: 0.04; background: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E"); }
+        .grid-bg { position: fixed; inset: 0; z-index: -1; background-image: linear-gradient(to right, rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,0.03) 1px, transparent 1px); background-size: 50px 50px; mask-image: radial-gradient(circle at center, black 30%, transparent 80%); }
+        .ambient-glow { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 90vw; height: 90vw; background: radial-gradient(circle, rgba(249, 115, 22, 0.06) 0%, rgba(0,0,0,0) 60%); pointer-events: none; z-index: -1; }
+        .cursor-dot { width: 6px; height: 6px; background: #f97316; position: fixed; border-radius: 50%; z-index: 9999; pointer-events: none; transform: translate(-50%, -50%); }
+        .cursor-circle { width: 40px; height: 40px; border: 1px solid rgba(255, 255, 255, 0.15); position: fixed; border-radius: 50%; z-index: 9998; pointer-events: none; transform: translate(-50%, -50%); transition: width 0.3s, height 0.3s, border-color 0.3s, background 0.3s; }
+        .cursor-circle.active { width: 60px; height: 60px; background-color: rgba(249, 115, 22, 0.05); border-color: #f97316; }
         .spotlight { position: relative; overflow: hidden; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); transition: border-color 0.3s; }
         .spotlight:hover { border-color: rgba(255,255,255,0.1); }
-        .spotlight::before {
-            content: ''; position: absolute; inset: 0;
-            background: radial-gradient(600px circle at var(--mouse-x) var(--mouse-y), rgba(249, 115, 22, 0.06), transparent 40%);
-            opacity: 0; transition: opacity 0.5s; pointer-events: none;
-        }
+        .spotlight::before { content: ''; position: absolute; inset: 0; background: radial-gradient(600px circle at var(--mouse-x) var(--mouse-y), rgba(249, 115, 22, 0.06), transparent 40%); opacity: 0; transition: opacity 0.5s; pointer-events: none; }
         .spotlight:hover::before { opacity: 1; }
-
-        .loader-wrap {
-            position: fixed; z-index: 10000; inset: 0; background: #030303;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-        }
+        .loader-wrap { position: fixed; z-index: 10000; inset: 0; background: #030303; display: flex; flex-direction: column; align-items: center; justify-content: center; }
         .loader-bar { width: 1px; height: 0%; background: #f97316; }
-
         @keyframes scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
         .marquee-content { display: flex; gap: 4rem; width: max-content; animation: scroll 30s linear infinite; }
     </style>
 </head>
 
 <body>
-
     <div class="noise"></div>
     <div class="grid-bg"></div>
     <div class="ambient-glow animate-pulse-slow"></div>
-    
     <div class="cursor-dot hidden md:block"></div>
     <div class="cursor-circle hidden md:block"></div>
-
     <div class="loader-wrap">
         <div class="loader-bar"></div>
         <div class="mt-4 text-[10px] font-body font-medium tracking-widest uppercase fade-text">Initializing FixitBw...</div>
@@ -119,24 +57,21 @@
                 </div>
                 <span class="font-display font-semibold text-xl tracking-tight text-white group-hover:text-zinc-200 transition-colors">FixitBw</span>
             </a>
-
             <div class="hidden md:flex gap-1">
                 <a href="about.html" class="magnetic px-5 py-2 text-xs font-body font-medium uppercase tracking-widest text-zinc-500 hover:text-white hover:bg-white/5 rounded-full transition-all">About</a>
+                <!-- CORRECT LINK BELOW -->
                 <a href="sales-and-rentals.html" class="magnetic px-5 py-2 text-xs font-body font-medium uppercase tracking-widest text-zinc-500 hover:text-white hover:bg-white/5 rounded-full transition-all">Catalog</a>
                 <a href="promise.html" class="magnetic px-5 py-2 text-xs font-body font-medium uppercase tracking-widest text-zinc-500 hover:text-white hover:bg-white/5 rounded-full transition-all">Promise</a>
             </div>
-
             <a href="#contact" class="magnetic hidden md:flex items-center gap-2 border border-white/10 px-5 py-2 rounded-sm hover:border-accent hover:bg-accent/10 hover:text-accent transition-all duration-300 group">
                 <span class="text-xs font-body font-bold uppercase tracking-widest">Connect</span>
             </a>
-            
             <button class="md:hidden text-white"><iconify-icon icon="lucide:menu" width="24"></iconify-icon></button>
         </div>
     </nav>
 
     <!-- Hero Section -->
     <header class="relative min-h-screen flex flex-col justify-center items-center px-4 pt-32 pb-20 overflow-hidden">
-        
         <div class="z-10 text-center flex flex-col items-center max-w-4xl mx-auto">
             <div class="hero-anim opacity-0 translate-y-4 mb-8">
                 <div class="inline-flex items-center gap-2 font-mono text-[10px] text-accent tracking-[0.2em] uppercase border border-accent/20 px-3 py-1.5 rounded-full bg-accent/5 backdrop-blur-md">
@@ -144,20 +79,17 @@
                     Operational in Gaborone
                 </div>
             </div>
-
             <h1 class="hero-anim opacity-0 translate-y-4 font-display text-[13vw] md:text-[7vw] leading-[0.9] tracking-tighter text-white uppercase text-center mb-6">
-                The Arsenal<br>
-                For <span class="text-zinc-600">Builders.</span>
+                The Arsenal<br>For <span class="text-zinc-600">Builders.</span>
             </h1>
-
             <div class="hero-anim opacity-0 translate-y-4 mt-4 max-w-lg text-center">
                 <p class="font-body text-lg text-zinc-400 font-light leading-relaxed">
                     Don't let a missing tool stop the job. We provide industrial-grade power tools for sale and rent. 
                     <span class="text-white">Reliability is our standard.</span>
                 </p>
             </div>
-            
             <div class="hero-anim opacity-0 translate-y-4 mt-10 flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
+                <!-- CORRECT LINK BELOW -->
                 <a href="sales-and-rentals.html" class="magnetic bg-white text-black px-8 py-4 rounded-sm text-xs font-body font-bold uppercase tracking-widest hover:bg-zinc-200 transition-colors text-center">
                     Explore Inventory
                 </a>
@@ -166,7 +98,6 @@
                 </a>
             </div>
         </div>
-
         <div class="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/10 to-transparent"></div>
     </header>
 
@@ -178,7 +109,6 @@
             <div class="flex items-center gap-3 opacity-50"><iconify-icon icon="mdi:drill" class="text-accent"></iconify-icon> <span class="text-sm font-body font-medium uppercase tracking-widest text-white">Drills</span></div>
             <div class="flex items-center gap-3 opacity-50"><iconify-icon icon="mdi:hammer" class="text-accent"></iconify-icon> <span class="text-sm font-body font-medium uppercase tracking-widest text-white">Demolition</span></div>
             <div class="flex items-center gap-3 opacity-50"><iconify-icon icon="mdi:ruler-square" class="text-accent"></iconify-icon> <span class="text-sm font-body font-medium uppercase tracking-widest text-white">Measurement</span></div>
-            
             <div class="flex items-center gap-3 opacity-50"><iconify-icon icon="mdi:lightning-bolt" class="text-accent"></iconify-icon> <span class="text-sm font-body font-medium uppercase tracking-widest text-white">Generators</span></div>
             <div class="flex items-center gap-3 opacity-50"><iconify-icon icon="mdi:saw-blade" class="text-accent"></iconify-icon> <span class="text-sm font-body font-medium uppercase tracking-widest text-white">Saws & Cutters</span></div>
             <div class="flex items-center gap-3 opacity-50"><iconify-icon icon="mdi:drill" class="text-accent"></iconify-icon> <span class="text-sm font-body font-medium uppercase tracking-widest text-white">Drills</span></div>
@@ -192,9 +122,8 @@
                 <h2 class="font-display text-2xl text-white mb-2">Select your path</h2>
                 <div class="h-1 w-12 bg-accent"></div>
             </div>
-
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                
+                <!-- CORRECT LINK BELOW -->
                 <a href="sales-and-rentals.html" class="spotlight p-10 min-h-[320px] flex flex-col justify-between group cursor-pointer rounded-sm bg-black/40">
                     <div class="relative z-10">
                         <div class="flex justify-between items-start mb-8">
@@ -210,7 +139,6 @@
                     </div>
                     <div class="w-full h-px bg-white/5 mt-6 group-hover:bg-accent/50 transition-colors"></div>
                 </a>
-
                 <a href="about.html" class="spotlight p-10 min-h-[320px] flex flex-col justify-between group cursor-pointer rounded-sm bg-black/40">
                     <div class="relative z-10">
                         <div class="flex justify-between items-start mb-8">
@@ -226,7 +154,6 @@
                     </div>
                     <div class="w-full h-px bg-white/5 mt-6 group-hover:bg-accent/50 transition-colors"></div>
                 </a>
-
                 <a href="promise.html" class="spotlight p-10 min-h-[320px] flex flex-col justify-between group cursor-pointer rounded-sm bg-black/40">
                     <div class="relative z-10">
                         <div class="flex justify-between items-start mb-8">
@@ -242,16 +169,13 @@
                     </div>
                     <div class="w-full h-px bg-white/5 mt-6 group-hover:bg-accent/50 transition-colors"></div>
                 </a>
-
             </div>
         </div>
     </section>
 
-    <!-- Footer -->
     <footer id="contact" class="bg-zinc-950 pt-24 pb-12 px-6 border-t border-white/5 relative z-20">
         <div class="max-w-[1400px] mx-auto">
             <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-12">
-                
                 <div class="space-y-6">
                     <div class="flex items-center gap-3">
                         <img src="logo.png" alt="FixitBw" class="w-10 h-10 object-contain grayscale hover:grayscale-0 transition-all">
@@ -261,7 +185,6 @@
                         Empowering Botswana's infrastructure with reliability and speed. The tool you need, exactly when you need it.
                     </p>
                 </div>
-
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-8 md:gap-16">
                     <div>
                         <h4 class="text-xs font-mono text-zinc-400 uppercase tracking-widest mb-4">Direct Line</h4>
@@ -273,21 +196,14 @@
                     <div>
                         <h4 class="text-xs font-mono text-zinc-400 uppercase tracking-widest mb-4">Socials</h4>
                         <ul class="space-y-2">
-                            <li>
-                                <a href="https://www.tiktok.com/@prodmoroka" target="_blank" class="flex items-center gap-2 text-sm font-body text-zinc-400 hover:text-white transition-colors group">
-                                    <iconify-icon icon="ic:baseline-tiktok" class="group-hover:text-accent transition-colors"></iconify-icon> TikTok
-                                </a>
-                            </li>
+                            <li><a href="https://www.tiktok.com/@prodmoroka" target="_blank" class="flex items-center gap-2 text-sm font-body text-zinc-400 hover:text-white transition-colors group"><iconify-icon icon="ic:baseline-tiktok" class="group-hover:text-accent transition-colors"></iconify-icon> TikTok</a></li>
                         </ul>
                     </div>
                 </div>
             </div>
-            
             <div class="mt-20 pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4">
                 <p class="text-[10px] font-mono text-zinc-600 uppercase">© 2024 FixitBw. Gaborone, Botswana.</p>
-                <div class="text-[10px] font-mono text-zinc-700 uppercase">
-                    Designed for Durability
-                </div>
+                <div class="text-[10px] font-mono text-zinc-700 uppercase">Designed for Durability</div>
             </div>
         </div>
     </footer>
@@ -303,16 +219,13 @@
         document.addEventListener('mousemove', e => {
             spotlightCards.forEach(card => {
                 const rect = card.getBoundingClientRect();
-                const x = e.clientX - rect.left;
-                const y = e.clientY - rect.top;
-                card.style.setProperty('--mouse-x', `${x}px`);
-                card.style.setProperty('--mouse-y', `${y}px`);
+                card.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`);
+                card.style.setProperty('--mouse-y', `${e.clientY - rect.top}px`);
             });
         });
 
         const cursorDot = document.querySelector('.cursor-dot');
         const cursorCircle = document.querySelector('.cursor-circle');
-        
         document.addEventListener('mousemove', (e) => {
             gsap.to(cursorDot, { x: e.clientX, y: e.clientY, duration: 0.1 });
             gsap.to(cursorCircle, { x: e.clientX, y: e.clientY, duration: 0.4 });
@@ -328,15 +241,10 @@
         magnets.forEach(btn => {
             btn.addEventListener('mousemove', (e) => {
                 const rect = btn.getBoundingClientRect();
-                const x = e.clientX - rect.left - rect.width / 2;
-                const y = e.clientY - rect.top - rect.height / 2;
-                gsap.to(btn, { x: x * 0.3, y: y * 0.3, duration: 0.3 });
+                gsap.to(btn, { x: (e.clientX - rect.left - rect.width/2) * 0.3, y: (e.clientY - rect.top - rect.height/2) * 0.3, duration: 0.3 });
             });
-            btn.addEventListener('mouseleave', () => {
-                gsap.to(btn, { x: 0, y: 0, duration: 0.3 });
-            });
+            btn.addEventListener('mouseleave', () => { gsap.to(btn, { x: 0, y: 0, duration: 0.3 }); });
         });
     </script>
-
 </body>
 </html>
