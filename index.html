@@ -1,440 +1,367 @@
-<!doctype html>
-<html lang="en" class="lenis">
+<html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Fixit 🔨 BW | Power Tools Botswana</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FIXIT | Power Tools Botswana</title>
+    <link rel="icon" type="image/png" href="logo.png">
 
-  <!-- favicon (must be exactly logo.png in repo root) -->
-  <link rel="icon" type="image/png" href="logo.png">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Fonts -->
+    <link href="https://api.fontshare.com/v2/css?f[]=clash-display@200,300,400,500,600,700&amp;f[]=general-sans@200,300,400,500,600&amp;display=swap" rel="stylesheet">
+    
+    <!-- Lightweight Animation Library (GSAP) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
 
-  <!-- Tailwind (optional) -->
-  <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        display: ['Clash Display', 'sans-serif'],
+                        body: ['General Sans', 'sans-serif'],
+                        mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'monospace'], // Default mono for specific technical tags
+                    },
+                    colors: {
+                        'accent': '#f97316', 
+                        'dark': '#050505',
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 8s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    }
+                }
+            }
+        }
+    </script>
 
-  <!-- Fonts -->
-  <link href="https://api.fontshare.com/v2/css?f[]=clash-display@200,300,400,500,600,700&f[]=general-sans@200,300,400,500,600&display=swap" rel="stylesheet">
+    <style>
+        :root { --cursor-size: 20px; }
+        body { background-color: #030303; color: #ffffff; cursor: none; overflow-x: hidden; }
+        ::selection { background: #f97316; color: #000; }
 
-  <!-- Libraries -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.29/bundled/lenis.min.js"></script>
-  <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+        /* --- LIGHTWEIGHT FX --- */
+        .noise {
+            position: fixed; inset: 0; pointer-events: none; z-index: 50; opacity: 0.04;
+            background: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+        
+        .grid-bg {
+            position: fixed; inset: 0; z-index: -1;
+            background-image: 
+                linear-gradient(to right, rgba(255,255,255,0.03) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255,255,255,0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            mask-image: radial-gradient(circle at center, black 30%, transparent 80%);
+        }
 
-  <meta name="description" content="Fixit 🔨 BW — Power tool sales & rentals across Botswana. Rent or buy drills, saws, grinders, generators and more. Contact +267 73318758.">
+        .ambient-glow {
+            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 90vw; height: 90vw;
+            background: radial-gradient(circle, rgba(249, 115, 22, 0.06) 0%, rgba(0,0,0,0) 60%);
+            pointer-events: none; z-index: -1;
+        }
 
-  <style>
-    :root{
-      --accent:#f97316;
-      --bg:#030303;
-      --muted:#bfbfbf;
-    }
+        /* --- CURSOR --- */
+        .cursor-dot {
+            width: 6px; height: 6px; background: #f97316; position: fixed;
+            border-radius: 50%; z-index: 9999; pointer-events: none; transform: translate(-50%, -50%);
+        }
+        .cursor-circle {
+            width: 40px; height: 40px; border: 1px solid rgba(255, 255, 255, 0.15);
+            position: fixed; border-radius: 50%; z-index: 9998; pointer-events: none;
+            transform: translate(-50%, -50%); transition: width 0.3s, height 0.3s, border-color 0.3s, background 0.3s;
+        }
+        .cursor-circle.active {
+            width: 60px; height: 60px; background-color: rgba(249, 115, 22, 0.05); border-color: #f97316;
+        }
 
-    /* Base */
-    html,body{height:100%;margin:0}
-    body{
-      background:var(--bg);
-      color:#fff;
-      font-family:"General Sans",system-ui,-apple-system,"Segoe UI",Roboto,Arial;
-      -webkit-font-smoothing:antialiased;
-      -moz-osx-font-smoothing:grayscale;
-      overflow-x:hidden;
-      cursor:none;
-    }
-    ::selection{background:var(--accent); color:#000;}
+        /* --- SPOTLIGHT CARDS --- */
+        .spotlight { position: relative; overflow: hidden; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); transition: border-color 0.3s; }
+        .spotlight:hover { border-color: rgba(255,255,255,0.1); }
+        .spotlight::before {
+            content: ''; position: absolute; inset: 0;
+            background: radial-gradient(600px circle at var(--mouse-x) var(--mouse-y), rgba(249, 115, 22, 0.06), transparent 40%);
+            opacity: 0; transition: opacity 0.5s; pointer-events: none;
+        }
+        .spotlight:hover::before { opacity: 1; }
 
-    /* Background (floating shapes) */
-    #background{position:fixed;inset:0;z-index:-2;background:#0a0a0a;overflow:hidden}
-    .shape-container{position:fixed;inset:0;z-index:0;pointer-events:none}
-    .float-shape{position:absolute;bottom:-60px;width:40px;height:40px;background:rgba(249,115,22,0.12);border-radius:8px;filter:blur(6px);opacity:0.45;animation:floatUp linear infinite;mix-blend-mode:overlay}
-    @keyframes floatUp{0%{transform:translateY(0) rotate(0deg);opacity:0}10%{opacity:0.35}100%{transform:translateY(-120vh) rotate(360deg);opacity:0}}
+        /* --- LOADER --- */
+        .loader-wrap {
+            position: fixed; z-index: 10000; inset: 0; background: #030303;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+        }
+        .loader-bar { width: 1px; height: 0%; background: #f97316; }
 
-    /* Noise */
-    .noise{position:fixed;inset:0;pointer-events:none;z-index:1;opacity:0.03;
-      background:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")}
-
-    /* Cursor (desktop) */
-    .cursor-dot{width:6px;height:6px;background:var(--accent);position:fixed;top:0;left:0;border-radius:50%;z-index:9999;pointer-events:none;transform:translate(-50%,-50%)}
-    .cursor-circle{width:40px;height:40px;border:1px solid rgba(255,255,255,0.14);position:fixed;top:0;left:0;border-radius:50%;z-index:9998;pointer-events:none;transform:translate(-50%,-50%);transition:all .22s}
-    .cursor-circle.active{width:64px;height:64px;background:rgba(249,115,22,0.08);border-color:var(--accent);backdrop-filter:blur(2px)}
-
-    /* Nav */
-    nav{position:fixed;top:0;left:0;width:100%;z-index:1000;padding:14px 18px;background:linear-gradient(180deg, rgba(0,0,0,0.35), transparent)}
-    .nav-inner{max-width:1400px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:0 12px}
-    .logo{display:flex;align-items:center;gap:10px;text-decoration:none;color:#fff}
-    .logo .brand{font-weight:800;font-size:18px}
-    .logo img{width:26px;height:26px;object-fit:contain}
-    .nav-links{display:flex;gap:14px;align-items:center}
-    .nav-links a{color:#d1d1d1;text-decoration:none;font-weight:700;font-size:13px;padding:8px 10px;border-radius:8px}
-    .nav-links a:hover{color:#fff;background:rgba(255,255,255,0.02)}
-    .nav-cta{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:10px;background:rgba(0,0,0,0.45);border:1px solid rgba(255,255,255,0.04);color:#fff;text-decoration:none;font-weight:800}
-    .nav-cta:hover{border-color:var(--accent)}
-
-    /* Hero / header */
-    header.max-w-center{min-height:92vh;display:flex;align-items:center;justify-content:center;padding:0 18px;padding-top:160px;z-index:10}
-    @media (max-width:768px){ header.max-w-center{padding-top:130px} }
-    h1.big{font-family:'Clash Display',sans-serif;font-size:clamp(36px,9vw,100px);line-height:0.9;text-align:center;margin:0;letter-spacing:-0.02em}
-    .lead{color:#c7c7c7;font-size:17px;max-width:920px;margin:16px auto 0;text-align:center}
-
-    /* Layout containers */
-    .max-w-center{max-width:1200px;margin:0 auto;padding:0 18px}
-    .services-section{padding:70px 0}
-
-    /* Cards */
-    .services-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;align-items:start}
-    .card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:20px;border-radius:12px;border:1px solid rgba(255,255,255,0.04);box-shadow:0 8px 30px rgba(0,0,0,0.4)}
-    .card-top{display:flex;gap:14px;align-items:flex-start;margin-bottom:8px}
-    .icon-wrap{width:56px;height:56px;display:flex;align-items:center;justify-content:center;border-radius:10px}
-    .card h3{margin:0;font-size:18px;font-weight:800}
-    .card p{color:#d0d0d0;line-height:1.6;margin:0;margin-top:6px}
-
-    /* Spotlight */
-    .spotlight{position:relative;overflow:hidden;border-radius:12px;background:transparent}
-    .spotlight::before{content:'';position:absolute;inset:0;background:radial-gradient(600px circle at var(--mouse-x) var(--mouse-y), rgba(249,115,22,0.06), transparent 36%);pointer-events:none;transition:opacity .2s}
-
-    /* Marquee */
-    .marquee{padding:18px 0;border-top:1px solid rgba(255,255,255,0.02);border-bottom:1px solid rgba(255,255,255,0.02);overflow:hidden}
-    .marquee-inner{display:flex;gap:36px;align-items:center;white-space:nowrap;transform:translateX(0)}
-
-    /* Footer */
-    footer{padding:44px 18px 80px;color:#d0d0d0;border-top:1px solid rgba(255,255,255,0.03);position:relative;z-index:10}
-    .footer-inner{max-width:1200px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap}
-    .visit-btn{background:#fff;color:#000;padding:10px 14px;border-radius:8px;font-weight:700;text-decoration:none}
-
-    /* Responsiveness (M1: 1-column mobile) */
-    @media (max-width: 1024px){
-      .services-grid{grid-template-columns:1fr}
-      header.max-w-center{min-height:80vh;padding-top:130px}
-    }
-    @media (max-width:640px){
-      .nav-links{display:none}
-      header.max-w-center{min-height:72vh;padding-top:100px}
-      h1.big{font-size:34px}
-      .card{padding:18px}
-    }
-
-    /* Performance tweaks */
-    .float-shape{will-change:transform,opacity}
-    html,body{-webkit-tap-highlight-color:transparent;user-select:none}
-  </style>
+        /* --- MARQUEE --- */
+        @keyframes scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+        .marquee-content { display: flex; gap: 4rem; width: max-content; animation: scroll 30s linear infinite; }
+    </style>
 </head>
 
 <body>
-  <!-- Background layers -->
-  <div id="background" aria-hidden="true"></div>
-  <div class="shape-container" aria-hidden="true"></div>
-  <div class="noise" aria-hidden="true"></div>
 
-  <!-- Cursor (desktop) -->
-  <div class="cursor-dot" aria-hidden="true"></div>
-  <div class="cursor-circle" aria-hidden="true"></div>
+    <div class="noise"></div>
+    <div class="grid-bg"></div>
+    <div class="ambient-glow animate-pulse-slow"></div>
+    
+    <div class="cursor-dot hidden md:block"></div>
+    <div class="cursor-circle hidden md:block"></div>
 
-  <!-- Light loader -->
-  <div class="loader-wrap" aria-hidden="true" style="position:fixed;inset:0;z-index:9998;display:flex;align-items:center;justify-content:center;pointer-events:none;">
-    <div class="loader-bar" style="width:2px;height:0;background:var(--accent);"></div>
-  </div>
-
-  <!-- NAV -->
-  <nav role="navigation" aria-label="Main navigation">
-    <div class="nav-inner">
-      <a class="logo" href="index.html" aria-label="FixitBW home">
-        <span class="brand">Fixit</span>
-        <span class="hammer" aria-hidden="true"><img src="logo.png" alt="FixitBW logo" style="width:26px;height:26px;object-fit:contain"></span>
-        <span class="brand" style="font-weight:900">BW</span>
-      </a>
-
-      <div class="nav-links" role="navigation" aria-label="Site links">
-        <a href="about.html">About</a>
-        <a href="sales.html">Sales & Rentals</a>
-        <a href="promise.html">Our Promise</a>
-      </div>
-
-      <a class="nav-cta" id="get-tools-cta" href="https://wa.me/26773318758" target="_blank" rel="noopener noreferrer">
-        Contact Us Today
-      </a>
+    <!-- Loader -->
+    <div class="loader-wrap">
+        <div class="loader-bar"></div>
+        <div class="mt-4 text-[10px] font-body font-medium tracking-widest uppercase fade-text">Initializing FixitBw...</div>
     </div>
-  </nav>
 
-  <!-- HERO -->
-  <header class="max-w-center" role="banner" aria-label="Hero">
-    <div style="text-align:center;z-index:10;">
-      <div style="opacity:0.95;">
-        <p class="lead" style="text-transform:uppercase;letter-spacing:0.22em;color:#ffb88b;font-weight:700;font-size:12px;">
-          Botswana's Trusted Source
-        </p>
-      </div>
+    <!-- Navigation -->
+    <nav class="fixed top-0 left-0 w-full z-[100] px-6 py-5 border-b border-white/5 bg-black/70 backdrop-blur-xl">
+        <div class="flex justify-between items-center max-w-[1600px] mx-auto">
+            <!-- Logo -->
+            <a href="index.html" class="flex items-center gap-3 group magnetic">
+                <div class="relative w-8 h-8 flex items-center justify-center">
+                    <img src="logo.png" alt="FixitBw Logo" class="w-full h-full object-contain opacity-90 group-hover:opacity-100 transition-opacity">
+                    <!-- Subtle Glow behind logo -->
+                    <div class="absolute inset-0 bg-accent/20 blur-lg rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                </div>
+                <span class="font-display font-semibold text-xl tracking-tight text-white group-hover:text-zinc-200 transition-colors">FixitBw</span>
+            </a>
 
-      <h1 class="big reveal-text" style="margin-top:14px;">
-        <span class="char">Build.</span><br>
-        <span class="char">Repair.</span><br>
-        <span class="char">Create. <em style="font-weight:400">Fixit.</em></span>
-      </h1>
-
-      <p class="lead" style="margin-top:12px;max-width:880px;">
-        Whether you're building, repairing, or creating, we provide the tools that help you get the job done right.
-        Rent or buy with ease, supported by dependable quality across Botswana.
-      </p>
-
-      <div style="margin-top:22px;">
-        <a class="nav-cta" href="sales.html" style="text-decoration:none;">View Tools</a>
-      </div>
-    </div>
-  </header>
-
-  <!-- SERVICES (original simple cards + large colorful icons) -->
-  <section class="services-section" aria-labelledby="what-we-offer">
-    <div class="max-w-center">
-      <h2 id="what-we-offer" style="font-family:'Clash Display';font-size:40px;text-align:center;margin-bottom:28px;">What We Offer</h2>
-
-      <div class="services-grid" role="list">
-        <!-- Card 1: Sales -->
-        <article class="card spotlight" role="listitem" aria-labelledby="sales-title">
-          <div class="card-top">
-            <div class="icon-wrap" aria-hidden="true" style="background:linear-gradient(180deg, rgba(249,115,22,0.22), rgba(249,115,22,0.12));">
-              <iconify-icon icon="eva:flash-fill" width="28" height="28" style="color:#fff"></iconify-icon>
+            <!-- Links (Matches About.html font-body) -->
+            <div class="hidden md:flex gap-1">
+                <a href="about.html" class="magnetic px-5 py-2 text-xs font-body font-medium uppercase tracking-widest text-zinc-500 hover:text-white hover:bg-white/5 rounded-full transition-all">About</a>
+                <a href="sales-and-rentals.html" class="magnetic px-5 py-2 text-xs font-body font-medium uppercase tracking-widest text-zinc-500 hover:text-white hover:bg-white/5 rounded-full transition-all">Catalog</a>
+                <a href="promise.html" class="magnetic px-5 py-2 text-xs font-body font-medium uppercase tracking-widest text-zinc-500 hover:text-white hover:bg-white/5 rounded-full transition-all">Promise</a>
             </div>
-            <div>
-              <h3 id="sales-title">Power Tool Sales</h3>
-            </div>
-          </div>
-          <p>Build your own toolkit — we sell reliable drills, saws, grinders, cutters and generators from trusted brands.</p>
-        </article>
 
-        <!-- Card 2: Rentals -->
-        <article class="card spotlight" role="listitem" aria-labelledby="rentals-title">
-          <div class="card-top">
-            <div class="icon-wrap" aria-hidden="true" style="background:linear-gradient(180deg, rgba(37,99,235,0.12), rgba(59,130,246,0.06));">
-              <iconify-icon icon="mdi:tools" width="28" height="28" style="color:#fff"></iconify-icon>
-            </div>
-            <div>
-              <h3 id="rentals-title">Tool Rentals</h3>
-            </div>
-          </div>
-          <p>Rent by the day or for the whole project — affordable, flexible options and well-maintained equipment.</p>
-        </article>
-
-        <!-- Card 3: Trusted Quality -->
-        <article class="card spotlight" role="listitem" aria-labelledby="trusted-title">
-          <div class="card-top">
-            <div class="icon-wrap" aria-hidden="true" style="background:linear-gradient(180deg, rgba(16,185,129,0.12), rgba(34,197,94,0.06));">
-              <iconify-icon icon="mdi:shield-check" width="28" height="28" style="color:#fff"></iconify-icon>
-            </div>
-            <div>
-              <h3 id="trusted-title">Trusted Quality</h3>
-            </div>
-          </div>
-          <p>Every item is inspected and serviced before rental — we stand behind the tools we sell and rent.</p>
-        </article>
-      </div>
-    </div>
-  </section>
-
-  <!-- ABOUT PREVIEW -->
-  <section style="padding:36px 0 48px;">
-    <div class="max-w-center" style="display:grid;grid-template-columns:1fr 420px;gap:22px;align-items:start;">
-      <div>
-        <h2 style="font-size:34px;margin:0 0 10px 0;">About FixitBW</h2>
-        <p style="color:#d0d0d0;line-height:1.75;">
-          Locally owned in Botswana, FixitBW provides accessible, dependable power tools for builders, contractors and DIY enthusiasts.
-          We focus on clear pricing, dependable equipment and friendly local service.
-        </p>
-        <div style="margin-top:14px;">
-          <a class="nav-cta" href="about.html" style="text-decoration:none;">Learn More</a>
+            <a href="#contact" class="magnetic hidden md:flex items-center gap-2 border border-white/10 px-5 py-2 rounded-sm hover:border-accent hover:bg-accent/10 hover:text-accent transition-all duration-300 group">
+                <span class="text-xs font-body font-bold uppercase tracking-widest">Connect</span>
+            </a>
+            
+            <!-- Mobile Menu -->
+            <button class="md:hidden text-white"><iconify-icon icon="lucide:menu" width="24"></iconify-icon></button>
         </div>
-      </div>
+    </nav>
 
-      <div class="spotlight" style="padding:18px;border-radius:12px;">
-        <h3 style="margin:0 0 6px 0;">Why Choose Us</h3>
-        <ul style="color:#cfcfcf;line-height:1.7;margin:0;padding-left:18px;">
-          <li>Locally available tools</li>
-          <li>Fair prices and clear terms</li>
-          <li>Well-maintained equipment</li>
-        </ul>
-      </div>
-    </div>
-  </section>
+    <!-- Hero Section -->
+    <header class="relative min-h-screen flex flex-col justify-center items-center px-4 pt-32 pb-20 overflow-hidden">
+        
+        <div class="z-10 text-center flex flex-col items-center max-w-4xl mx-auto">
+            <div class="hero-anim opacity-0 translate-y-4 mb-8">
+                <!-- Tag (Kept mono for technical feel, matches 'Since 2024' tag in About page) -->
+                <div class="inline-flex items-center gap-2 font-mono text-[10px] text-accent tracking-[0.2em] uppercase border border-accent/20 px-3 py-1.5 rounded-full bg-accent/5 backdrop-blur-md">
+                    <span class="w-1.5 h-1.5 rounded-full bg-accent animate-pulse"></span>
+                    Operational in Gaborone
+                </div>
+            </div>
 
-  <!-- MARQUEE -->
-  <section class="marquee" aria-hidden="true">
-    <div class="max-w-center">
-      <div class="marquee-inner" id="marqueeInner">
-        <div style="font-weight:800;color:#bdbdbd;">DRILLS</div>
-        <div style="font-weight:800;color:#aaa;">GRINDERS</div>
-        <div style="font-weight:800;color:#bdbdbd;">SAWS</div>
-        <div style="font-weight:800;color:#aaa;">GENERATORS</div>
-        <div style="font-weight:800;color:#bdbdbd;">CUTTERS</div>
-        <div style="font-weight:800;color:#aaa;">ACCESSORIES</div>
-        <!-- duplicated items for smooth loop -->
-        <div style="font-weight:800;color:#bdbdbd;">DRILLS</div>
-        <div style="font-weight:800;color:#aaa;">GRINDERS</div>
-        <div style="font-weight:800;color:#bdbdbd;">SAWS</div>
-      </div>
-    </div>
-  </section>
+            <h1 class="hero-anim opacity-0 translate-y-4 font-display text-[13vw] md:text-[7vw] leading-[0.9] tracking-tighter text-white uppercase text-center mb-6">
+                The Arsenal<br>
+                For <span class="text-zinc-600">Builders.</span>
+            </h1>
 
-  <!-- CTA -->
-  <section style="padding:40px 0;text-align:center;">
-    <h2 style="color:#c7c7c7;font-size:24px;margin:0 0 12px 0;">Tools you can <span style="color:#fff;font-weight:800;">trust</span>.</h2>
-    <div style="margin-top:12px;">
-      <a class="nav-cta" href="https://wa.me/26773318758" target="_blank" rel="noopener noreferrer" style="text-decoration:none;">Contact Us Today</a>
-    </div>
-  </section>
+            <div class="hero-anim opacity-0 translate-y-4 mt-4 max-w-lg text-center">
+                <p class="font-body text-lg text-zinc-400 font-light leading-relaxed">
+                    Don't let a missing tool stop the job. We provide industrial-grade power tools for sale and rent. 
+                    <span class="text-white">Reliability is our standard.</span>
+                </p>
+            </div>
+            
+            <div class="hero-anim opacity-0 translate-y-4 mt-10 flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
+                <a href="sales-and-rentals.html" class="magnetic bg-white text-black px-8 py-4 rounded-sm text-xs font-body font-bold uppercase tracking-widest hover:bg-zinc-200 transition-colors text-center">
+                    Explore Inventory
+                </a>
+                <a href="about.html" class="magnetic border border-white/10 text-white px-8 py-4 rounded-sm text-xs font-body font-bold uppercase tracking-widest hover:bg-white/5 hover:border-white/30 transition-all text-center">
+                    Our Mission
+                </a>
+            </div>
+        </div>
 
-  <!-- FOOTER -->
-  <footer id="contact">
-    <div class="footer-inner">
-      <div style="display:flex;align-items:center;gap:12px;">
-        <span style="font-weight:800;font-size:18px;color:#fff;">Fixit</span>
-        <span><img src="logo.png" alt="FixitBW hammer" style="width:20px;height:20px;object-fit:contain"></span>
-        <span style="font-weight:900;font-size:18px;color:#fff;">BW</span>
-      </div>
+        <!-- Abstract Decor -->
+        <div class="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/10 to-transparent"></div>
+    </header>
 
-      <div style="display:flex;align-items:center;gap:18px;">
-        <a href="https://wa.me/26773318758" style="color:var(--accent);font-weight:700;text-decoration:none;">+267 73318758</a>
-        <a href="https://www.tiktok.com/@prodmoroka" target="_blank" style="color:#bbb;text-decoration:none;">TikTok</a>
-        <a href="https://www.facebook.com/profile.php?id=61556143019845" target="_blank" style="color:#bbb;text-decoration:none;">Facebook</a>
-        <a class="visit-btn" href="https://www.tiktok.com/@prodmoroka" target="_blank" style="text-decoration:none;">Visit FixitBW</a>
-      </div>
-    </div>
+    <!-- Marquee / Ticker -->
+    <section class="py-4 border-y border-white/5 bg-zinc-950/50 backdrop-blur-sm marquee-container relative z-20 overflow-hidden">
+        <div class="marquee-content">
+            <div class="flex items-center gap-3 opacity-50"><iconify-icon icon="mdi:lightning-bolt" class="text-accent"></iconify-icon> <span class="text-sm font-body font-medium uppercase tracking-widest text-white">Generators</span></div>
+            <div class="flex items-center gap-3 opacity-50"><iconify-icon icon="mdi:saw-blade" class="text-accent"></iconify-icon> <span class="text-sm font-body font-medium uppercase tracking-widest text-white">Saws & Cutters</span></div>
+            <div class="flex items-center gap-3 opacity-50"><iconify-icon icon="mdi:drill" class="text-accent"></iconify-icon> <span class="text-sm font-body font-medium uppercase tracking-widest text-white">Drills</span></div>
+            <div class="flex items-center gap-3 opacity-50"><iconify-icon icon="mdi:hammer" class="text-accent"></iconify-icon> <span class="text-sm font-body font-medium uppercase tracking-widest text-white">Demolition</span></div>
+            <div class="flex items-center gap-3 opacity-50"><iconify-icon icon="mdi:ruler-square" class="text-accent"></iconify-icon> <span class="text-sm font-body font-medium uppercase tracking-widest text-white">Measurement</span></div>
+            <!-- Duplicate for loop -->
+            <div class="flex items-center gap-3 opacity-50"><iconify-icon icon="mdi:lightning-bolt" class="text-accent"></iconify-icon> <span class="text-sm font-body font-medium uppercase tracking-widest text-white">Generators</span></div>
+            <div class="flex items-center gap-3 opacity-50"><iconify-icon icon="mdi:saw-blade" class="text-accent"></iconify-icon> <span class="text-sm font-body font-medium uppercase tracking-widest text-white">Saws & Cutters</span></div>
+            <div class="flex items-center gap-3 opacity-50"><iconify-icon icon="mdi:drill" class="text-accent"></iconify-icon> <span class="text-sm font-body font-medium uppercase tracking-widest text-white">Drills</span></div>
+        </div>
+    </section>
 
-    <div style="text-align:center;color:#777;margin-top:12px;">© 2024 Fixit 🔨 BW. All rights reserved.</div>
-  </footer>
+    <!-- Navigation Portal -->
+    <section class="py-32 px-6 relative z-10">
+        <div class="max-w-[1400px] mx-auto">
+            <div class="mb-12">
+                <h2 class="font-display text-2xl text-white mb-2">Select your path</h2>
+                <div class="h-1 w-12 bg-accent"></div>
+            </div>
 
-  <!-- Scripts -->
-  <script>
-    /* ===== Lenis smooth scrolling ===== */
-    const lenis = new Lenis({
-      duration: 1.2,
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      smooth: true
-    });
-    function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
-    requestAnimationFrame(raf);
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                
+                <!-- Card 1 -->
+                <a href="sales-and-rentals.html" class="spotlight p-10 min-h-[320px] flex flex-col justify-between group cursor-pointer rounded-sm bg-black/40">
+                    <div class="relative z-10">
+                        <div class="flex justify-between items-start mb-8">
+                            <div class="p-3 bg-white/5 rounded-sm group-hover:bg-accent/10 transition-colors">
+                                <iconify-icon icon="lucide:shopping-bag" width="24" class="text-zinc-400 group-hover:text-accent transition-colors"></iconify-icon>
+                            </div>
+                            <iconify-icon icon="lucide:arrow-right" width="20" class="text-zinc-600 group-hover:text-white group-hover:translate-x-1 transition-all"></iconify-icon>
+                        </div>
+                        <h3 class="text-3xl font-display text-white mb-3 group-hover:translate-x-1 transition-transform">Inventory</h3>
+                        <p class="text-zinc-500 font-body text-sm leading-relaxed max-w-[220px]">
+                            Access our catalog of top-tier brands. Available for direct purchase or flexible daily rentals.
+                        </p>
+                    </div>
+                    <div class="w-full h-px bg-white/5 mt-6 group-hover:bg-accent/50 transition-colors"></div>
+                </a>
 
-    /* ===== GSAP animations ===== */
-    gsap.registerPlugin(ScrollTrigger);
+                <!-- Card 2 -->
+                <a href="about.html" class="spotlight p-10 min-h-[320px] flex flex-col justify-between group cursor-pointer rounded-sm bg-black/40">
+                    <div class="relative z-10">
+                        <div class="flex justify-between items-start mb-8">
+                            <div class="p-3 bg-white/5 rounded-sm group-hover:bg-accent/10 transition-colors">
+                                <iconify-icon icon="lucide:users" width="24" class="text-zinc-400 group-hover:text-accent transition-colors"></iconify-icon>
+                            </div>
+                            <iconify-icon icon="lucide:arrow-right" width="20" class="text-zinc-600 group-hover:text-white group-hover:translate-x-1 transition-all"></iconify-icon>
+                        </div>
+                        <h3 class="text-3xl font-display text-white mb-3 group-hover:translate-x-1 transition-transform">The Team</h3>
+                        <p class="text-zinc-500 font-body text-sm leading-relaxed max-w-[220px]">
+                            Built by contractors, for contractors. We understand the cost of downtime.
+                        </p>
+                    </div>
+                    <div class="w-full h-px bg-white/5 mt-6 group-hover:bg-accent/50 transition-colors"></div>
+                </a>
 
-    // hero reveal (chars)
-    document.querySelectorAll('.reveal-text .char, .reveal-text').forEach((el,i) => {
-      if (el.classList && el.classList.contains('char')) {
-        gsap.fromTo(el, { y: '110%' }, { y: '0%', duration: 0.9, delay: i * 0.05, ease: "power3.out" });
-      } else {
-        gsap.from(el, { opacity: 0, y: 16, duration: 0.8, ease: "power2.out" });
-      }
-    });
+                <!-- Card 3 -->
+                <a href="promise.html" class="spotlight p-10 min-h-[320px] flex flex-col justify-between group cursor-pointer rounded-sm bg-black/40">
+                    <div class="relative z-10">
+                        <div class="flex justify-between items-start mb-8">
+                            <div class="p-3 bg-white/5 rounded-sm group-hover:bg-accent/10 transition-colors">
+                                <iconify-icon icon="lucide:shield-check" width="24" class="text-zinc-400 group-hover:text-accent transition-colors"></iconify-icon>
+                            </div>
+                            <iconify-icon icon="lucide:arrow-right" width="20" class="text-zinc-600 group-hover:text-white group-hover:translate-x-1 transition-all"></iconify-icon>
+                        </div>
+                        <h3 class="text-3xl font-display text-white mb-3 group-hover:translate-x-1 transition-transform">Guarantee</h3>
+                        <p class="text-zinc-500 font-body text-sm leading-relaxed max-w-[220px]">
+                            Every tool is serviced and calibrated. If it breaks on site, we replace it instantly.
+                        </p>
+                    </div>
+                    <div class="w-full h-px bg-white/5 mt-6 group-hover:bg-accent/50 transition-colors"></div>
+                </a>
 
-    // card reveal
-    gsap.from(".card", {
-      y: 30,
-      opacity: 0,
-      duration: 0.9,
-      stagger: 0.14,
-      ease: "power2.out",
-      scrollTrigger: { trigger: ".services-section", start: "top 85%" }
-    });
+            </div>
+        </div>
+    </section>
 
-    // section reveals
-    gsap.from("section", {
-      opacity: 0,
-      y: 28,
-      duration: 0.85,
-      stagger: 0.12,
-      ease: "power2.out",
-      scrollTrigger: { trigger: "section", start: "top 88%" }
-    });
+    <!-- Footer -->
+    <footer id="contact" class="bg-zinc-950 pt-24 pb-12 px-6 border-t border-white/5 relative z-20">
+        <div class="max-w-[1400px] mx-auto">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-12">
+                
+                <!-- Brand -->
+                <div class="space-y-6">
+                    <div class="flex items-center gap-3">
+                        <img src="logo.png" alt="FixitBw" class="w-10 h-10 object-contain grayscale hover:grayscale-0 transition-all">
+                        <span class="font-display font-semibold text-3xl tracking-tight text-white">FixitBw</span>
+                    </div>
+                    <p class="text-zinc-500 font-body text-sm max-w-xs leading-relaxed">
+                        Empowering Botswana's infrastructure with reliability and speed. The tool you need, exactly when you need it.
+                    </p>
+                </div>
 
-    /* ===== Cursor (desktop) ===== */
-    const dot = document.querySelector('.cursor-dot');
-    const circle = document.querySelector('.cursor-circle');
+                <!-- Contact Grid -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-8 md:gap-16">
+                    <div>
+                        <h4 class="text-xs font-mono text-zinc-400 uppercase tracking-widest mb-4">Direct Line</h4>
+                        <ul class="space-y-2">
+                            <li><a href="tel:+26773318758" class="text-sm font-body text-white hover:text-accent transition-colors">+267 7331 8758</a></li>
+                            <li><a href="mailto:lekgotlamoroka53@gmail.com" class="text-sm font-body text-zinc-400 hover:text-white transition-colors">lekgotlamoroka53@gmail.com</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="text-xs font-mono text-zinc-400 uppercase tracking-widest mb-4">Socials</h4>
+                        <ul class="space-y-2">
+                            <li>
+                                <a href="https://www.tiktok.com/@prodmoroka" target="_blank" class="flex items-center gap-2 text-sm font-body text-zinc-400 hover:text-white transition-colors group">
+                                    <iconify-icon icon="ic:baseline-tiktok" class="group-hover:text-accent transition-colors"></iconify-icon> TikTok
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mt-20 pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4">
+                <p class="text-[10px] font-mono text-zinc-600 uppercase">© 2024 FixitBw. Gaborone, Botswana.</p>
+                <div class="text-[10px] font-mono text-zinc-700 uppercase">
+                    Designed for Durability
+                </div>
+            </div>
+        </div>
+    </footer>
 
-    function isMobile() { return window.innerWidth <= 768; }
+    <script>
+        // --- 1. PRELOADER & INTRO ---
+        const tl = gsap.timeline();
+        
+        tl.to('.loader-bar', { height: '100%', duration: 1, ease: "power4.inOut" })
+          .to('.fade-text', { opacity: 0, duration: 0.5 }, "-=0.5")
+          .to('.loader-wrap', { y: '-100%', duration: 0.8, ease: "power4.inOut" })
+          .to('.hero-anim', { y: 0, opacity: 1, duration: 1, stagger: 0.1, ease: "power3.out" }, "-=0.4");
 
-    function updateCursorVisibility() {
-      if (isMobile()) {
-        if (dot) dot.style.display = 'none';
-        if (circle) circle.style.display = 'none';
-      } else {
-        if (dot) dot.style.display = 'block';
-        if (circle) circle.style.display = 'block';
-      }
-    }
-    updateCursorVisibility();
-    window.addEventListener('resize', updateCursorVisibility);
+        // --- 2. INTERACTIONS ---
+        
+        // Spotlight Effect
+        const spotlightCards = document.querySelectorAll('.spotlight');
+        document.addEventListener('mousemove', e => {
+            spotlightCards.forEach(card => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                card.style.setProperty('--mouse-x', `${x}px`);
+                card.style.setProperty('--mouse-y', `${y}px`);
+            });
+        });
 
-    if (!isMobile()) {
-      document.addEventListener('mousemove', (e) => {
-        gsap.to(dot, { x: e.clientX, y: e.clientY, duration: 0.06, ease: 'power2.out' });
-        gsap.to(circle, { x: e.clientX, y: e.clientY, duration: 0.18, ease: 'power2.out' });
-      });
+        // Cursor
+        const cursorDot = document.querySelector('.cursor-dot');
+        const cursorCircle = document.querySelector('.cursor-circle');
+        
+        document.addEventListener('mousemove', (e) => {
+            gsap.to(cursorDot, { x: e.clientX, y: e.clientY, duration: 0.1 });
+            gsap.to(cursorCircle, { x: e.clientX, y: e.clientY, duration: 0.4 });
+        });
 
-      document.querySelectorAll('a, button, .spotlight, .card').forEach(el => {
-        el.addEventListener('mouseenter', () => circle.classList.add('active'));
-        el.addEventListener('mouseleave', () => circle.classList.remove('active'));
-      });
-    }
+        const interactables = document.querySelectorAll('a, button, .spotlight');
+        interactables.forEach(el => {
+            el.addEventListener('mouseenter', () => cursorCircle.classList.add('active'));
+            el.addEventListener('mouseleave', () => cursorCircle.classList.remove('active'));
+        });
 
-    /* ===== Spotlight tracking & mobile tap ===== */
-    document.addEventListener('mousemove', (e) => {
-      document.querySelectorAll('.spotlight').forEach(card => {
-        const rect = card.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
-        card.style.setProperty('--mouse-x', `${x}px`);
-        card.style.setProperty('--mouse-y', `${y}px`);
-      });
-    });
+        // Magnetic Buttons
+        const magnets = document.querySelectorAll('.magnetic');
+        magnets.forEach(btn => {
+            btn.addEventListener('mousemove', (e) => {
+                const rect = btn.getBoundingClientRect();
+                const x = e.clientX - rect.left - rect.width / 2;
+                const y = e.clientY - rect.top - rect.height / 2;
+                gsap.to(btn, { x: x * 0.3, y: y * 0.3, duration: 0.3 });
+            });
+            btn.addEventListener('mouseleave', () => {
+                gsap.to(btn, { x: 0, y: 0, duration: 0.3 });
+            });
+        });
 
-    document.querySelectorAll('.spotlight').forEach(card => {
-      card.addEventListener('touchstart', (ev) => {
-        const rect = card.getBoundingClientRect();
-        const x = ev.touches[0].clientX - rect.left;
-        const y = ev.touches[0].clientY - rect.top;
-        card.style.setProperty('--mouse-x', `${x}px`);
-        card.style.setProperty('--mouse-y', `${y}px`);
-      }, { passive: true });
-    });
+    </script>
 
-    /* ===== Floating shapes generator (lightweight) ===== */
-    (function createShapes(){
-      const container = document.querySelector('.shape-container');
-      if (!container) return;
-      const maxShapes = window.innerWidth < 768 ? 8 : 14;
-      for (let i = 0; i < maxShapes; i++) {
-        const el = document.createElement('div');
-        el.className = 'float-shape';
-        const left = Math.random() * 100;
-        const delay = Math.random() * 8;
-        const duration = 12 + Math.random() * 14;
-        const size = (window.innerWidth < 600) ? (20 + Math.random() * 30) : (30 + Math.random() * 60);
-        el.style.left = left + 'vw';
-        el.style.width = size + 'px';
-        el.style.height = size + 'px';
-        el.style.animationDuration = duration + 's';
-        el.style.animationDelay = delay + 's';
-        el.style.opacity = 0.25 + Math.random() * 0.35;
-        container.appendChild(el);
-      }
-    })();
-
-    /* ===== Marquee loop (simple & light) ===== */
-    (function marqueeLoop(){
-      const marquee = document.getElementById('marqueeInner') || document.querySelector('.marquee-inner');
-      if (!marquee) return;
-      let pos = 0;
-      const speed = 0.3;
-      function step() {
-        pos -= speed;
-        if (Math.abs(pos) > marquee.scrollWidth / 2) pos = 0;
-        marquee.style.transform = `translateX(${pos}px)`;
-        requestAnimationFrame(step);
-      }
-      requestAnimationFrame(step);
-    })();
-
-    /* Accessibility: keyboard tab indicator (small) */
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Tab') document.body.classList.add('user-tabbed');
-    });
-
-  </script>
 </body>
 </html>
