@@ -1,144 +1,586 @@
-<!doctype html>
-<html lang="en" class="lenis">
+<html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Sales & Rentals | Fixit 🔨 BW</title>
-  <link rel="icon" type="image/png" href="logo.png">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catalog | FixitBw</title>
+    <link rel="icon" type="image/png" href="logo.png">
 
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://api.fontshare.com/v2/css?f[]=clash-display@200,300,400,500,600,700&f[]=general-sans@200,300,400,500,600&display=swap" rel="stylesheet">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.29/bundled/lenis.min.js"></script>
-  <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Fonts -->
+    <link href="https://api.fontshare.com/v2/css?f[]=clash-display@200,300,400,500,600,700&amp;f[]=general-sans@200,300,400,500,600&amp;display=swap" rel="stylesheet">
+    
+    <!-- Lightweight Animation Library (GSAP) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
 
-  <meta name="description" content="Sales & Rentals at FixitBW — Rent or buy power tools across Botswana.">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        display: ['Clash Display', 'sans-serif'],
+                        body: ['General Sans', 'sans-serif'],
+                        mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'monospace'],
+                    },
+                    colors: {
+                        'accent': '#f97316', 
+                        'accent-dark': '#ea580c',
+                        'dark': '#050505',
+                    }
+                }
+            }
+        }
+    </script>
 
-  <style>
-    :root{--accent:#f97316;--bg:#030303;--nav-h:72px}
-    html,body{height:100%;margin:0}
-    body{background:var(--bg);color:#fff;font-family:"General Sans",system-ui;overflow-x:hidden;cursor:none;-webkit-font-smoothing:antialiased}
-    ::selection{background:var(--accent);color:#000}
-    nav{position:fixed;top:0;left:0;width:100%;height:var(--nav-h);display:flex;align-items:center;z-index:1000;padding:12px 18px;background:linear-gradient(180deg, rgba(0,0,0,0.35), transparent)}
-    .nav-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:0 12px}
-    .logo{display:flex;align-items:center;gap:10px}
-    .logo img{width:26px;height:26px;object-fit:contain}
-    .nav-links{display:flex;gap:14px}
-    .nav-cta{display:inline-flex;align-items:center;padding:8px 12px;border-radius:10px;background:rgba(0,0,0,0.45);border:1px solid rgba(255,255,255,0.04);color:#fff;text-decoration:none}
+    <style>
+        :root { --cursor-size: 20px; }
+        body { background-color: #030303; color: #ffffff; cursor: none; overflow-x: hidden; }
+        ::selection { background: #f97316; color: #000; }
 
-    /* background */
-    #background{position:fixed;inset:0;z-index:-2;background:#0a0a0a;overflow:hidden}
-    .shape-container{position:fixed;inset:0;z-index:0;pointer-events:none}
-    .float-shape{position:absolute;bottom:-60px;width:40px;height:40px;border-radius:8px;filter:blur(6px);opacity:0.45;animation:floatUp linear infinite;mix-blend-mode:overlay;background:rgba(249,115,22,0.12)}
-    @keyframes floatUp{0%{transform:translateY(0) rotate(0deg);opacity:0}10%{opacity:0.35}100%{transform:translateY(-120vh) rotate(360deg);opacity:0}}
-    .noise{position:fixed;inset:0;pointer-events:none;z-index:1;opacity:0.03;background:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+        /* --- LIGHTWEIGHT FX --- */
+        .noise {
+            position: fixed; inset: 0; pointer-events: none; z-index: 50; opacity: 0.04;
+            background: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+        
+        .ambient-glow {
+            position: fixed; top: 20%; right: -10%; 
+            width: 50vw; height: 50vw;
+            background: radial-gradient(circle, rgba(249, 115, 22, 0.08) 0%, rgba(0,0,0,0) 70%);
+            pointer-events: none; z-index: -1;
+        }
 
-    /* cursor */
-    .cursor-dot{width:6px;height:6px;background:var(--accent);position:fixed;top:0;left:0;border-radius:50%;z-index:9999;pointer-events:none;transform:translate(-50%,-50%)}
-    .cursor-circle{width:40px;height:40px;border:1px solid rgba(255,255,255,0.14);position:fixed;top:0;left:0;border-radius:50%;z-index:9998;pointer-events:none;transform:translate(-50%,-50%);transition:all .22s}
-    .cursor-circle.active{width:64px;height:64px;background:rgba(249,115,22,0.08);border-color:var(--accent)}
+        /* Cursor */
+        .cursor-dot {
+            width: 6px; height: 6px; background: #f97316; position: fixed;
+            border-radius: 50%; z-index: 9999; pointer-events: none; transform: translate(-50%, -50%);
+        }
+        .cursor-circle {
+            width: 40px; height: 40px; border: 1px solid rgba(255, 255, 255, 0.15);
+            position: fixed; border-radius: 50%; z-index: 9998; pointer-events: none;
+            transform: translate(-50%, -50%); transition: width 0.3s, height 0.3s, border-color 0.3s, background 0.3s;
+        }
+        .cursor-circle.active {
+            width: 60px; height: 60px; background-color: rgba(249, 115, 22, 0.05); border-color: #f97316;
+        }
 
-    main{max-width:1080px;margin:0 auto;padding:calc(var(--nav-h) + 18px) 18px 80px;position:relative;z-index:10}
-    h1{font-size:32px;margin:0 0 10px 0}
-    .lead{color:#bdbdbd;line-height:1.7}
+        /* Optimized Card Spotlight */
+        .card-spotlight {
+            background: rgba(255,255,255,0.02);
+            position: relative; overflow: hidden;
+            transition: transform 0.3s ease, border-color 0.3s ease, opacity 0.3s ease;
+            border: 1px solid rgba(255,255,255,0.05);
+            will-change: transform;
+        }
+        .card-spotlight.selected {
+            border-color: #f97316;
+            background: rgba(249, 115, 22, 0.05);
+        }
+        .card-spotlight:hover { 
+            transform: translateY(-4px); 
+            border-color: rgba(249, 115, 22, 0.3);
+        }
+        .card-spotlight::before {
+            content: ''; position: absolute; inset: 0;
+            background: radial-gradient(600px circle at var(--mouse-x) var(--mouse-y), rgba(249, 115, 22, 0.08), transparent 40%);
+            opacity: 0; transition: opacity 0.3s; pointer-events: none; z-index: 10;
+        }
+        .card-spotlight:hover::before { opacity: 1; }
 
-    .spotlight{position:relative;overflow:hidden;border-radius:12px;background:rgba(255,255,255,0.02);padding:18px}
-    .spotlight::before{content:'';position:absolute;inset:0;background:radial-gradient(600px circle at var(--mouse-x) var(--mouse-y), rgba(249,115,22,0.05), transparent 40%);pointer-events:none}
+        /* Sticky Bottom Bar Animation */
+        #quote-bar {
+            transform: translateY(150%);
+            transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        #quote-bar.visible {
+            transform: translateY(0%);
+        }
 
-    footer{padding:34px 18px 80px;color:#d0d0d0;border-top:1px solid rgba(255,255,255,0.03);position:relative;z-index:10}
-    .footer-inner{max-width:1080px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+        /* Choice Modal */
+        #choice-modal {
+            opacity: 0; pointer-events: none; transition: opacity 0.3s ease;
+        }
+        #choice-modal.open {
+            opacity: 1; pointer-events: all;
+        }
 
-    @media(max-width:1024px){.nav-links{display:none}}
-    @media(max-width:640px){main{padding:calc(var(--nav-h) + 12px) 14px 60px}h1{font-size:26px}}
-  </style>
+        .custom-checkbox input:checked + div { background-color: #f97316; border-color: #f97316; }
+        .custom-checkbox input:checked + div svg { opacity: 1; }
+        .anim-entry { opacity: 0; transform: translateY(20px); }
+        
+        .filter-btn.active { background-color: #f97316; color: black; border-color: #f97316; }
+    </style>
 </head>
+
 <body>
-  <div id="background" aria-hidden="true"></div>
-  <div class="shape-container" aria-hidden="true"></div>
-  <div class="noise" aria-hidden="true"></div>
+    <div class="noise"></div>
+    <div class="ambient-glow"></div>
+    <div class="cursor-dot hidden md:block"></div>
+    <div class="cursor-circle hidden md:block"></div>
 
-  <div class="cursor-dot" aria-hidden="true"></div>
-  <div class="cursor-circle" aria-hidden="true"></div>
-
-  <nav>
-    <div class="nav-inner">
-      <a class="logo" href="index.html"><span style="font-weight:800;font-size:18px;color:#fff">Fixit</span><img src="logo.png" alt="logo" style="width:26px;height:26px;object-fit:contain"><span style="font-weight:900;font-size:18px;color:#fff">BW</span></a>
-      <div class="nav-links"><a href="index.html">Home</a><a href="about.html">About</a><a href="sales.html">Sales & Rentals</a><a href="promise.html">Our Promise</a></div>
-      <a class="nav-cta" href="https://wa.me/26773318758" target="_blank">Contact</a>
+    <!-- Choice Modal -->
+    <div id="choice-modal" class="fixed inset-0 z-[200] flex items-center justify-center px-4">
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="closeModal()"></div>
+        <div class="relative bg-zinc-900 border border-white/10 p-8 rounded-sm max-w-sm w-full shadow-2xl transform transition-transform scale-95" id="modal-content">
+            <h3 class="text-2xl font-display text-white mb-2">Choose Option</h3>
+            <p class="text-zinc-500 text-sm mb-6">How would you like to acquire this tool?</p>
+            
+            <div class="space-y-3">
+                <button onclick="confirmSelection('Buy')" class="w-full flex justify-between items-center p-4 border border-white/10 rounded-sm hover:border-accent hover:bg-accent/5 transition-all group">
+                    <span class="font-bold text-sm uppercase">Buy Outright</span>
+                    <span class="text-accent font-mono" id="modal-buy-price">P 0</span>
+                </button>
+                <button onclick="confirmSelection('Rent')" class="w-full flex justify-between items-center p-4 border border-white/10 rounded-sm hover:border-accent hover:bg-accent/5 transition-all group">
+                    <span class="font-bold text-sm uppercase">Rent Daily</span>
+                    <span class="text-accent font-mono" id="modal-rent-price">P 0/day</span>
+                </button>
+            </div>
+            
+            <button onclick="closeModal()" class="mt-6 text-xs text-zinc-500 hover:text-white uppercase tracking-widest w-full text-center">Cancel</button>
+        </div>
     </div>
-  </nav>
 
-  <main>
-    <section>
-      <h1>Power Tool Sales</h1>
-      <p class="lead">Build your own arsenal. We sell high-quality drills, grinders, saws, cutters and more. Our tools include trusted, premium brands to ensure durability and excellent performance.</p>
-    </section>
+    <!-- Navigation -->
+    <nav class="fixed top-0 left-0 w-full z-[100] px-6 py-5 border-b border-white/5 bg-black/80 backdrop-blur-md">
+        <div class="flex justify-between items-center max-w-[1600px] mx-auto">
+            <a href="index.html" class="flex items-center gap-3 group magnetic">
+                <img src="logo.png" alt="FixitBw" class="w-8 h-8 object-contain opacity-90 group-hover:opacity-100 transition-opacity">
+                <span class="font-display font-semibold text-xl tracking-tight text-white group-hover:text-zinc-200 transition-colors">FixitBw</span>
+            </a>
 
-    <section style="margin-top:22px;">
-      <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:18px;">
-        <div class="spotlight">
-          <h3 style="margin-top:0">Why Buy From Us</h3>
-          <ul style="color:#bdbdbd;">
-            <li>Wide range of tools for every job</li>
-            <li>Quality brands you can trust</li>
-            <li>Affordable and reliable equipment</li>
-          </ul>
+            <div class="hidden md:flex gap-1">
+                <a href="about.html" class="magnetic px-5 py-2 text-xs font-body font-medium uppercase tracking-widest text-zinc-500 hover:text-white hover:bg-white/5 rounded-full transition-all">About</a>
+                <a href="sales-and-rentals.html" class="magnetic px-5 py-2 text-xs font-body font-medium uppercase tracking-widest text-white bg-white/5 rounded-full">Catalog</a>
+                <a href="promise.html" class="magnetic px-5 py-2 text-xs font-body font-medium uppercase tracking-widest text-zinc-500 hover:text-white hover:bg-white/5 rounded-full transition-all">Promise</a>
+            </div>
+
+            <a href="mailto:lekgotlamoroka53@gmail.com" class="magnetic hidden md:flex items-center gap-2 border border-white/10 px-5 py-2 rounded-sm hover:border-accent hover:bg-accent/10 hover:text-accent transition-all duration-300 group">
+                <span class="text-xs font-body font-bold uppercase tracking-widest">Request Quote</span>
+            </a>
+             <button class="md:hidden text-white"><iconify-icon icon="lucide:menu" width="24"></iconify-icon></button>
+        </div>
+    </nav>
+
+    <main class="pt-32 pb-40 px-6 max-w-[1600px] mx-auto min-h-screen">
+        
+        <!-- Header -->
+        <header class="mb-12 anim-entry">
+            <div class="inline-flex items-center gap-2 mb-4">
+                <div class="h-px w-8 bg-accent"></div>
+                <span class="text-accent text-[10px] font-mono uppercase tracking-widest">The Arsenal</span>
+            </div>
+            <h1 class="text-5xl md:text-7xl font-display font-medium text-white tracking-tighter mb-6">
+                Select Your Tools
+            </h1>
+            <p class="text-zinc-400 font-body text-lg max-w-xl leading-relaxed">
+                Click the <span class="text-white font-bold">+</span> button. You can choose to buy or rent any tool in our inventory.
+            </p>
+        </header>
+
+        <!-- Controls -->
+        <div class="sticky top-20 z-40 bg-black/90 backdrop-blur-xl border-y border-white/10 py-4 mb-12 anim-entry">
+            <div class="flex flex-col md:flex-row gap-6 md:items-center justify-between">
+                <!-- Filters -->
+                <div class="flex bg-white/5 p-1 rounded-sm w-max">
+                    <button onclick="filterGrid('all')" class="filter-btn active px-6 py-2 rounded-sm text-[10px] font-bold uppercase tracking-widest text-zinc-400 hover:text-white transition-all border border-transparent">All Tools</button>
+                    <button onclick="filterGrid('sale')" class="filter-btn px-6 py-2 rounded-sm text-[10px] font-bold uppercase tracking-widest text-zinc-400 hover:text-white transition-all border border-transparent">For Sale</button>
+                    <button onclick="filterGrid('rent')" class="filter-btn px-6 py-2 rounded-sm text-[10px] font-bold uppercase tracking-widest text-zinc-400 hover:text-white transition-all border border-transparent">Rentals</button>
+                </div>
+
+                <div class="flex gap-4 overflow-x-auto pb-2 md:pb-0 no-scrollbar">
+                    <div class="relative flex-grow md:flex-grow-0 group">
+                        <input type="text" placeholder="SEARCH TOOLS..." class="bg-white/5 border border-white/10 rounded-sm px-4 py-2 pl-10 text-[10px] font-mono text-white placeholder-zinc-600 focus:outline-none focus:border-accent focus:bg-accent/5 transition-all w-[200px]">
+                        <iconify-icon icon="lucide:search" class="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-600 group-hover:text-accent transition-colors"></iconify-icon>
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <div class="spotlight">
-          <h3 style="margin-top:0">Accessories</h3>
-          <p style="color:#bdbdbd;">We stock bits, blades, discs and other consumables so you can keep working without delay.</p>
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+            
+            <!-- Sidebar -->
+            <aside class="hidden md:block col-span-1 space-y-8 anim-entry sticky top-48 h-fit">
+                <div>
+                    <h3 class="font-display text-sm text-white uppercase tracking-wider mb-6 border-b border-white/10 pb-2">Categories</h3>
+                    <div class="space-y-3">
+                        <label class="custom-checkbox flex items-center gap-3 cursor-pointer group">
+                            <input type="checkbox" class="hidden" checked="">
+                            <div class="w-4 h-4 border border-zinc-700 rounded-sm flex items-center justify-center transition-colors group-hover:border-accent">
+                                <iconify-icon icon="lucide:check" class="text-black text-[10px] opacity-0 transition-opacity"></iconify-icon>
+                            </div>
+                            <span class="text-sm font-body text-zinc-400 group-hover:text-white transition-colors">All Tools</span>
+                        </label>
+                    </div>
+                </div>
+                <div class="bg-accent/5 border border-accent/20 p-6 rounded-sm">
+                    <h3 class="text-accent font-display text-lg mb-2">Bulk Order?</h3>
+                    <p class="text-zinc-500 text-xs mb-4">Building a large site? We offer special rates for bulk rentals.</p>
+                </div>
+            </aside>
+
+            <!-- Product Grid -->
+            <!-- Note: data-sell and data-rent are prices. data-tags helps filtering. -->
+            <div class="col-span-1 md:col-span-3 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="product-grid">
+                
+                <!-- 1. Drill -->
+                <div class="card-spotlight group flex flex-col justify-between anim-entry bg-zinc-900/40 rounded-sm" 
+                     data-id="drill-1" 
+                     data-name="Impact Drill X2" 
+                     data-sell="P 1,299" 
+                     data-rent="P 100/day"
+                     data-tags="sale rent">
+                    <div class="p-5">
+                        <div class="aspect-square bg-zinc-900 rounded-sm mb-4 relative overflow-hidden group-hover:border group-hover:border-accent/20 transition-all">
+                            <img src="https://images.unsplash.com/photo-1504148455328-c376907d081c?auto=format&fit=crop&q=80&w=500" class="absolute inset-0 w-full h-full object-cover opacity-60 grayscale group-hover:opacity-100 group-hover:grayscale-0 group-hover:scale-105 transition-all duration-500 ease-out">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-80 group-hover:opacity-40 transition-opacity"></div>
+                        </div>
+                        <h3 class="text-lg font-display font-medium text-white mb-1 group-hover:text-accent transition-colors">Impact Drill X2</h3>
+                        <p class="text-zinc-500 text-[10px] font-mono mb-2 uppercase tracking-wider">18V Cordless • Heavy Duty</p>
+                    </div>
+                    <div class="flex items-center justify-between border-t border-white/5 p-4 bg-white/[0.02] relative z-20">
+                        <span class="font-display text-lg text-white">P 1,299</span>
+                        <button class="add-btn text-zinc-400 hover:text-white hover:bg-accent/20 p-2 rounded-full transition-all border border-transparent hover:border-accent/50" onclick="initToggle(this)">
+                            <iconify-icon icon="lucide:plus" class="text-lg"></iconify-icon>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 2. Hammer (Updated Image) -->
+                <div class="card-spotlight group flex flex-col justify-between anim-entry bg-zinc-900/40 rounded-sm" 
+                     data-id="hammer-1" 
+                     data-name="Demo Hammer 5kg" 
+                     data-sell="P 2,800" 
+                     data-rent="P 150/day"
+                     data-tags="sale rent">
+                    <div class="p-5">
+                        <div class="aspect-square bg-zinc-900 rounded-sm mb-4 relative overflow-hidden group-hover:border group-hover:border-accent/20 transition-all">
+                             <!-- Using demo-hammer.jpg -->
+                            <img src="demo-hammer.jpg" class="absolute inset-0 w-full h-full object-cover opacity-60 grayscale group-hover:opacity-100 group-hover:grayscale-0 group-hover:scale-105 transition-all duration-500 ease-out">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-80 group-hover:opacity-40 transition-opacity"></div>
+                        </div>
+                        <h3 class="text-lg font-display font-medium text-white mb-1 group-hover:text-accent transition-colors">Demo Hammer 5kg</h3>
+                        <p class="text-zinc-500 text-[10px] font-mono mb-2 uppercase tracking-wider">Pneumatic • Construction</p>
+                    </div>
+                    <div class="flex items-center justify-between border-t border-white/5 p-4 bg-white/[0.02] relative z-20">
+                        <span class="font-display text-lg text-white">P 2,800</span>
+                        <button class="add-btn text-zinc-400 hover:text-white hover:bg-accent/20 p-2 rounded-full transition-all border border-transparent hover:border-accent/50" onclick="initToggle(this)">
+                            <iconify-icon icon="lucide:plus" class="text-lg"></iconify-icon>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 3. Saw (Custom Image) -->
+                <div class="card-spotlight group flex flex-col justify-between anim-entry bg-zinc-900/40 rounded-sm" 
+                     data-id="saw-1" 
+                     data-name="Circular Saw Pro" 
+                     data-sell="P 2,450" 
+                     data-rent="P 120/day"
+                     data-tags="sale rent">
+                    <div class="p-5">
+                        <div class="aspect-square bg-zinc-900 rounded-sm mb-4 relative overflow-hidden group-hover:border group-hover:border-accent/20 transition-all">
+                            <!-- Circular Saw Image -->
+                            <img src="circular-saw.jpg" class="absolute inset-0 w-full h-full object-cover opacity-60 grayscale group-hover:opacity-100 group-hover:grayscale-0 group-hover:scale-105 transition-all duration-500 ease-out">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-80 group-hover:opacity-40 transition-opacity"></div>
+                        </div>
+                        <h3 class="text-lg font-display font-medium text-white mb-1 group-hover:text-accent transition-colors">Circular Saw Pro</h3>
+                        <p class="text-zinc-500 text-[10px] font-mono mb-2 uppercase tracking-wider">235mm Blade • 2400W</p>
+                    </div>
+                    <div class="flex items-center justify-between border-t border-white/5 p-4 bg-white/[0.02] relative z-20">
+                        <span class="font-display text-lg text-white">P 2,450</span>
+                        <button class="add-btn text-zinc-400 hover:text-white hover:bg-accent/20 p-2 rounded-full transition-all border border-transparent hover:border-accent/50" onclick="initToggle(this)">
+                            <iconify-icon icon="lucide:plus" class="text-lg"></iconify-icon>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 4. Generator (Custom Image) -->
+                <div class="card-spotlight group flex flex-col justify-between anim-entry bg-zinc-900/40 rounded-sm" 
+                     data-id="gen-1" 
+                     data-name="Generator 5.5kVA" 
+                     data-sell="P 8,500" 
+                     data-rent="P 450/day"
+                     data-tags="rent">
+                    <div class="p-5">
+                        <div class="aspect-square bg-zinc-900 rounded-sm mb-4 relative overflow-hidden group-hover:border group-hover:border-accent/20 transition-all">
+                             <!-- Generator Image -->
+                            <img src="generator.jpg" class="absolute inset-0 w-full h-full object-cover opacity-60 grayscale group-hover:opacity-100 group-hover:grayscale-0 group-hover:scale-105 transition-all duration-500 ease-out">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-80 group-hover:opacity-40 transition-opacity"></div>
+                        </div>
+                        <h3 class="text-lg font-display font-medium text-white mb-1 group-hover:text-accent transition-colors">Generator 5.5kVA</h3>
+                        <p class="text-zinc-500 text-[10px] font-mono mb-2 uppercase tracking-wider">Petrol • Industrial</p>
+                    </div>
+                    <div class="flex items-center justify-between border-t border-white/5 p-4 bg-white/[0.02] relative z-20">
+                        <span class="font-display text-lg text-white">P 8,500</span>
+                        <button class="add-btn text-zinc-400 hover:text-white hover:bg-accent/20 p-2 rounded-full transition-all border border-transparent hover:border-accent/50" onclick="initToggle(this)">
+                            <iconify-icon icon="lucide:plus" class="text-lg"></iconify-icon>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 5. Angle Grinder (Custom Image) -->
+                <div class="card-spotlight group flex flex-col justify-between anim-entry bg-zinc-900/40 rounded-sm" 
+                     data-id="grind-1" 
+                     data-name="Angle Grinder" 
+                     data-sell="P 890" 
+                     data-rent="P 80/day"
+                     data-tags="sale rent">
+                    <div class="p-5">
+                        <div class="aspect-square bg-zinc-900 rounded-sm mb-4 relative overflow-hidden group-hover:border group-hover:border-accent/20 transition-all">
+                             <!-- Angle Grinder Image -->
+                            <img src="angle-grinder.jpg" 
+                                 class="absolute inset-0 w-full h-full object-cover opacity-60 grayscale group-hover:opacity-100 group-hover:grayscale-0 group-hover:scale-105 transition-all duration-500 ease-out">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-80 group-hover:opacity-40 transition-opacity"></div>
+                        </div>
+                        <h3 class="text-lg font-display font-medium text-white mb-1 group-hover:text-accent transition-colors">Angle Grinder</h3>
+                        <p class="text-zinc-500 text-[10px] font-mono mb-2 uppercase tracking-wider">115mm • Corded</p>
+                    </div>
+                    <div class="flex items-center justify-between border-t border-white/5 p-4 bg-white/[0.02] relative z-20">
+                        <span class="font-display text-lg text-white">P 8,500</span>
+                        <button class="add-btn text-zinc-400 hover:text-white hover:bg-accent/20 p-2 rounded-full transition-all border border-transparent hover:border-accent/50" onclick="initToggle(this)">
+                            <iconify-icon icon="lucide:plus" class="text-lg"></iconify-icon>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 6. Welder -->
+                <div class="card-spotlight group flex flex-col justify-between anim-entry bg-zinc-900/40 rounded-sm" 
+                     data-id="weld-1" 
+                     data-name="Welding Machine" 
+                     data-sell="P 3,500" 
+                     data-rent="P 300/day"
+                     data-tags="rent sale">
+                    <div class="p-5">
+                        <div class="aspect-square bg-zinc-900 rounded-sm mb-4 relative overflow-hidden group-hover:border group-hover:border-accent/20 transition-all">
+                            <img src="https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?auto=format&fit=crop&q=80&w=500" class="absolute inset-0 w-full h-full object-cover opacity-60 grayscale group-hover:opacity-100 group-hover:grayscale-0 group-hover:scale-105 transition-all duration-500 ease-out">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-80 group-hover:opacity-40 transition-opacity"></div>
+                        </div>
+                        <h3 class="text-lg font-display font-medium text-white mb-1 group-hover:text-accent transition-colors">Welding Machine</h3>
+                        <p class="text-zinc-500 text-[10px] font-mono mb-2 uppercase tracking-wider">Inverter • 200AMP</p>
+                    </div>
+                    <div class="flex items-center justify-between border-t border-white/5 p-4 bg-white/[0.02] relative z-20">
+                        <span class="font-display text-lg text-white">P 3,500</span>
+                        <button class="add-btn text-zinc-400 hover:text-white hover:bg-accent/20 p-2 rounded-full transition-all border border-transparent hover:border-accent/50" onclick="initToggle(this)">
+                            <iconify-icon icon="lucide:plus" class="text-lg"></iconify-icon>
+                        </button>
+                    </div>
+                </div>
+
+            </div>
         </div>
-      </div>
-    </section>
+    </main>
 
-    <section style="margin-top:28px;">
-      <h2 style="margin:0 0 10px 0">Tool Rentals</h2>
-      <p style="color:#bdbdbd;max-width:880px;">Need a tool for a specific job? We offer short-term and long-term rentals on well-maintained equipment. From heavy-duty generators to precision saws, get what you need without the upfront cost.</p>
-      <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:18px;margin-top:12px;">
-        <div class="spotlight"><h4 style="margin:0 0 6px 0">Short-Term</h4><p style="color:#bdbdbd;margin:0">Daily and weekly rentals for quick jobs.</p></div>
-        <div class="spotlight"><h4 style="margin:0 0 6px 0">Long-Term</h4><p style="color:#bdbdbd;margin:0">Project-based rentals with flexible return options.</p></div>
-      </div>
-    </section>
-  </main>
-
-  <footer id="contact">
-    <div class="footer-inner">
-      <div style="display:flex;align-items:center;gap:12px;"><span style="font-weight:800;font-size:18px;color:#fff">Fixit</span><img src="logo.png" alt="logo" style="width:20px;height:20px;object-fit:contain"><span style="font-weight:900;font-size:18px;color:#fff">BW</span></div>
-      <div style="display:flex;align-items:center;gap:12px;"><a href="https://wa.me/26773318758" style="color:var(--accent);font-weight:700;text-decoration:none">+267 73318758</a><a href="https://www.tiktok.com/@prodmoroka" target="_blank" style="color:#bbb;text-decoration:none">TikTok</a></div>
+    <!-- Floating Request Bar -->
+    <div id="quote-bar" class="fixed bottom-0 left-0 w-full z-50 p-4">
+        <div class="max-w-[1600px] mx-auto bg-zinc-900/90 backdrop-blur-md border border-accent/20 p-4 rounded-sm shadow-2xl flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="flex items-center gap-4">
+                <div class="w-10 h-10 bg-accent/20 rounded-full flex items-center justify-center text-accent">
+                    <iconify-icon icon="lucide:shopping-bag" class="text-xl"></iconify-icon>
+                </div>
+                <div>
+                    <h3 class="text-white font-display text-lg">Your Selection</h3>
+                    <p class="text-zinc-400 text-xs font-mono"><span id="item-count">0</span> Items selected</p>
+                </div>
+            </div>
+            <div class="flex gap-3">
+                <button onclick="sendWhatsApp()" class="bg-green-600 hover:bg-green-500 text-white px-6 py-3 rounded-sm text-xs font-bold uppercase tracking-widest transition-colors flex items-center gap-2">
+                    <iconify-icon icon="ic:baseline-whatsapp" class="text-lg"></iconify-icon> Send via WhatsApp
+                </button>
+                <button onclick="sendEmail()" class="border border-white/20 hover:bg-white/10 text-white px-6 py-3 rounded-sm text-xs font-bold uppercase tracking-widest transition-colors">
+                    Email Quote
+                </button>
+            </div>
+        </div>
     </div>
-    <div style="text-align:center;color:#777;margin-top:12px">© 2024 Fixit 🔨 BW</div>
-  </footer>
 
-  <script>
-    // Lenis
-    const lenis = new Lenis({ duration:1.2, smooth:true });
-    function raf(t){lenis.raf(t);requestAnimationFrame(raf)}requestAnimationFrame(raf);
+    <!-- Footer -->
+    <footer id="contact" class="bg-zinc-950 pt-20 pb-12 px-6 border-t border-white/10 relative z-20">
+        <div class="max-w-[1600px] mx-auto text-center">
+            <div class="flex items-center justify-center gap-3 mb-8">
+                <img src="logo.png" alt="FixitBw" class="w-10 h-10 object-contain grayscale opacity-80">
+                <span class="font-display font-semibold text-2xl tracking-tight text-white">FixitBw</span>
+            </div>
+            
+            <div class="flex flex-col md:flex-row justify-center items-center gap-6 md:gap-12 text-zinc-500 mb-12">
+                <a href="tel:+26773318758" class="text-xs font-mono uppercase tracking-widest hover:text-accent transition-colors flex items-center gap-2">
+                    <iconify-icon icon="lucide:phone"></iconify-icon> +267 7331 8758
+                </a>
+                <a href="mailto:lekgotlamoroka53@gmail.com" class="text-xs font-mono uppercase tracking-widest hover:text-white transition-colors flex items-center gap-2">
+                    <iconify-icon icon="lucide:mail"></iconify-icon> lekgotlamoroka53@gmail.com
+                </a>
+            </div>
 
-    // GSAP
-    gsap.registerPlugin(ScrollTrigger);
-    gsap.from("main section", { y:30, opacity:0, duration:0.8, stagger:0.12, ease:"power2.out", scrollTrigger:{ trigger:"main", start:"top 85%" } });
+            <p class="text-[10px] font-mono text-zinc-700 uppercase">© 2024 FIXIT Botswana.</p>
+        </div>
+    </footer>
 
-    // Cursor
-    const dot=document.querySelector('.cursor-dot'), circle=document.querySelector('.cursor-circle');
-    function isMobile(){return window.innerWidth<=768}
-    function updateCursor(){ if(isMobile()){ dot.style.display='none'; circle.style.display='none'; } else { dot.style.display='block'; circle.style.display='block'; } }
-    updateCursor(); window.addEventListener('resize', updateCursor);
+    <script>
+        // --- 1. FILTER LOGIC ---
+        function filterGrid(category) {
+            // Update buttons
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active', 'bg-accent', 'text-black', 'border-accent'));
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.add('text-zinc-400', 'border-transparent'));
+            
+            const activeBtn = event.target;
+            activeBtn.classList.add('active', 'bg-accent', 'text-black', 'border-accent');
+            activeBtn.classList.remove('text-zinc-400', 'border-transparent');
 
-    if(!isMobile()){
-      document.addEventListener('mousemove', e=>{ gsap.to(dot,{x:e.clientX,y:e.clientY,duration:0.06}); gsap.to(circle,{x:e.clientX,y:e.clientY,duration:0.18}) });
-      document.querySelectorAll('a,button,.spotlight').forEach(el=>{ el.addEventListener('mouseenter', ()=> circle.classList.add('active')); el.addEventListener('mouseleave', ()=> circle.classList.remove('active')); });
-    }
+            // Filter items
+            const items = document.querySelectorAll('.card-spotlight');
+            
+            items.forEach(item => {
+                const tags = item.getAttribute('data-tags');
+                if (category === 'all' || tags.includes(category)) {
+                    gsap.to(item, { opacity: 1, scale: 1, duration: 0.3, display: 'flex' });
+                } else {
+                    gsap.to(item, { opacity: 0, scale: 0.95, duration: 0.3, display: 'none' });
+                }
+            });
+        }
 
-    // Spotlight
-    document.addEventListener('mousemove', e=>{
-      document.querySelectorAll('.spotlight').forEach(card=>{ const rect=card.getBoundingClientRect(); card.style.setProperty('--mouse-x', `${e.clientX-rect.left}px`); card.style.setProperty('--mouse-y', `${e.clientY-rect.top}px`)});
-    });
-    document.querySelectorAll('.spotlight').forEach(card=>card.addEventListener('touchstart', ev=>{ const rect=card.getBoundingClientRect(); card.style.setProperty('--mouse-x', `${ev.touches[0].clientX-rect.left}px`); card.style.setProperty('--mouse-y', `${ev.touches[0].clientY-rect.top}px`)}, {passive:true}));
+        // --- 2. SELECTION & MODAL LOGIC ---
+        let selectedItems = [];
+        let activeCard = null;
+        let activeBtn = null;
 
-    // Floating shapes
-    (function createShapes(){ const c=document.querySelector('.shape-container'); if(!c) return; const max=window.innerWidth<768?8:14; for(let i=0;i<max;i++){ const el=document.createElement('div'); el.className='float-shape'; const left=Math.random()*100, delay=Math.random()*8, duration=12+Math.random()*14, size=(window.innerWidth<600)?(20+Math.random()*30):(30+Math.random()*60); el.style.left=left+'vw'; el.style.width=size+'px'; el.style.height=size+'px'; el.style.animationDuration=duration+'s'; el.style.animationDelay=delay+'s'; el.style.opacity=0.25+Math.random()*0.35; c.appendChild(el);} })();
-  </script>
+        function initToggle(btn) {
+            const card = btn.closest('.card-spotlight');
+            const id = card.getAttribute('data-id');
+            
+            // If already selected, remove it
+            const existingIndex = selectedItems.findIndex(item => item.id === id);
+            if (existingIndex > -1) {
+                removeItem(id, card, btn);
+            } else {
+                // Open Modal
+                openModal(card, btn);
+            }
+        }
+
+        function openModal(card, btn) {
+            activeCard = card;
+            activeBtn = btn;
+            
+            const sellPrice = card.getAttribute('data-sell');
+            const rentPrice = card.getAttribute('data-rent');
+            
+            document.getElementById('modal-buy-price').innerText = sellPrice;
+            document.getElementById('modal-rent-price').innerText = rentPrice;
+            
+            const modal = document.getElementById('choice-modal');
+            modal.classList.add('open');
+            
+            // Animation for modal content
+            gsap.fromTo("#modal-content", {scale: 0.9, opacity: 0}, {scale: 1, opacity: 1, duration: 0.3, ease: "back.out(1.7)"});
+        }
+
+        function closeModal() {
+            document.getElementById('choice-modal').classList.remove('open');
+            activeCard = null;
+            activeBtn = null;
+        }
+
+        function confirmSelection(type) {
+            if (!activeCard) return;
+            
+            const id = activeCard.getAttribute('data-id');
+            const name = activeCard.getAttribute('data-name');
+            const price = type === 'Buy' ? activeCard.getAttribute('data-sell') : activeCard.getAttribute('data-rent');
+            
+            // Add Item
+            selectedItems.push({ id, name, type, price });
+            
+            // Update UI
+            activeCard.classList.add('selected');
+            activeBtn.classList.remove('text-zinc-400');
+            activeBtn.classList.add('bg-accent', 'text-black', 'border-accent');
+            activeBtn.innerHTML = '<iconify-icon icon="lucide:check" class="text-lg"></iconify-icon>';
+            
+            updateQuoteBar();
+            closeModal();
+        }
+
+        function removeItem(id, card, btn) {
+            selectedItems = selectedItems.filter(item => item.id !== id);
+            card.classList.remove('selected');
+            btn.classList.remove('bg-accent', 'text-black', 'border-accent');
+            btn.classList.add('text-zinc-400');
+            btn.innerHTML = '<iconify-icon icon="lucide:plus" class="text-lg"></iconify-icon>';
+            updateQuoteBar();
+        }
+
+        function updateQuoteBar() {
+            const bar = document.getElementById('quote-bar');
+            const count = document.getElementById('item-count');
+            count.innerText = selectedItems.length;
+            if (selectedItems.length > 0) bar.classList.add('visible');
+            else bar.classList.remove('visible');
+        }
+
+        // --- 3. SEND TO WHATSAPP ---
+        function sendWhatsApp() {
+            if (selectedItems.length === 0) return;
+
+            let message = "Hello FixitBw, I am interested in these tools:\n\n";
+            selectedItems.forEach(item => {
+                message += `- ${item.name} [${item.type} @ ${item.price}]\n`;
+            });
+            message += "\nPlease check availability.";
+
+            const url = `https://wa.me/26773318758?text=${encodeURIComponent(message)}`;
+            window.open(url, '_blank');
+        }
+
+        // --- 4. SEND EMAIL ---
+        function sendEmail() {
+            if (selectedItems.length === 0) return;
+            let subject = "Quote Request - FixitBw";
+            let body = "Hello, I would like a quote for:\n\n";
+            selectedItems.forEach(item => {
+                body += `- ${item.name} [${item.type} @ ${item.price}]\n`;
+            });
+            window.location.href = `mailto:lekgotlamoroka53@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+        }
+
+        // --- 5. ANIMATIONS ---
+        gsap.to(".anim-entry", { y: 0, opacity: 1, duration: 1, stagger: 0.1, ease: "power3.out" });
+
+        const cursorDot = document.querySelector('.cursor-dot');
+        const cursorCircle = document.querySelector('.cursor-circle');
+        const cards = document.querySelectorAll('.card-spotlight');
+
+        document.addEventListener('mousemove', (e) => {
+            gsap.to(cursorDot, { x: e.clientX, y: e.clientY, duration: 0.1 });
+            gsap.to(cursorCircle, { x: e.clientX, y: e.clientY, duration: 0.4 });
+        });
+
+        cards.forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                card.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`);
+                card.style.setProperty('--mouse-y', `${e.clientY - rect.top}px`);
+            });
+        });
+
+        const interactables = document.querySelectorAll('a, button, input, .custom-checkbox, .card-spotlight');
+        interactables.forEach(el => {
+            el.addEventListener('mouseenter', () => cursorCircle.classList.add('active'));
+            el.addEventListener('mouseleave', () => cursorCircle.classList.remove('active'));
+        });
+        
+        // Magnetic Nav
+        const magnets = document.querySelectorAll('.magnetic');
+        magnets.forEach(btn => {
+            btn.addEventListener('mousemove', (e) => {
+                const rect = btn.getBoundingClientRect();
+                gsap.to(btn, { x: (e.clientX - rect.left - rect.width/2) * 0.3, y: (e.clientY - rect.top - rect.height/2) * 0.3, duration: 0.3 });
+            });
+            btn.addEventListener('mouseleave', () => {
+                gsap.to(btn, { x: 0, y: 0, duration: 0.3 });
+            });
+        });
+    </script>
+
 </body>
 </html>
