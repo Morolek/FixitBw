@@ -11,26 +11,13 @@
     <!-- Fonts -->
     <link href="https://api.fontshare.com/v2/css?f[]=clash-display@200,300,400,500,600,700&amp;f[]=general-sans@200,300,400,500,600&amp;display=swap" rel="stylesheet">
     
-    <!-- Lightweight Animation Library (GSAP) -->
+    <!-- GSAP -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
 
     <script>
         tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        display: ['Clash Display', 'sans-serif'],
-                        body: ['General Sans', 'sans-serif'],
-                        mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'monospace'],
-                    },
-                    colors: {
-                        'accent': '#f97316', 
-                        'accent-dark': '#ea580c',
-                        'dark': '#050505',
-                    }
-                }
-            }
+            theme: { extend: { fontFamily: { display: ['Clash Display', 'sans-serif'], body: ['General Sans', 'sans-serif'], mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'monospace'], }, colors: { 'accent': '#f97316', 'accent-dark': '#ea580c', 'dark': '#050505', } } }
         }
     </script>
 
@@ -38,79 +25,26 @@
         :root { --cursor-size: 20px; }
         body { background-color: #030303; color: #ffffff; cursor: none; overflow-x: hidden; }
         ::selection { background: #f97316; color: #000; }
-
-        /* --- LIGHTWEIGHT FX --- */
-        .noise {
-            position: fixed; inset: 0; pointer-events: none; z-index: 50; opacity: 0.04;
-            background: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-        }
-        
-        .ambient-glow {
-            position: fixed; top: 20%; right: -10%; 
-            width: 50vw; height: 50vw;
-            background: radial-gradient(circle, rgba(249, 115, 22, 0.08) 0%, rgba(0,0,0,0) 70%);
-            pointer-events: none; z-index: -1;
-        }
-
-        /* Cursor */
-        .cursor-dot {
-            width: 6px; height: 6px; background: #f97316; position: fixed;
-            border-radius: 50%; z-index: 9999; pointer-events: none; transform: translate(-50%, -50%);
-        }
-        .cursor-circle {
-            width: 40px; height: 40px; border: 1px solid rgba(255, 255, 255, 0.15);
-            position: fixed; border-radius: 50%; z-index: 9998; pointer-events: none;
-            transform: translate(-50%, -50%); transition: width 0.3s, height 0.3s, border-color 0.3s, background 0.3s;
-        }
-        .cursor-circle.active {
-            width: 60px; height: 60px; background-color: rgba(249, 115, 22, 0.05); border-color: #f97316;
-        }
-
-        /* Optimized Card Spotlight */
-        .card-spotlight {
-            background: rgba(255,255,255,0.02);
-            position: relative; overflow: hidden;
-            transition: transform 0.3s ease, border-color 0.3s ease, opacity 0.3s ease;
-            border: 1px solid rgba(255,255,255,0.05);
-            will-change: transform;
-        }
-        .card-spotlight.selected {
-            border-color: #f97316;
-            background: rgba(249, 115, 22, 0.05);
-        }
-        .card-spotlight:hover { 
-            transform: translateY(-4px); 
-            border-color: rgba(249, 115, 22, 0.3);
-        }
-        .card-spotlight::before {
-            content: ''; position: absolute; inset: 0;
-            background: radial-gradient(600px circle at var(--mouse-x) var(--mouse-y), rgba(249, 115, 22, 0.08), transparent 40%);
-            opacity: 0; transition: opacity 0.3s; pointer-events: none; z-index: 10;
-        }
+        .noise { position: fixed; inset: 0; pointer-events: none; z-index: 50; opacity: 0.04; background: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E"); }
+        .ambient-glow { position: fixed; top: 20%; right: -10%; width: 50vw; height: 50vw; background: radial-gradient(circle, rgba(249, 115, 22, 0.08) 0%, rgba(0,0,0,0) 70%); pointer-events: none; z-index: -1; }
+        .cursor-dot { width: 6px; height: 6px; background: #f97316; position: fixed; border-radius: 50%; z-index: 9999; pointer-events: none; transform: translate(-50%, -50%); }
+        .cursor-circle { width: 40px; height: 40px; border: 1px solid rgba(255, 255, 255, 0.15); position: fixed; border-radius: 50%; z-index: 9998; pointer-events: none; transform: translate(-50%, -50%); transition: width 0.3s, height 0.3s, border-color 0.3s, background 0.3s; }
+        .cursor-circle.active { width: 60px; height: 60px; background-color: rgba(249, 115, 22, 0.05); border-color: #f97316; }
+        .card-spotlight { background: rgba(255,255,255,0.02); position: relative; overflow: hidden; transition: transform 0.3s ease, border-color 0.3s ease, opacity 0.3s ease; border: 1px solid rgba(255,255,255,0.05); will-change: transform; }
+        .card-spotlight.selected { border-color: #f97316; background: rgba(249, 115, 22, 0.05); }
+        .card-spotlight:hover { transform: translateY(-4px); border-color: rgba(249, 115, 22, 0.3); }
+        .card-spotlight::before { content: ''; position: absolute; inset: 0; background: radial-gradient(600px circle at var(--mouse-x) var(--mouse-y), rgba(249, 115, 22, 0.08), transparent 40%); opacity: 0; transition: opacity 0.3s; pointer-events: none; z-index: 10; }
         .card-spotlight:hover::before { opacity: 1; }
-
-        /* Sticky Bottom Bar Animation */
-        #quote-bar {
-            transform: translateY(150%);
-            transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-        #quote-bar.visible {
-            transform: translateY(0%);
-        }
-
-        /* Choice Modal */
-        #choice-modal {
-            opacity: 0; pointer-events: none; transition: opacity 0.3s ease;
-        }
-        #choice-modal.open {
-            opacity: 1; pointer-events: all;
-        }
-
+        #quote-bar { transform: translateY(150%); transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1); }
+        #quote-bar.visible { transform: translateY(0%); }
+        #choice-modal { opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
+        #choice-modal.open { opacity: 1; pointer-events: all; }
         .custom-checkbox input:checked + div { background-color: #f97316; border-color: #f97316; }
         .custom-checkbox input:checked + div svg { opacity: 1; }
         .anim-entry { opacity: 0; transform: translateY(20px); }
-        
         .filter-btn.active { background-color: #f97316; color: black; border-color: #f97316; }
+        /* Fallback smooth transition */
+        .tool-img { transition: all 0.5s ease-out; }
     </style>
 </head>
 
@@ -126,7 +60,6 @@
         <div class="relative bg-zinc-900 border border-white/10 p-8 rounded-sm max-w-sm w-full shadow-2xl transform transition-transform scale-95" id="modal-content">
             <h3 class="text-2xl font-display text-white mb-2">Choose Option</h3>
             <p class="text-zinc-500 text-sm mb-6">How would you like to acquire this tool?</p>
-            
             <div class="space-y-3">
                 <button onclick="confirmSelection('Buy')" class="w-full flex justify-between items-center p-4 border border-white/10 rounded-sm hover:border-accent hover:bg-accent/5 transition-all group">
                     <span class="font-bold text-sm uppercase">Buy Outright</span>
@@ -137,7 +70,6 @@
                     <span class="text-accent font-mono" id="modal-rent-price">P 0/day</span>
                 </button>
             </div>
-            
             <button onclick="closeModal()" class="mt-6 text-xs text-zinc-500 hover:text-white uppercase tracking-widest w-full text-center">Cancel</button>
         </div>
     </div>
@@ -149,13 +81,11 @@
                 <img src="logo.png" alt="FixitBw" class="w-8 h-8 object-contain opacity-90 group-hover:opacity-100 transition-opacity">
                 <span class="font-display font-semibold text-xl tracking-tight text-white group-hover:text-zinc-200 transition-colors">FixitBw</span>
             </a>
-
             <div class="hidden md:flex gap-1">
                 <a href="about.html" class="magnetic px-5 py-2 text-xs font-body font-medium uppercase tracking-widest text-zinc-500 hover:text-white hover:bg-white/5 rounded-full transition-all">About</a>
-                <a href="sales-and-rentals.html" class="magnetic px-5 py-2 text-xs font-body font-medium uppercase tracking-widest text-white bg-white/5 rounded-full">Catalog</a>
+                <a href="catalog.html" class="magnetic px-5 py-2 text-xs font-body font-medium uppercase tracking-widest text-white bg-white/5 rounded-full">Catalog</a>
                 <a href="promise.html" class="magnetic px-5 py-2 text-xs font-body font-medium uppercase tracking-widest text-zinc-500 hover:text-white hover:bg-white/5 rounded-full transition-all">Promise</a>
             </div>
-
             <a href="mailto:lekgotlamoroka53@gmail.com" class="magnetic hidden md:flex items-center gap-2 border border-white/10 px-5 py-2 rounded-sm hover:border-accent hover:bg-accent/10 hover:text-accent transition-all duration-300 group">
                 <span class="text-xs font-body font-bold uppercase tracking-widest">Request Quote</span>
             </a>
@@ -164,31 +94,19 @@
     </nav>
 
     <main class="pt-32 pb-40 px-6 max-w-[1600px] mx-auto min-h-screen">
-        
-        <!-- Header -->
         <header class="mb-12 anim-entry">
-            <div class="inline-flex items-center gap-2 mb-4">
-                <div class="h-px w-8 bg-accent"></div>
-                <span class="text-accent text-[10px] font-mono uppercase tracking-widest">The Arsenal</span>
-            </div>
-            <h1 class="text-5xl md:text-7xl font-display font-medium text-white tracking-tighter mb-6">
-                Select Your Tools
-            </h1>
-            <p class="text-zinc-400 font-body text-lg max-w-xl leading-relaxed">
-                Click the <span class="text-white font-bold">+</span> button. You can choose to buy or rent any tool in our inventory.
-            </p>
+            <div class="inline-flex items-center gap-2 mb-4"><div class="h-px w-8 bg-accent"></div><span class="text-accent text-[10px] font-mono uppercase tracking-widest">The Arsenal</span></div>
+            <h1 class="text-5xl md:text-7xl font-display font-medium text-white tracking-tighter mb-6">Select Your Tools</h1>
+            <p class="text-zinc-400 font-body text-lg max-w-xl leading-relaxed">Click the <span class="text-white font-bold">+</span> button. You can choose to buy or rent any tool in our inventory.</p>
         </header>
 
-        <!-- Controls -->
         <div class="sticky top-20 z-40 bg-black/90 backdrop-blur-xl border-y border-white/10 py-4 mb-12 anim-entry">
             <div class="flex flex-col md:flex-row gap-6 md:items-center justify-between">
-                <!-- Filters -->
                 <div class="flex bg-white/5 p-1 rounded-sm w-max">
                     <button onclick="filterGrid('all')" class="filter-btn active px-6 py-2 rounded-sm text-[10px] font-bold uppercase tracking-widest text-zinc-400 hover:text-white transition-all border border-transparent">All Tools</button>
                     <button onclick="filterGrid('sale')" class="filter-btn px-6 py-2 rounded-sm text-[10px] font-bold uppercase tracking-widest text-zinc-400 hover:text-white transition-all border border-transparent">For Sale</button>
                     <button onclick="filterGrid('rent')" class="filter-btn px-6 py-2 rounded-sm text-[10px] font-bold uppercase tracking-widest text-zinc-400 hover:text-white transition-all border border-transparent">Rentals</button>
                 </div>
-
                 <div class="flex gap-4 overflow-x-auto pb-2 md:pb-0 no-scrollbar">
                     <div class="relative flex-grow md:flex-grow-0 group">
                         <input type="text" placeholder="SEARCH TOOLS..." class="bg-white/5 border border-white/10 rounded-sm px-4 py-2 pl-10 text-[10px] font-mono text-white placeholder-zinc-600 focus:outline-none focus:border-accent focus:bg-accent/5 transition-all w-[200px]">
@@ -199,17 +117,13 @@
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
-            
-            <!-- Sidebar -->
             <aside class="hidden md:block col-span-1 space-y-8 anim-entry sticky top-48 h-fit">
                 <div>
                     <h3 class="font-display text-sm text-white uppercase tracking-wider mb-6 border-b border-white/10 pb-2">Categories</h3>
                     <div class="space-y-3">
                         <label class="custom-checkbox flex items-center gap-3 cursor-pointer group">
                             <input type="checkbox" class="hidden" checked="">
-                            <div class="w-4 h-4 border border-zinc-700 rounded-sm flex items-center justify-center transition-colors group-hover:border-accent">
-                                <iconify-icon icon="lucide:check" class="text-black text-[10px] opacity-0 transition-opacity"></iconify-icon>
-                            </div>
+                            <div class="w-4 h-4 border border-zinc-700 rounded-sm flex items-center justify-center transition-colors group-hover:border-accent"><iconify-icon icon="lucide:check" class="text-black text-[10px] opacity-0 transition-opacity"></iconify-icon></div>
                             <span class="text-sm font-body text-zinc-400 group-hover:text-white transition-colors">All Tools</span>
                         </label>
                     </div>
@@ -220,20 +134,13 @@
                 </div>
             </aside>
 
-            <!-- Product Grid -->
-            <!-- Note: data-sell and data-rent are prices. data-tags helps filtering. -->
             <div class="col-span-1 md:col-span-3 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="product-grid">
                 
                 <!-- 1. Drill -->
-                <div class="card-spotlight group flex flex-col justify-between anim-entry bg-zinc-900/40 rounded-sm" 
-                     data-id="drill-1" 
-                     data-name="Impact Drill X2" 
-                     data-sell="P 1,299" 
-                     data-rent="P 100/day"
-                     data-tags="sale rent">
+                <div class="card-spotlight group flex flex-col justify-between anim-entry bg-zinc-900/40 rounded-sm" data-id="drill-1" data-name="Impact Drill X2" data-sell="P 1,299" data-rent="P 100/day" data-tags="sale rent">
                     <div class="p-5">
                         <div class="aspect-square bg-zinc-900 rounded-sm mb-4 relative overflow-hidden group-hover:border group-hover:border-accent/20 transition-all">
-                            <img src="https://images.unsplash.com/photo-1504148455328-c376907d081c?auto=format&fit=crop&q=80&w=500" class="absolute inset-0 w-full h-full object-cover opacity-60 grayscale group-hover:opacity-100 group-hover:grayscale-0 group-hover:scale-105 transition-all duration-500 ease-out">
+                            <img src="https://images.unsplash.com/photo-1504148455328-c376907d081c?auto=format&fit=crop&q=80&w=500" class="tool-img absolute inset-0 w-full h-full object-cover opacity-60 grayscale group-hover:opacity-100 group-hover:grayscale-0 group-hover:scale-105">
                             <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-80 group-hover:opacity-40 transition-opacity"></div>
                         </div>
                         <h3 class="text-lg font-display font-medium text-white mb-1 group-hover:text-accent transition-colors">Impact Drill X2</h3>
@@ -241,23 +148,16 @@
                     </div>
                     <div class="flex items-center justify-between border-t border-white/5 p-4 bg-white/[0.02] relative z-20">
                         <span class="font-display text-lg text-white">P 1,299</span>
-                        <button class="add-btn text-zinc-400 hover:text-white hover:bg-accent/20 p-2 rounded-full transition-all border border-transparent hover:border-accent/50" onclick="initToggle(this)">
-                            <iconify-icon icon="lucide:plus" class="text-lg"></iconify-icon>
-                        </button>
+                        <button class="add-btn text-zinc-400 hover:text-white hover:bg-accent/20 p-2 rounded-full transition-all border border-transparent hover:border-accent/50" onclick="initToggle(this)"><iconify-icon icon="lucide:plus" class="text-lg"></iconify-icon></button>
                     </div>
                 </div>
 
                 <!-- 2. Hammer -->
-                <div class="card-spotlight group flex flex-col justify-between anim-entry bg-zinc-900/40 rounded-sm" 
-                     data-id="hammer-1" 
-                     data-name="Demo Hammer 5kg" 
-                     data-sell="P 2,800" 
-                     data-rent="P 150/day"
-                     data-tags="sale rent">
+                <div class="card-spotlight group flex flex-col justify-between anim-entry bg-zinc-900/40 rounded-sm" data-id="hammer-1" data-name="Demo Hammer 5kg" data-sell="P 2,800" data-rent="P 150/day" data-tags="sale rent">
                     <div class="p-5">
                         <div class="aspect-square bg-zinc-900 rounded-sm mb-4 relative overflow-hidden group-hover:border group-hover:border-accent/20 transition-all">
-                             <!-- Using demo-hammer.jpg -->
-                            <img src="demo-hammer.jpg" class="absolute inset-0 w-full h-full object-cover opacity-60 grayscale group-hover:opacity-100 group-hover:grayscale-0 group-hover:scale-105 transition-all duration-500 ease-out">
+                            <!-- Image Fallback Added -->
+                            <img src="demo-hammer.jpg" onerror="this.src='https://images.unsplash.com/photo-1581147036324-c17ac41dfa6c?auto=format&fit=crop&q=80&w=500'" class="tool-img absolute inset-0 w-full h-full object-cover opacity-60 grayscale group-hover:opacity-100 group-hover:grayscale-0 group-hover:scale-105">
                             <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-80 group-hover:opacity-40 transition-opacity"></div>
                         </div>
                         <h3 class="text-lg font-display font-medium text-white mb-1 group-hover:text-accent transition-colors">Demo Hammer 5kg</h3>
@@ -265,23 +165,16 @@
                     </div>
                     <div class="flex items-center justify-between border-t border-white/5 p-4 bg-white/[0.02] relative z-20">
                         <span class="font-display text-lg text-white">P 2,800</span>
-                        <button class="add-btn text-zinc-400 hover:text-white hover:bg-accent/20 p-2 rounded-full transition-all border border-transparent hover:border-accent/50" onclick="initToggle(this)">
-                            <iconify-icon icon="lucide:plus" class="text-lg"></iconify-icon>
-                        </button>
+                        <button class="add-btn text-zinc-400 hover:text-white hover:bg-accent/20 p-2 rounded-full transition-all border border-transparent hover:border-accent/50" onclick="initToggle(this)"><iconify-icon icon="lucide:plus" class="text-lg"></iconify-icon></button>
                     </div>
                 </div>
 
-                <!-- 3. Saw (Custom Image) -->
-                <div class="card-spotlight group flex flex-col justify-between anim-entry bg-zinc-900/40 rounded-sm" 
-                     data-id="saw-1" 
-                     data-name="Circular Saw Pro" 
-                     data-sell="P 2,450" 
-                     data-rent="P 120/day"
-                     data-tags="sale rent">
+                <!-- 3. Saw -->
+                <div class="card-spotlight group flex flex-col justify-between anim-entry bg-zinc-900/40 rounded-sm" data-id="saw-1" data-name="Circular Saw Pro" data-sell="P 2,450" data-rent="P 120/day" data-tags="sale rent">
                     <div class="p-5">
                         <div class="aspect-square bg-zinc-900 rounded-sm mb-4 relative overflow-hidden group-hover:border group-hover:border-accent/20 transition-all">
-                            <!-- Circular Saw Image -->
-                            <img src="circular-saw.jpg" class="absolute inset-0 w-full h-full object-cover opacity-60 grayscale group-hover:opacity-100 group-hover:grayscale-0 group-hover:scale-105 transition-all duration-500 ease-out">
+                            <!-- Image Fallback Added -->
+                            <img src="circular-saw.jpg" onerror="this.src='https://images.unsplash.com/photo-1572981779307-38b8cabb2407?auto=format&fit=crop&q=80&w=500'" class="tool-img absolute inset-0 w-full h-full object-cover opacity-60 grayscale group-hover:opacity-100 group-hover:grayscale-0 group-hover:scale-105">
                             <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-80 group-hover:opacity-40 transition-opacity"></div>
                         </div>
                         <h3 class="text-lg font-display font-medium text-white mb-1 group-hover:text-accent transition-colors">Circular Saw Pro</h3>
@@ -289,23 +182,16 @@
                     </div>
                     <div class="flex items-center justify-between border-t border-white/5 p-4 bg-white/[0.02] relative z-20">
                         <span class="font-display text-lg text-white">P 2,450</span>
-                        <button class="add-btn text-zinc-400 hover:text-white hover:bg-accent/20 p-2 rounded-full transition-all border border-transparent hover:border-accent/50" onclick="initToggle(this)">
-                            <iconify-icon icon="lucide:plus" class="text-lg"></iconify-icon>
-                        </button>
+                        <button class="add-btn text-zinc-400 hover:text-white hover:bg-accent/20 p-2 rounded-full transition-all border border-transparent hover:border-accent/50" onclick="initToggle(this)"><iconify-icon icon="lucide:plus" class="text-lg"></iconify-icon></button>
                     </div>
                 </div>
 
-                <!-- 4. Generator (Custom Image) -->
-                <div class="card-spotlight group flex flex-col justify-between anim-entry bg-zinc-900/40 rounded-sm" 
-                     data-id="gen-1" 
-                     data-name="Generator 5.5kVA" 
-                     data-sell="P 8,500" 
-                     data-rent="P 450/day"
-                     data-tags="rent">
+                <!-- 4. Generator -->
+                <div class="card-spotlight group flex flex-col justify-between anim-entry bg-zinc-900/40 rounded-sm" data-id="gen-1" data-name="Generator 5.5kVA" data-sell="P 8,500" data-rent="P 450/day" data-tags="rent">
                     <div class="p-5">
                         <div class="aspect-square bg-zinc-900 rounded-sm mb-4 relative overflow-hidden group-hover:border group-hover:border-accent/20 transition-all">
-                             <!-- Generator Image -->
-                            <img src="generator.jpg" class="absolute inset-0 w-full h-full object-cover opacity-60 grayscale group-hover:opacity-100 group-hover:grayscale-0 group-hover:scale-105 transition-all duration-500 ease-out">
+                             <!-- Image Fallback Added -->
+                            <img src="generator.jpg" onerror="this.src='https://images.unsplash.com/photo-1621252179027-94459d27d3ee?auto=format&fit=crop&q=80&w=500'" class="tool-img absolute inset-0 w-full h-full object-cover opacity-60 grayscale group-hover:opacity-100 group-hover:grayscale-0 group-hover:scale-105">
                             <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-80 group-hover:opacity-40 transition-opacity"></div>
                         </div>
                         <h3 class="text-lg font-display font-medium text-white mb-1 group-hover:text-accent transition-colors">Generator 5.5kVA</h3>
@@ -313,24 +199,16 @@
                     </div>
                     <div class="flex items-center justify-between border-t border-white/5 p-4 bg-white/[0.02] relative z-20">
                         <span class="font-display text-lg text-white">P 8,500</span>
-                        <button class="add-btn text-zinc-400 hover:text-white hover:bg-accent/20 p-2 rounded-full transition-all border border-transparent hover:border-accent/50" onclick="initToggle(this)">
-                            <iconify-icon icon="lucide:plus" class="text-lg"></iconify-icon>
-                        </button>
+                        <button class="add-btn text-zinc-400 hover:text-white hover:bg-accent/20 p-2 rounded-full transition-all border border-transparent hover:border-accent/50" onclick="initToggle(this)"><iconify-icon icon="lucide:plus" class="text-lg"></iconify-icon></button>
                     </div>
                 </div>
 
-                <!-- 5. Angle Grinder (Custom Image) -->
-                <div class="card-spotlight group flex flex-col justify-between anim-entry bg-zinc-900/40 rounded-sm" 
-                     data-id="grind-1" 
-                     data-name="Angle Grinder" 
-                     data-sell="P 890" 
-                     data-rent="P 80/day"
-                     data-tags="sale rent">
+                <!-- 5. Angle Grinder (FIXED with fallback) -->
+                <div class="card-spotlight group flex flex-col justify-between anim-entry bg-zinc-900/40 rounded-sm" data-id="grind-1" data-name="Angle Grinder" data-sell="P 890" data-rent="P 80/day" data-tags="sale rent">
                     <div class="p-5">
                         <div class="aspect-square bg-zinc-900 rounded-sm mb-4 relative overflow-hidden group-hover:border group-hover:border-accent/20 transition-all">
-                             <!-- Angle Grinder Image -->
-                            <img src="angle-grinder.jpg" 
-                                 class="absolute inset-0 w-full h-full object-cover opacity-60 grayscale group-hover:opacity-100 group-hover:grayscale-0 group-hover:scale-105 transition-all duration-500 ease-out">
+                             <!-- Fixed: Added Fallback so it appears even if file is missing -->
+                            <img src="angle-grinder.jpg" onerror="this.src='https://images.unsplash.com/photo-1540305893333-3d0d54032d84?auto=format&fit=crop&q=80&w=500'" class="tool-img absolute inset-0 w-full h-full object-cover opacity-60 grayscale group-hover:opacity-100 group-hover:grayscale-0 group-hover:scale-105">
                             <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-80 group-hover:opacity-40 transition-opacity"></div>
                         </div>
                         <h3 class="text-lg font-display font-medium text-white mb-1 group-hover:text-accent transition-colors">Angle Grinder</h3>
@@ -338,22 +216,15 @@
                     </div>
                     <div class="flex items-center justify-between border-t border-white/5 p-4 bg-white/[0.02] relative z-20">
                         <span class="font-display text-lg text-white">P 890</span>
-                        <button class="add-btn text-zinc-400 hover:text-white hover:bg-accent/20 p-2 rounded-full transition-all border border-transparent hover:border-accent/50" onclick="initToggle(this)">
-                            <iconify-icon icon="lucide:plus" class="text-lg"></iconify-icon>
-                        </button>
+                        <button class="add-btn text-zinc-400 hover:text-white hover:bg-accent/20 p-2 rounded-full transition-all border border-transparent hover:border-accent/50" onclick="initToggle(this)"><iconify-icon icon="lucide:plus" class="text-lg"></iconify-icon></button>
                     </div>
                 </div>
 
                 <!-- 6. Welder -->
-                <div class="card-spotlight group flex flex-col justify-between anim-entry bg-zinc-900/40 rounded-sm" 
-                     data-id="weld-1" 
-                     data-name="Welding Machine" 
-                     data-sell="P 3,500" 
-                     data-rent="P 300/day"
-                     data-tags="rent sale">
+                <div class="card-spotlight group flex flex-col justify-between anim-entry bg-zinc-900/40 rounded-sm" data-id="weld-1" data-name="Welding Machine" data-sell="P 3,500" data-rent="P 300/day" data-tags="rent sale">
                     <div class="p-5">
                         <div class="aspect-square bg-zinc-900 rounded-sm mb-4 relative overflow-hidden group-hover:border group-hover:border-accent/20 transition-all">
-                            <img src="https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?auto=format&fit=crop&q=80&w=500" class="absolute inset-0 w-full h-full object-cover opacity-60 grayscale group-hover:opacity-100 group-hover:grayscale-0 group-hover:scale-105 transition-all duration-500 ease-out">
+                            <img src="https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?auto=format&fit=crop&q=80&w=500" class="tool-img absolute inset-0 w-full h-full object-cover opacity-60 grayscale group-hover:opacity-100 group-hover:grayscale-0 group-hover:scale-105">
                             <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-80 group-hover:opacity-40 transition-opacity"></div>
                         </div>
                         <h3 class="text-lg font-display font-medium text-white mb-1 group-hover:text-accent transition-colors">Welding Machine</h3>
@@ -361,9 +232,7 @@
                     </div>
                     <div class="flex items-center justify-between border-t border-white/5 p-4 bg-white/[0.02] relative z-20">
                         <span class="font-display text-lg text-white">P 3,500</span>
-                        <button class="add-btn text-zinc-400 hover:text-white hover:bg-accent/20 p-2 rounded-full transition-all border border-transparent hover:border-accent/50" onclick="initToggle(this)">
-                            <iconify-icon icon="lucide:plus" class="text-lg"></iconify-icon>
-                        </button>
+                        <button class="add-btn text-zinc-400 hover:text-white hover:bg-accent/20 p-2 rounded-full transition-all border border-transparent hover:border-accent/50" onclick="initToggle(this)"><iconify-icon icon="lucide:plus" class="text-lg"></iconify-icon></button>
                     </div>
                 </div>
 
@@ -371,75 +240,47 @@
         </div>
     </main>
 
-    <!-- Floating Request Bar -->
     <div id="quote-bar" class="fixed bottom-0 left-0 w-full z-50 p-4">
         <div class="max-w-[1600px] mx-auto bg-zinc-900/90 backdrop-blur-md border border-accent/20 p-4 rounded-sm shadow-2xl flex flex-col md:flex-row justify-between items-center gap-4">
             <div class="flex items-center gap-4">
-                <div class="w-10 h-10 bg-accent/20 rounded-full flex items-center justify-center text-accent">
-                    <iconify-icon icon="lucide:shopping-bag" class="text-xl"></iconify-icon>
-                </div>
-                <div>
-                    <h3 class="text-white font-display text-lg">Your Selection</h3>
-                    <p class="text-zinc-400 text-xs font-mono"><span id="item-count">0</span> Items selected</p>
-                </div>
+                <div class="w-10 h-10 bg-accent/20 rounded-full flex items-center justify-center text-accent"><iconify-icon icon="lucide:shopping-bag" class="text-xl"></iconify-icon></div>
+                <div><h3 class="text-white font-display text-lg">Your Selection</h3><p class="text-zinc-400 text-xs font-mono"><span id="item-count">0</span> Items selected</p></div>
             </div>
             <div class="flex gap-3">
-                <button onclick="sendWhatsApp()" class="bg-green-600 hover:bg-green-500 text-white px-6 py-3 rounded-sm text-xs font-bold uppercase tracking-widest transition-colors flex items-center gap-2">
-                    <iconify-icon icon="ic:baseline-whatsapp" class="text-lg"></iconify-icon> Send via WhatsApp
-                </button>
-                <button onclick="sendEmail()" class="border border-white/20 hover:bg-white/10 text-white px-6 py-3 rounded-sm text-xs font-bold uppercase tracking-widest transition-colors">
-                    Email Quote
-                </button>
+                <button onclick="sendWhatsApp()" class="bg-green-600 hover:bg-green-500 text-white px-6 py-3 rounded-sm text-xs font-bold uppercase tracking-widest transition-colors flex items-center gap-2"><iconify-icon icon="ic:baseline-whatsapp" class="text-lg"></iconify-icon> Send via WhatsApp</button>
+                <button onclick="sendEmail()" class="border border-white/20 hover:bg-white/10 text-white px-6 py-3 rounded-sm text-xs font-bold uppercase tracking-widest transition-colors">Email Quote</button>
             </div>
         </div>
     </div>
 
-    <!-- Footer -->
     <footer id="contact" class="bg-zinc-950 pt-20 pb-12 px-6 border-t border-white/10 relative z-20">
         <div class="max-w-[1600px] mx-auto text-center">
             <div class="flex items-center justify-center gap-3 mb-8">
                 <img src="logo.png" alt="FixitBw" class="w-10 h-10 object-contain grayscale opacity-80">
                 <span class="font-display font-semibold text-2xl tracking-tight text-white">FixitBw</span>
             </div>
-            
             <div class="flex flex-col md:flex-row justify-center items-center gap-6 md:gap-12 text-zinc-500 mb-12">
-                <a href="tel:+26773318758" class="text-xs font-mono uppercase tracking-widest hover:text-accent transition-colors flex items-center gap-2">
-                    <iconify-icon icon="lucide:phone"></iconify-icon> +267 7331 8758
-                </a>
-                <a href="mailto:lekgotlamoroka53@gmail.com" class="text-xs font-mono uppercase tracking-widest hover:text-white transition-colors flex items-center gap-2">
-                    <iconify-icon icon="lucide:mail"></iconify-icon> lekgotlamoroka53@gmail.com
-                </a>
+                <a href="tel:+26773318758" class="text-xs font-mono uppercase tracking-widest hover:text-accent transition-colors flex items-center gap-2"><iconify-icon icon="lucide:phone"></iconify-icon> +267 7331 8758</a>
+                <a href="mailto:lekgotlamoroka53@gmail.com" class="text-xs font-mono uppercase tracking-widest hover:text-white transition-colors flex items-center gap-2"><iconify-icon icon="lucide:mail"></iconify-icon> lekgotlamoroka53@gmail.com</a>
             </div>
-
             <p class="text-[10px] font-mono text-zinc-700 uppercase">© 2024 FIXIT Botswana.</p>
         </div>
     </footer>
 
     <script>
-        // --- 1. FILTER LOGIC ---
         function filterGrid(category) {
-            // Update buttons
             document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active', 'bg-accent', 'text-black', 'border-accent'));
             document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.add('text-zinc-400', 'border-transparent'));
-            
             const activeBtn = event.target;
             activeBtn.classList.add('active', 'bg-accent', 'text-black', 'border-accent');
             activeBtn.classList.remove('text-zinc-400', 'border-transparent');
-
-            // Filter items
             const items = document.querySelectorAll('.card-spotlight');
-            
             items.forEach(item => {
                 const tags = item.getAttribute('data-tags');
-                if (category === 'all' || tags.includes(category)) {
-                    gsap.to(item, { opacity: 1, scale: 1, duration: 0.3, display: 'flex' });
-                } else {
-                    gsap.to(item, { opacity: 0, scale: 0.95, duration: 0.3, display: 'none' });
-                }
+                if (category === 'all' || tags.includes(category)) { gsap.to(item, { opacity: 1, scale: 1, duration: 0.3, display: 'flex' }); } else { gsap.to(item, { opacity: 0, scale: 0.95, duration: 0.3, display: 'none' }); }
             });
         }
 
-        // --- 2. SELECTION & MODAL LOGIC ---
         let selectedItems = [];
         let activeCard = null;
         let activeBtn = null;
@@ -447,56 +288,34 @@
         function initToggle(btn) {
             const card = btn.closest('.card-spotlight');
             const id = card.getAttribute('data-id');
-            
-            // If already selected, remove it
             const existingIndex = selectedItems.findIndex(item => item.id === id);
-            if (existingIndex > -1) {
-                removeItem(id, card, btn);
-            } else {
-                // Open Modal
-                openModal(card, btn);
-            }
+            if (existingIndex > -1) { removeItem(id, card, btn); } else { openModal(card, btn); }
         }
 
         function openModal(card, btn) {
             activeCard = card;
             activeBtn = btn;
-            
             const sellPrice = card.getAttribute('data-sell');
             const rentPrice = card.getAttribute('data-rent');
-            
             document.getElementById('modal-buy-price').innerText = sellPrice;
             document.getElementById('modal-rent-price').innerText = rentPrice;
-            
             const modal = document.getElementById('choice-modal');
             modal.classList.add('open');
-            
-            // Animation for modal content
             gsap.fromTo("#modal-content", {scale: 0.9, opacity: 0}, {scale: 1, opacity: 1, duration: 0.3, ease: "back.out(1.7)"});
         }
 
-        function closeModal() {
-            document.getElementById('choice-modal').classList.remove('open');
-            activeCard = null;
-            activeBtn = null;
-        }
+        function closeModal() { document.getElementById('choice-modal').classList.remove('open'); activeCard = null; activeBtn = null; }
 
         function confirmSelection(type) {
             if (!activeCard) return;
-            
             const id = activeCard.getAttribute('data-id');
             const name = activeCard.getAttribute('data-name');
             const price = type === 'Buy' ? activeCard.getAttribute('data-sell') : activeCard.getAttribute('data-rent');
-            
-            // Add Item
             selectedItems.push({ id, name, type, price });
-            
-            // Update UI
             activeCard.classList.add('selected');
             activeBtn.classList.remove('text-zinc-400');
             activeBtn.classList.add('bg-accent', 'text-black', 'border-accent');
             activeBtn.innerHTML = '<iconify-icon icon="lucide:check" class="text-lg"></iconify-icon>';
-            
             updateQuoteBar();
             closeModal();
         }
@@ -514,72 +333,36 @@
             const bar = document.getElementById('quote-bar');
             const count = document.getElementById('item-count');
             count.innerText = selectedItems.length;
-            if (selectedItems.length > 0) bar.classList.add('visible');
-            else bar.classList.remove('visible');
+            if (selectedItems.length > 0) bar.classList.add('visible'); else bar.classList.remove('visible');
         }
 
-        // --- 3. SEND TO WHATSAPP ---
         function sendWhatsApp() {
             if (selectedItems.length === 0) return;
-
             let message = "Hello FixitBw, I am interested in these tools:\n\n";
-            selectedItems.forEach(item => {
-                message += `- ${item.name} [${item.type} @ ${item.price}]\n`;
-            });
+            selectedItems.forEach(item => { message += `- ${item.name} [${item.type} @ ${item.price}]\n`; });
             message += "\nPlease check availability.";
-
             const url = `https://wa.me/26773318758?text=${encodeURIComponent(message)}`;
             window.open(url, '_blank');
         }
 
-        // --- 4. SEND EMAIL ---
         function sendEmail() {
             if (selectedItems.length === 0) return;
             let subject = "Quote Request - FixitBw";
             let body = "Hello, I would like a quote for:\n\n";
-            selectedItems.forEach(item => {
-                body += `- ${item.name} [${item.type} @ ${item.price}]\n`;
-            });
+            selectedItems.forEach(item => { body += `- ${item.name} [${item.type} @ ${item.price}]\n`; });
             window.location.href = `mailto:lekgotlamoroka53@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
         }
 
-        // --- 5. ANIMATIONS ---
         gsap.to(".anim-entry", { y: 0, opacity: 1, duration: 1, stagger: 0.1, ease: "power3.out" });
-
         const cursorDot = document.querySelector('.cursor-dot');
         const cursorCircle = document.querySelector('.cursor-circle');
         const cards = document.querySelectorAll('.card-spotlight');
-
-        document.addEventListener('mousemove', (e) => {
-            gsap.to(cursorDot, { x: e.clientX, y: e.clientY, duration: 0.1 });
-            gsap.to(cursorCircle, { x: e.clientX, y: e.clientY, duration: 0.4 });
-        });
-
-        cards.forEach(card => {
-            card.addEventListener('mousemove', (e) => {
-                const rect = card.getBoundingClientRect();
-                card.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`);
-                card.style.setProperty('--mouse-y', `${e.clientY - rect.top}px`);
-            });
-        });
-
+        document.addEventListener('mousemove', (e) => { gsap.to(cursorDot, { x: e.clientX, y: e.clientY, duration: 0.1 }); gsap.to(cursorCircle, { x: e.clientX, y: e.clientY, duration: 0.4 }); });
+        cards.forEach(card => { card.addEventListener('mousemove', (e) => { const rect = card.getBoundingClientRect(); card.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`); card.style.setProperty('--mouse-y', `${e.clientY - rect.top}px`); }); });
         const interactables = document.querySelectorAll('a, button, input, .custom-checkbox, .card-spotlight');
-        interactables.forEach(el => {
-            el.addEventListener('mouseenter', () => cursorCircle.classList.add('active'));
-            el.addEventListener('mouseleave', () => cursorCircle.classList.remove('active'));
-        });
-        
+        interactables.forEach(el => { el.addEventListener('mouseenter', () => cursorCircle.classList.add('active')); el.addEventListener('mouseleave', () => cursorCircle.classList.remove('active')); });
         const magnets = document.querySelectorAll('.magnetic');
-        magnets.forEach(btn => {
-            btn.addEventListener('mousemove', (e) => {
-                const rect = btn.getBoundingClientRect();
-                gsap.to(btn, { x: (e.clientX - rect.left - rect.width/2) * 0.3, y: (e.clientY - rect.top - rect.height/2) * 0.3, duration: 0.3 });
-            });
-            btn.addEventListener('mouseleave', () => {
-                gsap.to(btn, { x: 0, y: 0, duration: 0.3 });
-            });
-        });
+        magnets.forEach(btn => { btn.addEventListener('mousemove', (e) => { const rect = btn.getBoundingClientRect(); gsap.to(btn, { x: (e.clientX - rect.left - rect.width/2) * 0.3, y: (e.clientY - rect.top - rect.height/2) * 0.3, duration: 0.3 }); }); btn.addEventListener('mouseleave', () => { gsap.to(btn, { x: 0, y: 0, duration: 0.3 }); }); });
     </script>
-
 </body>
 </html>
