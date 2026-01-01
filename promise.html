@@ -1,126 +1,291 @@
-<!doctype html>
-<html lang="en" class="lenis">
+<html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Our Promise | Fixit 🔨 BW</title>
-  <link rel="icon" type="image/png" href="logo.png">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Promise | FixitBw</title>
+    <link rel="icon" type="image/png" href="logo.png">
 
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://api.fontshare.com/v2/css?f[]=clash-display@200,300,400,500,600,700&f[]=general-sans@200,300,400,500,600&display=swap" rel="stylesheet">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.29/bundled/lenis.min.js"></script>
-  <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Fonts -->
+    <link href="https://api.fontshare.com/v2/css?f[]=clash-display@200,300,400,500,600,700&amp;f[]=general-sans@200,300,400,500,600&amp;display=swap" rel="stylesheet">
+    
+    <!-- GSAP -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
 
-  <meta name="description" content="Our Promise — FixitBW: Reliable tools, fair prices, and excellent service.">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        display: ['Clash Display', 'sans-serif'],
+                        body: ['General Sans', 'sans-serif'],
+                        mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'monospace'],
+                    },
+                    colors: {
+                        'accent': '#f97316', 
+                        'accent-dark': '#ea580c',
+                        'dark': '#050505',
+                    }
+                }
+            }
+        }
+    </script>
 
-  <style>
-    :root{--accent:#f97316;--bg:#030303;--nav-h:72px}
-    html,body{height:100%;margin:0}
-    body{background:var(--bg);color:#fff;font-family:"General Sans",system-ui;overflow-x:hidden;cursor:none;-webkit-font-smoothing:antialiased}
-    ::selection{background:var(--accent);color:#000}
-    nav{position:fixed;top:0;left:0;width:100%;height:var(--nav-h);display:flex;align-items:center;z-index:1000;padding:12px 18px;background:linear-gradient(180deg, rgba(0,0,0,0.35), transparent)}
-    .nav-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:0 12px}
-    .logo img{width:26px;height:26px;object-fit:contain}
-    .nav-links{display:flex;gap:14px}
-    .nav-cta{display:inline-flex;align-items:center;padding:8px 12px;border-radius:10px;background:rgba(0,0,0,0.45);border:1px solid rgba(255,255,255,0.04);color:#fff;text-decoration:none}
+    <style>
+        :root { --cursor-size: 20px; }
+        body { background-color: #030303; color: #ffffff; cursor: none; overflow-x: hidden; }
+        ::selection { background: #f97316; color: #000; }
 
-    /* background */
-    #background{position:fixed;inset:0;z-index:-2;background:#0a0a0a;overflow:hidden}
-    .shape-container{position:fixed;inset:0;z-index:0;pointer-events:none}
-    .float-shape{position:absolute;bottom:-60px;width:40px;height:40px;border-radius:8px;filter:blur(6px);opacity:0.45;animation:floatUp linear infinite;mix-blend-mode:overlay;background:rgba(249,115,22,0.12)}
-    @keyframes floatUp{0%{transform:translateY(0) rotate(0deg);opacity:0}10%{opacity:0.35}100%{transform:translateY(-120vh) rotate(360deg);opacity:0}}
-    .noise{position:fixed;inset:0;pointer-events:none;z-index:1;opacity:0.03;background:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+        /* --- LIGHTWEIGHT FX --- */
+        .noise {
+            position: fixed; inset: 0; pointer-events: none; z-index: 50; opacity: 0.04;
+            background: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+        
+        .ambient-glow {
+            position: fixed; top: 20%; right: -10%; 
+            width: 50vw; height: 50vw;
+            background: radial-gradient(circle, rgba(249, 115, 22, 0.08) 0%, rgba(0,0,0,0) 70%);
+            pointer-events: none; z-index: -1;
+        }
 
-    /* cursor */
-    .cursor-dot{width:6px;height:6px;background:var(--accent);position:fixed;top:0;left:0;border-radius:50%;z-index:9999;pointer-events:none;transform:translate(-50%,-50%)}
-    .cursor-circle{width:40px;height:40px;border:1px solid rgba(255,255,255,0.14);position:fixed;top:0;left:0;border-radius:50%;z-index:9998;pointer-events:none;transform:translate(-50%,-50%);transition:all .22s}
-    .cursor-circle.active{width:64px;height:64px;background:rgba(249,115,22,0.08);border-color:var(--accent)}
+        /* Cursor */
+        .cursor-dot {
+            width: 6px; height: 6px; background: #f97316; position: fixed;
+            border-radius: 50%; z-index: 9999; pointer-events: none; transform: translate(-50%, -50%);
+        }
+        .cursor-circle {
+            width: 40px; height: 40px; border: 1px solid rgba(255, 255, 255, 0.15);
+            position: fixed; border-radius: 50%; z-index: 9998; pointer-events: none;
+            transform: translate(-50%, -50%); transition: width 0.3s, height 0.3s, border-color 0.3s, background 0.3s;
+        }
+        .cursor-circle.active {
+            width: 60px; height: 60px; background-color: rgba(249, 115, 22, 0.05); border-color: #f97316;
+        }
 
-    main{max-width:1100px;margin:0 auto;padding:calc(var(--nav-h) + 18px) 18px 80px;position:relative;z-index:10}
-    h1{font-size:32px;margin:0 0 10px 0}
-    .lead{color:#bdbdbd;line-height:1.7}
+        /* Card Spotlight */
+        .card-spotlight {
+            background: rgba(255,255,255,0.02);
+            position: relative; overflow: hidden;
+            transition: transform 0.3s ease, border-color 0.3s ease;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+        .card-spotlight:hover { 
+            transform: translateY(-4px); 
+            border-color: rgba(249, 115, 22, 0.3);
+        }
+        .card-spotlight::before {
+            content: ''; position: absolute; inset: 0;
+            background: radial-gradient(600px circle at var(--mouse-x) var(--mouse-y), rgba(249, 115, 22, 0.08), transparent 40%);
+            opacity: 0; transition: opacity 0.3s; pointer-events: none; z-index: 10;
+        }
+        .card-spotlight:hover::before { opacity: 1; }
 
-    .spotlight{position:relative;overflow:hidden;border-radius:12px;background:rgba(255,255,255,0.02);padding:18px}
-    .spotlight::before{content:'';position:absolute;inset:0;background:radial-gradient(600px circle at var(--mouse-x) var(--mouse-y), rgba(249,115,22,0.05), transparent 40%);pointer-events:none}
-
-    footer{padding:34px 18px 80px;color:#d0d0d0;border-top:1px solid rgba(255,255,255,0.03);position:relative;z-index:10}
-    .footer-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
-
-    @media(max-width:1024px){.nav-links{display:none}}
-    @media(max-width:640px){main{padding:calc(var(--nav-h) + 12px) 14px 60px}h1{font-size:26px}}
-  </style>
+        .anim-entry { opacity: 0; transform: translateY(20px); }
+        
+        /* Protocol List Styles */
+        .protocol-item { border-left: 1px solid rgba(255,255,255,0.1); padding-left: 2rem; position: relative; }
+        .protocol-item::before {
+            content: ''; position: absolute; left: -3px; top: 0.5rem; width: 5px; height: 5px; background: #333; border-radius: 50%; transition: background 0.3s;
+        }
+        .protocol-item:hover::before { background: #f97316; }
+    </style>
 </head>
+
 <body>
-  <div id="background" aria-hidden="true"></div>
-  <div class="shape-container" aria-hidden="true"></div>
-  <div class="noise" aria-hidden="true"></div>
+    <div class="noise"></div>
+    <div class="ambient-glow"></div>
+    <div class="cursor-dot hidden md:block"></div>
+    <div class="cursor-circle hidden md:block"></div>
 
-  <div class="cursor-dot" aria-hidden="true"></div>
-  <div class="cursor-circle" aria-hidden="true"></div>
+    <!-- Navigation -->
+    <nav class="fixed top-0 left-0 w-full z-[100] px-6 py-5 border-b border-white/5 bg-black/80 backdrop-blur-md">
+        <div class="flex justify-between items-center max-w-[1600px] mx-auto">
+            <a href="index.html" class="flex items-center gap-3 group magnetic">
+                <img src="logo.png" alt="FixitBw" class="w-8 h-8 object-contain opacity-90 group-hover:opacity-100 transition-opacity">
+                <span class="font-display font-semibold text-xl tracking-tight text-white group-hover:text-zinc-200 transition-colors">FixitBw</span>
+            </a>
 
-  <nav>
-    <div class="nav-inner">
-      <a class="logo" href="index.html"><span style="font-weight:800;font-size:18px;color:#fff">Fixit</span><img src="logo.png" alt="logo" style="width:26px;height:26px;object-fit:contain"><span style="font-weight:900;font-size:18px;color:#fff">BW</span></a>
-      <div class="nav-links"><a href="index.html">Home</a><a href="about.html">About</a><a href="sales.html">Sales & Rentals</a><a href="promise.html">Our Promise</a></div>
-      <a class="nav-cta" href="https://wa.me/26773318758" target="_blank">Contact</a>
-    </div>
-  </nav>
+            <div class="hidden md:flex gap-1">
+                <a href="about.html" class="magnetic px-5 py-2 text-xs font-body font-medium uppercase tracking-widest text-zinc-500 hover:text-white hover:bg-white/5 rounded-full transition-all">About</a>
+                <a href="catalog.html" class="magnetic px-5 py-2 text-xs font-body font-medium uppercase tracking-widest text-zinc-500 hover:text-white hover:bg-white/5 rounded-full transition-all">Catalog</a>
+                <!-- Active State -->
+                <a href="promise.html" class="magnetic px-5 py-2 text-xs font-body font-medium uppercase tracking-widest text-white bg-white/5 rounded-full">Promise</a>
+            </div>
 
-  <main>
-    <section>
-      <h1>Our Promise</h1>
-      <p class="lead">We aim to provide reliable tools, fair prices, and excellent service to support your work — no matter the size of the project.</p>
-    </section>
+            <a href="mailto:lekgotlamoroka53@gmail.com" class="magnetic hidden md:flex items-center gap-2 border border-white/10 px-5 py-2 rounded-sm hover:border-accent hover:bg-accent/10 hover:text-accent transition-all duration-300 group">
+                <span class="text-xs font-body font-bold uppercase tracking-widest">Request Quote</span>
+            </a>
+             <button class="md:hidden text-white"><iconify-icon icon="lucide:menu" width="24"></iconify-icon></button>
+        </div>
+    </nav>
 
-    <section style="margin-top:22px;display:grid;grid-template-columns:repeat(3,1fr);gap:16px;">
-      <div class="spotlight"><h3 style="margin-top:0">Well-Maintained Equipment</h3><p style="color:#bdbdbd">Our rental tools are serviced and ready for any project. We ensure reliability so you can focus on the job.</p></div>
-      <div class="spotlight"><h3 style="margin-top:0">Friendly Service</h3><p style="color:#bdbdbd">We provide helpful advice and fast responses so you can pick the right tool quickly.</p></div>
-      <div class="spotlight"><h3 style="margin-top:0">Accessible to Everyone</h3><p style="color:#bdbdbd">From contractors to DIY homeowners, our goal is to make good tools easy to get across Botswana.</p></div>
-    </section>
-  </main>
+    <main class="min-h-screen pt-32 pb-20 px-6 max-w-[1600px] mx-auto">
+        
+        <!-- Hero Section -->
+        <header class="mb-24 anim-entry">
+            <div class="inline-flex items-center gap-2 mb-4">
+                <div class="h-px w-8 bg-accent"></div>
+                <span class="text-accent text-[10px] font-mono uppercase tracking-widest">The Standard</span>
+            </div>
+            <h1 class="text-5xl md:text-7xl font-display font-medium text-white tracking-tighter mb-6">
+                Our Word is <br>
+                <span class="text-zinc-600">Iron.</span>
+            </h1>
+            <p class="text-zinc-400 font-body text-lg max-w-xl leading-relaxed">
+                In construction, downtime is the enemy. FixitBw exists to eliminate it. Our promise isn't just marketing—it's an operational protocol.
+            </p>
+        </header>
 
-  <footer id="contact">
-    <div class="footer-inner">
-      <div style="display:flex;align-items:center;gap:12px;"><span style="font-weight:800;font-size:18px;color:#fff">Fixit</span><img src="logo.png" alt="logo" style="width:20px;height:20px;object-fit:contain"><span style="font-weight:900;font-size:18px;color:#fff">BW</span></div>
-      <div style="display:flex;align-items:center;gap:12px;"><a href="https://wa.me/26773318758" style="color:var(--accent);font-weight:700;text-decoration:none">+267 73318758</a><a href="https://www.tiktok.com/@prodmoroka" target="_blank" style="color:#bbb;text-decoration:none">TikTok</a></div>
-    </div>
-    <div style="text-align:center;color:#777;margin-top:12px">© 2024 Fixit 🔨 BW</div>
-  </footer>
+        <!-- The 3 Pillars -->
+        <section class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-32">
+            
+            <!-- Pillar 1 -->
+            <div class="card-spotlight p-8 rounded-sm group anim-entry">
+                <iconify-icon icon="lucide:shield-alert" class="text-4xl text-zinc-600 mb-6 group-hover:text-accent transition-colors"></iconify-icon>
+                <h3 class="text-xl font-display text-white mb-3">Zero Downtime</h3>
+                <p class="text-zinc-500 text-sm leading-relaxed">
+                    If a tool rented from us fails during normal operation, we don't just refund you. We deliver a replacement immediately to your site in Gaborone.
+                </p>
+            </div>
 
-  <script>
-    // Lenis
-    const lenis = new Lenis({ duration:1.2, smooth:true });
-    function raf(t){lenis.raf(t);requestAnimationFrame(raf)}requestAnimationFrame(raf);
+            <!-- Pillar 2 -->
+            <div class="card-spotlight p-8 rounded-sm group anim-entry">
+                <iconify-icon icon="lucide:check-circle-2" class="text-4xl text-zinc-600 mb-6 group-hover:text-accent transition-colors"></iconify-icon>
+                <h3 class="text-xl font-display text-white mb-3">Performance Tested</h3>
+                <p class="text-zinc-500 text-sm leading-relaxed">
+                    We don't rent "used" tools; we rent "serviced" tools. Every item is inspected, cleaned, and tested for peak voltage/RPM before it leaves our shop.
+                </p>
+            </div>
 
-    // GSAP
-    gsap.registerPlugin(ScrollTrigger);
-    gsap.from("main section", { y:30, opacity:0, duration:0.8, stagger:0.12, ease:"power2.out", scrollTrigger:{ trigger:"main", start:"top 85%" } });
+            <!-- Pillar 3 -->
+            <div class="card-spotlight p-8 rounded-sm group anim-entry">
+                <iconify-icon icon="lucide:banknote" class="text-4xl text-zinc-600 mb-6 group-hover:text-accent transition-colors"></iconify-icon>
+                <h3 class="text-xl font-display text-white mb-3">Honest Rates</h3>
+                <p class="text-zinc-500 text-sm leading-relaxed">
+                    No hidden damage waivers or unexplained fees. Our daily rates are transparent, and our purchase prices are competitive with the South African market.
+                </p>
+            </div>
 
-    // Cursor
-    const dot=document.querySelector('.cursor-dot'), circle=document.querySelector('.cursor-circle');
-    function isMobile(){return window.innerWidth<=768}
-    function updateCursor(){ if(isMobile()){ dot.style.display='none'; circle.style.display='none'; } else { dot.style.display='block'; circle.style.display='block'; } }
-    updateCursor(); window.addEventListener('resize', updateCursor);
+        </section>
 
-    if(!isMobile()){
-      document.addEventListener('mousemove', e=>{ gsap.to(dot,{x:e.clientX,y:e.clientY,duration:0.06}); gsap.to(circle,{x:e.clientX,y:e.clientY,duration:0.18}) });
-      document.querySelectorAll('a,button,.spotlight').forEach(el=>{ el.addEventListener('mouseenter', ()=> circle.classList.add('active')); el.addEventListener('mouseleave', ()=> circle.classList.remove('active')); });
-    }
+        <!-- The Maintenance Protocol -->
+        <section class="grid grid-cols-1 lg:grid-cols-2 gap-16 border-t border-white/5 pt-24">
+            <div class="anim-entry">
+                <h2 class="text-3xl font-display text-white mb-6">The Maintenance Protocol</h2>
+                <p class="text-zinc-500 text-sm max-w-md mb-8">
+                    We treat our tools like tactical equipment. Every return triggers a rigorous 4-step process before the tool is marked 'Ready'.
+                </p>
+                <a href="catalog.html" class="inline-flex items-center gap-2 text-accent text-xs font-bold uppercase tracking-widest hover:text-white transition-colors">
+                    Rent Certified Tools <iconify-icon icon="lucide:arrow-right"></iconify-icon>
+                </a>
+            </div>
 
-    // Spotlight
-    document.addEventListener('mousemove', e=>{
-      document.querySelectorAll('.spotlight').forEach(card=>{
-        const rect=card.getBoundingClientRect();
-        card.style.setProperty('--mouse-x', `${e.clientX-rect.left}px`);
-        card.style.setProperty('--mouse-y', `${e.clientY-rect.top}px`);
-      });
-    });
-    document.querySelectorAll('.spotlight').forEach(card=>card.addEventListener('touchstart', ev=>{ const rect=card.getBoundingClientRect(); card.style.setProperty('--mouse-x', `${ev.touches[0].clientX-rect.left}px`); card.style.setProperty('--mouse-y', `${ev.touches[0].clientY-rect.top}px`)}, {passive:true}));
+            <div class="space-y-8 anim-entry">
+                <div class="protocol-item group">
+                    <span class="text-[10px] font-mono text-accent mb-1 block">STEP 01</span>
+                    <h4 class="text-white font-display text-lg group-hover:translate-x-2 transition-transform">Visual Inspection</h4>
+                    <p class="text-zinc-600 text-xs mt-1">Checking for casing cracks, frayed cords, and loose components.</p>
+                </div>
+                <div class="protocol-item group">
+                    <span class="text-[10px] font-mono text-accent mb-1 block">STEP 02</span>
+                    <h4 class="text-white font-display text-lg group-hover:translate-x-2 transition-transform">Mechanical Test</h4>
+                    <p class="text-zinc-600 text-xs mt-1">Running the tool at max load to ensure motor health and torque stability.</p>
+                </div>
+                <div class="protocol-item group">
+                    <span class="text-[10px] font-mono text-accent mb-1 block">STEP 03</span>
+                    <h4 class="text-white font-display text-lg group-hover:translate-x-2 transition-transform">Deep Clean</h4>
+                    <p class="text-zinc-600 text-xs mt-1">Removal of concrete dust, grease, and debris from vents and moving parts.</p>
+                </div>
+                <div class="protocol-item group">
+                    <span class="text-[10px] font-mono text-accent mb-1 block">STEP 04</span>
+                    <h4 class="text-white font-display text-lg group-hover:translate-x-2 transition-transform">Calibration</h4>
+                    <p class="text-zinc-600 text-xs mt-1">Ensuring laser levels are true and blades are aligned perfectly.</p>
+                </div>
+            </div>
+        </section>
 
-    // Floating shapes
-    (function createShapes(){ const c=document.querySelector('.shape-container'); if(!c) return; const max=window.innerWidth<768?8:14; for(let i=0;i<max;i++){ const el=document.createElement('div'); el.className='float-shape'; const left=Math.random()*100, delay=Math.random()*8, duration=12+Math.random()*14, size=(window.innerWidth<600)?(20+Math.random()*30):(30+Math.random()*60); el.style.left=left+'vw'; el.style.width=size+'px'; el.style.height=size+'px'; el.style.animationDuration=duration+'s'; el.style.animationDelay=delay+'s'; el.style.opacity=0.25+Math.random()*0.35; c.appendChild(el);} })();
-  </script>
+    </main>
+
+    <!-- Footer -->
+    <footer id="contact" class="bg-zinc-950 pt-20 pb-12 px-6 border-t border-white/10 relative z-20">
+        <div class="max-w-[1600px] mx-auto text-center">
+            <div class="flex items-center justify-center gap-3 mb-8">
+                <img src="logo.png" alt="FixitBw" class="w-10 h-10 object-contain grayscale opacity-80">
+                <span class="font-display font-semibold text-2xl tracking-tight text-white">FixitBw</span>
+            </div>
+            
+            <div class="flex flex-col md:flex-row justify-center items-center gap-6 md:gap-12 text-zinc-500 mb-12">
+                <a href="tel:+26773318758" class="text-xs font-mono uppercase tracking-widest hover:text-accent transition-colors flex items-center gap-2">
+                    <iconify-icon icon="lucide:phone"></iconify-icon> +267 7331 8758
+                </a>
+                <a href="mailto:lekgotlamoroka53@gmail.com" class="text-xs font-mono uppercase tracking-widest hover:text-white transition-colors flex items-center gap-2">
+                    <iconify-icon icon="lucide:mail"></iconify-icon> lekgotlamoroka53@gmail.com
+                </a>
+                <a href="https://www.tiktok.com/@prodmoroka" target="_blank" class="text-xs font-mono uppercase tracking-widest hover:text-white transition-colors flex items-center gap-2">
+                    <iconify-icon icon="ic:baseline-tiktok"></iconify-icon> TikTok
+                </a>
+            </div>
+
+            <p class="text-[10px] font-mono text-zinc-700 uppercase">© 2024 FIXIT Botswana.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Animations
+        gsap.to(".anim-entry", {
+            y: 0,
+            opacity: 1,
+            duration: 1,
+            stagger: 0.1,
+            scrollTrigger: {
+                trigger: "body",
+                start: "top center",
+            },
+            ease: "power3.out"
+        });
+
+        // Mouse Interactions
+        const cursorDot = document.querySelector('.cursor-dot');
+        const cursorCircle = document.querySelector('.cursor-circle');
+        const cards = document.querySelectorAll('.card-spotlight');
+
+        document.addEventListener('mousemove', (e) => {
+            gsap.to(cursorDot, { x: e.clientX, y: e.clientY, duration: 0.1 });
+            gsap.to(cursorCircle, { x: e.clientX, y: e.clientY, duration: 0.4 });
+            
+            // Card Spotlights
+            cards.forEach(card => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                card.style.setProperty('--mouse-x', `${x}px`);
+                card.style.setProperty('--mouse-y', `${y}px`);
+            });
+        });
+
+        const interactables = document.querySelectorAll('a, button, input, .custom-checkbox, .card-spotlight');
+        interactables.forEach(el => {
+            el.addEventListener('mouseenter', () => cursorCircle.classList.add('active'));
+            el.addEventListener('mouseleave', () => cursorCircle.classList.remove('active'));
+        });
+
+        // Magnetic Nav
+        const magnets = document.querySelectorAll('.magnetic');
+        magnets.forEach(btn => {
+            btn.addEventListener('mousemove', (e) => {
+                const rect = btn.getBoundingClientRect();
+                gsap.to(btn, { x: (e.clientX - rect.left - rect.width / 2) * 0.3, y: (e.clientY - rect.top - rect.height / 2) * 0.3, duration: 0.3 });
+            });
+            btn.addEventListener('mouseleave', () => {
+                gsap.to(btn, { x: 0, y: 0, duration: 0.3 });
+            });
+        });
+    </script>
+
 </body>
 </html>
