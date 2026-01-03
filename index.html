@@ -1,9 +1,12 @@
-<html lang="en">
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FIXIT | Power Tools Botswana</title>
     <link rel="icon" type="image/png" href="logo.png">
+    
+    <!-- Libraries -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://api.fontshare.com/v2/css?f[]=clash-display@200,300,400,500,600,700&amp;f[]=general-sans@200,300,400,500,600&amp;display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
@@ -11,29 +14,131 @@
 
     <script>
         tailwind.config = {
-            theme: { extend: { fontFamily: { display: ['Clash Display', 'sans-serif'], body: ['General Sans', 'sans-serif'], mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'monospace'], }, colors: { 'accent': '#f97316', 'dark': '#050505', }, animation: { 'pulse-slow': 'pulse 8s cubic-bezier(0.4, 0, 0.6, 1) infinite', } } }
+            theme: { 
+                extend: { 
+                    fontFamily: { 
+                        display: ['Clash Display', 'sans-serif'], 
+                        body: ['General Sans', 'sans-serif'], 
+                        mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'monospace'], 
+                    }, 
+                    colors: { 
+                        'accent': '#f97316', 
+                        'dark': '#050505', 
+                    }, 
+                    animation: { 
+                        'pulse-slow': 'pulse 8s cubic-bezier(0.4, 0, 0.6, 1) infinite', 
+                    } 
+                } 
+            }
         }
     </script>
 
     <style>
-        :root { --cursor-size: 20px; }
-        body { background-color: #030303; color: #ffffff; cursor: none; overflow-x: hidden; }
+        /* --- THEME VARIABLES --- */
+        :root {
+            --cursor-size: 20px;
+            
+            /* Default (Dark) Variables */
+            --bg-primary: #030303;
+            --bg-secondary: #0a0a0a;
+            --bg-card: rgba(255,255,255,0.02);
+            --text-main: #ffffff;
+            --text-muted: #a1a1aa; /* zinc-400 */
+            --border-color: rgba(255, 255, 255, 0.1);
+            --grid-line: rgba(255,255,255,0.03);
+            --sidebar-bg: rgba(5, 5, 5, 0.95);
+            --sidebar-text: #ffffff;
+        }
+
+        /* Light Theme Overrides */
+        [data-theme="light"] {
+            --bg-primary: #f4f4f5; /* zinc-100 */
+            --bg-secondary: #ffffff;
+            --bg-card: rgba(255,255,255, 0.8);
+            --text-main: #18181b; /* zinc-900 */
+            --text-muted: #52525b; /* zinc-600 */
+            --border-color: rgba(0, 0, 0, 0.1);
+            --grid-line: rgba(0,0,0,0.05);
+            --sidebar-bg: rgba(255, 255, 255, 0.95);
+            --sidebar-text: #18181b;
+        }
+
+        body { 
+            background-color: var(--bg-primary); 
+            color: var(--text-main); 
+            cursor: none; 
+            overflow-x: hidden; 
+            transition: background-color 0.5s ease, color 0.5s ease;
+        }
+
         ::selection { background: #f97316; color: #000; }
+        
         .noise { position: fixed; inset: 0; pointer-events: none; z-index: 50; opacity: 0.04; background: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E"); }
-        .grid-bg { position: fixed; inset: 0; z-index: -1; background-image: linear-gradient(to right, rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,0.03) 1px, transparent 1px); background-size: 50px 50px; mask-image: radial-gradient(circle at center, black 30%, transparent 80%); }
+        
+        .grid-bg { 
+            position: fixed; inset: 0; z-index: -1; 
+            background-image: linear-gradient(to right, var(--grid-line) 1px, transparent 1px), linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px); 
+            background-size: 50px 50px; 
+            mask-image: radial-gradient(circle at center, black 30%, transparent 80%); 
+        }
+
         .ambient-glow { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 90vw; height: 90vw; background: radial-gradient(circle, rgba(249, 115, 22, 0.06) 0%, rgba(0,0,0,0) 60%); pointer-events: none; z-index: -1; }
+        
+        /* Cursor */
         .cursor-dot { width: 6px; height: 6px; background: #f97316; position: fixed; border-radius: 50%; z-index: 9999; pointer-events: none; transform: translate(-50%, -50%); }
-        .cursor-circle { width: 40px; height: 40px; border: 1px solid rgba(255, 255, 255, 0.15); position: fixed; border-radius: 50%; z-index: 9998; pointer-events: none; transform: translate(-50%, -50%); transition: width 0.3s, height 0.3s, border-color 0.3s, background 0.3s; }
-        .cursor-circle.active { width: 60px; height: 60px; background-color: rgba(249, 115, 22, 0.05); border-color: #f97316; }
-        .spotlight { position: relative; overflow: hidden; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); transition: border-color 0.3s; }
-        .spotlight:hover { border-color: rgba(255,255,255,0.1); }
+        .cursor-circle { width: 40px; height: 40px; border: 1px solid var(--text-muted); opacity: 0.5; position: fixed; border-radius: 50%; z-index: 9998; pointer-events: none; transform: translate(-50%, -50%); transition: width 0.3s, height 0.3s, border-color 0.3s, background 0.3s; }
+        .cursor-circle.active { width: 60px; height: 60px; background-color: rgba(249, 115, 22, 0.05); border-color: #f97316; opacity: 1; }
+        
+        /* Spotlight Card */
+        .spotlight { 
+            position: relative; overflow: hidden; 
+            background: var(--bg-card); 
+            border: 1px solid var(--border-color); 
+            transition: border-color 0.3s, background-color 0.3s; 
+        }
+        .spotlight:hover { border-color: var(--text-muted); }
         .spotlight::before { content: ''; position: absolute; inset: 0; background: radial-gradient(600px circle at var(--mouse-x) var(--mouse-y), rgba(249, 115, 22, 0.06), transparent 40%); opacity: 0; transition: opacity 0.5s; pointer-events: none; }
         .spotlight:hover::before { opacity: 1; }
+
+        /* Loader */
         .loader-wrap { position: fixed; z-index: 10000; inset: 0; background: #030303; display: flex; flex-direction: column; align-items: center; justify-content: center; }
         .loader-bar { width: 1px; height: 0%; background: #f97316; }
+
+        /* Marquee */
         @keyframes scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
         .marquee-content { display: flex; gap: 4rem; width: max-content; animation: scroll 30s linear infinite; }
+
+        /* Sidebar Styling */
+        .sidebar {
+            background-color: var(--sidebar-bg);
+            border-left: 1px solid var(--border-color);
+        }
+        
+        /* Utility classes for theme colors */
+        .text-theme-main { color: var(--text-main); }
+        .text-theme-muted { color: var(--text-muted); }
+        .border-theme { border-color: var(--border-color); }
+        .bg-theme-card { background-color: var(--bg-card); }
     </style>
+
+    <!-- CRITICAL: PREVENT THEME FLASH -->
+    <script>
+        (function() {
+            try {
+                const savedTheme = localStorage.getItem('theme') || 'dark';
+                const html = document.documentElement;
+                if (savedTheme === 'light') {
+                    html.setAttribute('data-theme', 'light');
+                } else if (savedTheme === 'system') {
+                    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
+                        html.setAttribute('data-theme', 'light');
+                    }
+                }
+            } catch (e) {
+                console.error("Theme access error", e);
+            }
+        })();
+    </script>
 </head>
 
 <body>
@@ -42,32 +147,104 @@
     <div class="ambient-glow animate-pulse-slow"></div>
     <div class="cursor-dot hidden md:block"></div>
     <div class="cursor-circle hidden md:block"></div>
-    <div class="loader-wrap"><div class="loader-bar"></div><div class="mt-4 text-[10px] font-body font-medium tracking-widest uppercase fade-text">Initializing FixitBw...</div></div>
+    
+    <!-- Loader -->
+    <div class="loader-wrap"><div class="loader-bar"></div><div class="mt-4 text-[10px] font-body font-medium tracking-widest uppercase fade-text text-white">Initializing FixitBw...</div></div>
 
     <!-- Navigation -->
-    <nav class="fixed top-0 left-0 w-full z-[100] px-6 py-5 border-b border-white/5 bg-black/70 backdrop-blur-xl">
+    <nav class="fixed top-0 left-0 w-full z-[100] px-6 py-5 border-b border-theme backdrop-blur-xl transition-colors duration-500">
         <div class="flex justify-between items-center max-w-[1600px] mx-auto">
             <a href="index.html" class="flex items-center gap-3 group magnetic">
                 <div class="relative w-8 h-8 flex items-center justify-center">
                     <img src="logo.png" alt="FixitBw Logo" class="w-full h-full object-contain opacity-90 group-hover:opacity-100 transition-opacity">
                     <div class="absolute inset-0 bg-accent/20 blur-lg rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></div>
                 </div>
-                <span class="font-display font-semibold text-xl tracking-tight text-white group-hover:text-zinc-200 transition-colors">FixitBw</span>
+                <span class="font-display font-semibold text-xl tracking-tight text-theme-main group-hover:text-accent transition-colors">FixitBw</span>
             </a>
+            
             <div class="hidden md:flex gap-1">
-                <a href="about.html" class="magnetic px-5 py-2 text-xs font-body font-medium uppercase tracking-widest text-zinc-500 hover:text-white hover:bg-white/5 rounded-full transition-all">About</a>
-                
-                <!-- LINK UPDATED HERE -->
-                <a href="catalog.html" class="magnetic px-5 py-2 text-xs font-body font-medium uppercase tracking-widest text-zinc-500 hover:text-white hover:bg-white/5 rounded-full transition-all">Catalog</a>
-                
-                <a href="promise.html" class="magnetic px-5 py-2 text-xs font-body font-medium uppercase tracking-widest text-zinc-500 hover:text-white hover:bg-white/5 rounded-full transition-all">Promise</a>
+                <a href="about.html" class="magnetic px-5 py-2 text-xs font-body font-medium uppercase tracking-widest text-theme-muted hover:text-theme-main hover:bg-theme-card rounded-full transition-all">About</a>
+                <a href="catalog.html" class="magnetic px-5 py-2 text-xs font-body font-medium uppercase tracking-widest text-theme-muted hover:text-theme-main hover:bg-theme-card rounded-full transition-all">Catalog</a>
+                <a href="promise.html" class="magnetic px-5 py-2 text-xs font-body font-medium uppercase tracking-widest text-theme-muted hover:text-theme-main hover:bg-theme-card rounded-full transition-all">Promise</a>
             </div>
-            <a href="#contact" class="magnetic hidden md:flex items-center gap-2 border border-white/10 px-5 py-2 rounded-sm hover:border-accent hover:bg-accent/10 hover:text-accent transition-all duration-300 group">
-                <span class="text-xs font-body font-bold uppercase tracking-widest">Connect</span>
-            </a>
-            <button class="md:hidden text-white"><iconify-icon icon="lucide:menu" width="24"></iconify-icon></button>
+
+            <div class="flex items-center gap-4">
+                <a href="#contact" class="magnetic hidden md:flex items-center gap-2 border border-theme px-5 py-2 rounded-sm hover:border-accent hover:bg-accent/10 hover:text-accent text-theme-main transition-all duration-300 group">
+                    <span class="text-xs font-body font-bold uppercase tracking-widest">Connect</span>
+                </a>
+                
+                <!-- Sidebar Toggle Button -->
+                <button id="menu-btn" class="magnetic flex items-center justify-center w-10 h-10 border border-theme rounded-full hover:border-accent hover:text-accent text-theme-main transition-all">
+                    <iconify-icon icon="lucide:menu" width="20"></iconify-icon>
+                </button>
+            </div>
         </div>
     </nav>
+
+    <!-- Sidebar / Offcanvas Menu -->
+    <div id="sidebar-overlay" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-[150] opacity-0 pointer-events-none transition-opacity duration-300"></div>
+    <aside id="sidebar" class="sidebar fixed top-0 right-0 h-full w-[300px] z-[160] translate-x-full transition-transform duration-500 backdrop-blur-xl flex flex-col justify-between py-10 px-8 text-theme-main">
+        
+        <div>
+            <div class="flex justify-between items-center mb-12">
+                <span class="text-xs font-mono uppercase tracking-widest text-accent">Menu</span>
+                <button id="close-btn" class="text-theme-muted hover:text-accent transition-colors">
+                    <iconify-icon icon="lucide:x" width="24"></iconify-icon>
+                </button>
+            </div>
+
+            <ul class="space-y-6">
+                <li>
+                    <a href="index.html" class="flex items-center gap-4 text-2xl font-display text-theme-main hover:translate-x-2 transition-transform group">
+                        <iconify-icon icon="lucide:home" class="text-accent opacity-0 group-hover:opacity-100 transition-opacity text-lg"></iconify-icon>
+                        Home
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="flex items-center gap-4 text-2xl font-display text-theme-main hover:translate-x-2 transition-transform group">
+                        <iconify-icon icon="lucide:user" class="text-accent opacity-0 group-hover:opacity-100 transition-opacity text-lg"></iconify-icon>
+                        Profile
+                    </a>
+                </li>
+                <li>
+                    <a href="catalog.html" class="flex items-center gap-4 text-2xl font-display text-theme-main hover:translate-x-2 transition-transform group">
+                        <iconify-icon icon="lucide:shopping-bag" class="text-accent opacity-0 group-hover:opacity-100 transition-opacity text-lg"></iconify-icon>
+                        Catalog
+                    </a>
+                </li>
+            </ul>
+
+            <div class="mt-12 pt-12 border-t border-theme">
+                <span class="text-xs font-mono uppercase tracking-widest text-theme-muted block mb-4">Appearance</span>
+                
+                <!-- Theme Switcher -->
+                <div class="flex gap-2">
+                    <button onclick="setTheme('dark')" class="flex-1 py-2 px-3 border border-theme rounded-sm flex items-center justify-center gap-2 hover:border-accent hover:text-accent text-theme-muted transition-all text-xs uppercase" title="Dark Mode">
+                        <iconify-icon icon="lucide:moon"></iconify-icon>
+                    </button>
+                    <button onclick="setTheme('light')" class="flex-1 py-2 px-3 border border-theme rounded-sm flex items-center justify-center gap-2 hover:border-accent hover:text-accent text-theme-muted transition-all text-xs uppercase" title="Light Mode">
+                        <iconify-icon icon="lucide:sun"></iconify-icon>
+                    </button>
+                    <button onclick="setTheme('system')" class="flex-1 py-2 px-3 border border-theme rounded-sm flex items-center justify-center gap-2 hover:border-accent hover:text-accent text-theme-muted transition-all text-xs uppercase" title="System Auto">
+                        <iconify-icon icon="lucide:monitor"></iconify-icon>
+                    </button>
+                </div>
+                <div id="current-theme-label" class="mt-2 text-[10px] text-accent font-mono text-center opacity-70">Active: Dark</div>
+            </div>
+        </div>
+
+        <div>
+            <a href="#" class="flex items-center gap-3 p-4 bg-theme-card border border-theme rounded-sm group hover:border-accent transition-colors">
+                <div class="w-10 h-10 bg-accent/20 rounded-full flex items-center justify-center text-accent">
+                    <iconify-icon icon="lucide:settings-2"></iconify-icon>
+                </div>
+                <div>
+                    <div class="text-sm font-bold text-theme-main">Settings</div>
+                    <div class="text-[10px] text-theme-muted">Account & Preferences</div>
+                </div>
+            </a>
+        </div>
+    </aside>
 
     <!-- Hero Section -->
     <header class="relative min-h-screen flex flex-col justify-center items-center px-4 pt-32 pb-20 overflow-hidden">
@@ -78,23 +255,20 @@
                     Operational in Gaborone
                 </div>
             </div>
-            <h1 class="hero-anim opacity-0 translate-y-4 font-display text-[13vw] md:text-[7vw] leading-[0.9] tracking-tighter text-white uppercase text-center mb-6">
-                The Arsenal<br>For <span class="text-zinc-600">Builders.</span>
+            <h1 class="hero-anim opacity-0 translate-y-4 font-display text-[13vw] md:text-[7vw] leading-[0.9] tracking-tighter text-theme-main uppercase text-center mb-6 transition-colors">
+                The Arsenal<br>For <span class="text-zinc-600 dark:text-zinc-400">Builders.</span>
             </h1>
             <div class="hero-anim opacity-0 translate-y-4 mt-4 max-w-lg text-center">
-                <p class="font-body text-lg text-zinc-400 font-light leading-relaxed">
+                <p class="font-body text-lg text-theme-muted font-light leading-relaxed transition-colors">
                     Don't let a missing tool stop the job. We provide industrial-grade power tools for sale and rent. 
-                    <span class="text-white">Reliability is our standard.</span>
+                    <span class="text-theme-main">Reliability is our standard.</span>
                 </p>
             </div>
             <div class="hero-anim opacity-0 translate-y-4 mt-10 flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
-                
-                <!-- LINK UPDATED HERE -->
-                <a href="catalog.html" class="magnetic bg-white text-black px-8 py-4 rounded-sm text-xs font-body font-bold uppercase tracking-widest hover:bg-zinc-200 transition-colors text-center">
+                <a href="catalog.html" class="magnetic bg-theme-card border border-theme text-theme-main px-8 py-4 rounded-sm text-xs font-body font-bold uppercase tracking-widest hover:bg-accent hover:border-accent hover:text-white transition-all text-center">
                     Explore Inventory
                 </a>
-                
-                <a href="about.html" class="magnetic border border-white/10 text-white px-8 py-4 rounded-sm text-xs font-body font-bold uppercase tracking-widest hover:bg-white/5 hover:border-white/30 transition-all text-center">
+                <a href="about.html" class="magnetic border border-theme text-theme-main px-8 py-4 rounded-sm text-xs font-body font-bold uppercase tracking-widest hover:bg-theme-card transition-all text-center">
                     Our Mission
                 </a>
             </div>
@@ -103,16 +277,14 @@
     </header>
 
     <!-- Marquee -->
-    <section class="py-4 border-y border-white/5 bg-zinc-950/50 backdrop-blur-sm marquee-container relative z-20 overflow-hidden">
+    <section class="py-4 border-y border-theme bg-theme-card backdrop-blur-sm marquee-container relative z-20 overflow-hidden transition-colors">
         <div class="marquee-content">
-            <div class="flex items-center gap-3 opacity-50"><iconify-icon icon="mdi:lightning-bolt" class="text-accent"></iconify-icon> <span class="text-sm font-body font-medium uppercase tracking-widest text-white">Generators</span></div>
-            <div class="flex items-center gap-3 opacity-50"><iconify-icon icon="mdi:saw-blade" class="text-accent"></iconify-icon> <span class="text-sm font-body font-medium uppercase tracking-widest text-white">Saws & Cutters</span></div>
-            <div class="flex items-center gap-3 opacity-50"><iconify-icon icon="mdi:drill" class="text-accent"></iconify-icon> <span class="text-sm font-body font-medium uppercase tracking-widest text-white">Drills</span></div>
-            <div class="flex items-center gap-3 opacity-50"><iconify-icon icon="mdi:hammer" class="text-accent"></iconify-icon> <span class="text-sm font-body font-medium uppercase tracking-widest text-white">Demolition</span></div>
-            <div class="flex items-center gap-3 opacity-50"><iconify-icon icon="mdi:ruler-square" class="text-accent"></iconify-icon> <span class="text-sm font-body font-medium uppercase tracking-widest text-white">Measurement</span></div>
-            <div class="flex items-center gap-3 opacity-50"><iconify-icon icon="mdi:lightning-bolt" class="text-accent"></iconify-icon> <span class="text-sm font-body font-medium uppercase tracking-widest text-white">Generators</span></div>
-            <div class="flex items-center gap-3 opacity-50"><iconify-icon icon="mdi:saw-blade" class="text-accent"></iconify-icon> <span class="text-sm font-body font-medium uppercase tracking-widest text-white">Saws & Cutters</span></div>
-            <div class="flex items-center gap-3 opacity-50"><iconify-icon icon="mdi:drill" class="text-accent"></iconify-icon> <span class="text-sm font-body font-medium uppercase tracking-widest text-white">Drills</span></div>
+            <div class="flex items-center gap-3 opacity-50"><iconify-icon icon="mdi:lightning-bolt" class="text-accent"></iconify-icon> <span class="text-sm font-body font-medium uppercase tracking-widest text-theme-main">Generators</span></div>
+            <div class="flex items-center gap-3 opacity-50"><iconify-icon icon="mdi:saw-blade" class="text-accent"></iconify-icon> <span class="text-sm font-body font-medium uppercase tracking-widest text-theme-main">Saws & Cutters</span></div>
+            <div class="flex items-center gap-3 opacity-50"><iconify-icon icon="mdi:drill" class="text-accent"></iconify-icon> <span class="text-sm font-body font-medium uppercase tracking-widest text-theme-main">Drills</span></div>
+            <div class="flex items-center gap-3 opacity-50"><iconify-icon icon="mdi:hammer" class="text-accent"></iconify-icon> <span class="text-sm font-body font-medium uppercase tracking-widest text-theme-main">Demolition</span></div>
+            <div class="flex items-center gap-3 opacity-50"><iconify-icon icon="mdi:ruler-square" class="text-accent"></iconify-icon> <span class="text-sm font-body font-medium uppercase tracking-widest text-theme-main">Measurement</span></div>
+            <div class="flex items-center gap-3 opacity-50"><iconify-icon icon="mdi:lightning-bolt" class="text-accent"></iconify-icon> <span class="text-sm font-body font-medium uppercase tracking-widest text-theme-main">Generators</span></div>
         </div>
     </section>
 
@@ -120,53 +292,53 @@
     <section class="py-32 px-6 relative z-10">
         <div class="max-w-[1400px] mx-auto">
             <div class="mb-12">
-                <h2 class="font-display text-2xl text-white mb-2">Select your path</h2>
+                <h2 class="font-display text-2xl text-theme-main mb-2 transition-colors">Select your path</h2>
                 <div class="h-1 w-12 bg-accent"></div>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                 
-                <!-- LINK UPDATED HERE -->
-                <a href="catalog.html" class="spotlight p-10 min-h-[320px] flex flex-col justify-between group cursor-pointer rounded-sm bg-black/40">
+                <a href="catalog.html" class="spotlight p-10 min-h-[320px] flex flex-col justify-between group cursor-pointer rounded-sm">
                     <div class="relative z-10">
                         <div class="flex justify-between items-start mb-8">
                             <div class="p-3 bg-white/5 rounded-sm group-hover:bg-accent/10 transition-colors">
                                 <iconify-icon icon="lucide:shopping-bag" width="24" class="text-zinc-400 group-hover:text-accent transition-colors"></iconify-icon>
                             </div>
-                            <iconify-icon icon="lucide:arrow-right" width="20" class="text-zinc-600 group-hover:text-white group-hover:translate-x-1 transition-all"></iconify-icon>
+                            <iconify-icon icon="lucide:arrow-right" width="20" class="text-zinc-600 group-hover:text-theme-main group-hover:translate-x-1 transition-all"></iconify-icon>
                         </div>
-                        <h3 class="text-3xl font-display text-white mb-3 group-hover:translate-x-1 transition-transform">Inventory</h3>
-                        <p class="text-zinc-500 font-body text-sm leading-relaxed max-w-[220px]">
+                        <h3 class="text-3xl font-display text-theme-main mb-3 group-hover:translate-x-1 transition-transform">Inventory</h3>
+                        <p class="text-theme-muted font-body text-sm leading-relaxed max-w-[220px]">
                             Access our catalog of top-tier brands. Available for direct purchase or flexible daily rentals.
                         </p>
                     </div>
                     <div class="w-full h-px bg-white/5 mt-6 group-hover:bg-accent/50 transition-colors"></div>
                 </a>
 
-                <a href="about.html" class="spotlight p-10 min-h-[320px] flex flex-col justify-between group cursor-pointer rounded-sm bg-black/40">
+                <a href="about.html" class="spotlight p-10 min-h-[320px] flex flex-col justify-between group cursor-pointer rounded-sm">
                     <div class="relative z-10">
                         <div class="flex justify-between items-start mb-8">
                             <div class="p-3 bg-white/5 rounded-sm group-hover:bg-accent/10 transition-colors">
                                 <iconify-icon icon="lucide:users" width="24" class="text-zinc-400 group-hover:text-accent transition-colors"></iconify-icon>
                             </div>
-                            <iconify-icon icon="lucide:arrow-right" width="20" class="text-zinc-600 group-hover:text-white group-hover:translate-x-1 transition-all"></iconify-icon>
+                            <iconify-icon icon="lucide:arrow-right" width="20" class="text-zinc-600 group-hover:text-theme-main group-hover:translate-x-1 transition-all"></iconify-icon>
                         </div>
-                        <h3 class="text-3xl font-display text-white mb-3 group-hover:translate-x-1 transition-transform">The Team</h3>
-                        <p class="text-zinc-500 font-body text-sm leading-relaxed max-w-[220px]">
+                        <h3 class="text-3xl font-display text-theme-main mb-3 group-hover:translate-x-1 transition-transform">The Team</h3>
+                        <p class="text-theme-muted font-body text-sm leading-relaxed max-w-[220px]">
                             Built by contractors, for contractors. We understand the cost of downtime.
                         </p>
                     </div>
                     <div class="w-full h-px bg-white/5 mt-6 group-hover:bg-accent/50 transition-colors"></div>
                 </a>
-                <a href="promise.html" class="spotlight p-10 min-h-[320px] flex flex-col justify-between group cursor-pointer rounded-sm bg-black/40">
+                
+                <a href="promise.html" class="spotlight p-10 min-h-[320px] flex flex-col justify-between group cursor-pointer rounded-sm">
                     <div class="relative z-10">
                         <div class="flex justify-between items-start mb-8">
                             <div class="p-3 bg-white/5 rounded-sm group-hover:bg-accent/10 transition-colors">
                                 <iconify-icon icon="lucide:shield-check" width="24" class="text-zinc-400 group-hover:text-accent transition-colors"></iconify-icon>
                             </div>
-                            <iconify-icon icon="lucide:arrow-right" width="20" class="text-zinc-600 group-hover:text-white group-hover:translate-x-1 transition-all"></iconify-icon>
+                            <iconify-icon icon="lucide:arrow-right" width="20" class="text-zinc-600 group-hover:text-theme-main group-hover:translate-x-1 transition-all"></iconify-icon>
                         </div>
-                        <h3 class="text-3xl font-display text-white mb-3 group-hover:translate-x-1 transition-transform">Guarantee</h3>
-                        <p class="text-zinc-500 font-body text-sm leading-relaxed max-w-[220px]">
+                        <h3 class="text-3xl font-display text-theme-main mb-3 group-hover:translate-x-1 transition-transform">Guarantee</h3>
+                        <p class="text-theme-muted font-body text-sm leading-relaxed max-w-[220px]">
                             Every tool is serviced and calibrated. If it breaks on site, we replace it instantly.
                         </p>
                     </div>
@@ -176,7 +348,7 @@
         </div>
     </section>
 
-    <footer id="contact" class="bg-zinc-950 pt-24 pb-12 px-6 border-t border-white/5 relative z-20">
+    <footer id="contact" class="bg-black/90 pt-24 pb-12 px-6 border-t border-theme relative z-20">
         <div class="max-w-[1400px] mx-auto">
             <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-12">
                 <div class="space-y-6">
@@ -212,12 +384,41 @@
     </footer>
 
     <script>
+        // --- THEME LOGIC (Interaction) ---
+        function applyTheme(themeName) {
+            const html = document.documentElement;
+            const label = document.getElementById('current-theme-label');
+            
+            // Remove previous theme attributes
+            html.removeAttribute('data-theme');
+            
+            if (themeName === 'light') {
+                html.setAttribute('data-theme', 'light');
+                if(label) label.innerText = "Active: Light";
+            } else if (themeName === 'system') {
+                if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
+                    html.setAttribute('data-theme', 'light');
+                }
+                if(label) label.innerText = "Active: System";
+            } else {
+                // Default dark
+                if(label) label.innerText = "Active: Dark";
+            }
+        }
+
+        function setTheme(themeName) {
+            localStorage.setItem('theme', themeName);
+            applyTheme(themeName);
+        }
+
+        // --- ANIMATIONS & INTERACTION ---
         const tl = gsap.timeline();
         tl.to('.loader-bar', { height: '100%', duration: 1, ease: "power4.inOut" })
           .to('.fade-text', { opacity: 0, duration: 0.5 }, "-=0.5")
           .to('.loader-wrap', { y: '-100%', duration: 0.8, ease: "power4.inOut" })
           .to('.hero-anim', { y: 0, opacity: 1, duration: 1, stagger: 0.1, ease: "power3.out" }, "-=0.4");
 
+        // Spotlight
         const spotlightCards = document.querySelectorAll('.spotlight');
         document.addEventListener('mousemove', e => {
             spotlightCards.forEach(card => {
@@ -227,6 +428,7 @@
             });
         });
 
+        // Custom Cursor
         const cursorDot = document.querySelector('.cursor-dot');
         const cursorCircle = document.querySelector('.cursor-circle');
         document.addEventListener('mousemove', (e) => {
@@ -240,6 +442,7 @@
             el.addEventListener('mouseleave', () => cursorCircle.classList.remove('active'));
         });
 
+        // Magnetic Buttons
         const magnets = document.querySelectorAll('.magnetic');
         magnets.forEach(btn => {
             btn.addEventListener('mousemove', (e) => {
@@ -248,6 +451,28 @@
             });
             btn.addEventListener('mouseleave', () => { gsap.to(btn, { x: 0, y: 0, duration: 0.3 }); });
         });
+
+        // --- SIDEBAR LOGIC ---
+        const menuBtn = document.getElementById('menu-btn');
+        const closeBtn = document.getElementById('close-btn');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('sidebar-overlay');
+
+        function toggleSidebar() {
+            const isClosed = sidebar.classList.contains('translate-x-full');
+            if (isClosed) {
+                sidebar.classList.remove('translate-x-full');
+                overlay.classList.remove('opacity-0', 'pointer-events-none');
+            } else {
+                sidebar.classList.add('translate-x-full');
+                overlay.classList.add('opacity-0', 'pointer-events-none');
+            }
+        }
+
+        menuBtn.addEventListener('click', toggleSidebar);
+        closeBtn.addEventListener('click', toggleSidebar);
+        overlay.addEventListener('click', toggleSidebar);
+
     </script>
 </body>
 </html>
