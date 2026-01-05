@@ -271,10 +271,20 @@
     <aside id="sidebar" class="sidebar fixed top-0 right-0 h-full w-[300px] z-[160] translate-x-full transition-transform duration-500 backdrop-blur-xl flex flex-col justify-between py-10 px-8 text-theme-main">
         
         <div>
-            <div class="flex justify-between items-center mb-12">
+            <div class="flex justify-between items-center mb-8">
                 <span class="text-xs font-mono uppercase tracking-widest text-accent">Menu</span>
                 <button id="close-btn" class="text-theme-muted hover:text-accent transition-colors">
                     <iconify-icon icon="lucide:x" width="24"></iconify-icon>
+                </button>
+            </div>
+
+            <!-- Mobile Auth Buttons inside Sidebar -->
+            <div class="grid grid-cols-2 gap-3 mb-8">
+                <button onclick="openAuthModal('signin')" class="border border-theme hover:border-accent hover:text-accent text-theme-main font-bold uppercase tracking-widest text-[10px] py-3 rounded-sm transition-colors text-center">
+                    Sign In
+                </button>
+                <button onclick="openAuthModal('signup')" class="bg-accent hover:bg-white text-black font-bold uppercase tracking-widest text-[10px] py-3 rounded-sm transition-colors text-center shadow-[0_0_10px_rgba(249,115,22,0.2)]">
+                    Sign Up
                 </button>
             </div>
 
