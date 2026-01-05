@@ -18,9 +18,11 @@
                     fontFamily: {
                         display: ['Clash Display', 'sans-serif'],
                         body: ['General Sans', 'sans-serif'],
+                        mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'monospace'],
                     },
                     colors: {
                         'accent': '#f97316', 
+                        'dark': '#050505',
                     }
                 }
             }
@@ -28,8 +30,44 @@
     </script>
 
     <style>
-        :root { --cursor-size: 20px; }
-        body { background-color: #030303; color: #ffffff; cursor: none; overflow-y: auto; }
+        /* --- THEME VARIABLES --- */
+        :root {
+            --cursor-size: 20px;
+            
+            /* Default (Dark) Variables */
+            --bg-primary: #030303;
+            --bg-secondary: #0a0a0a;
+            --bg-card: rgba(255,255,255,0.02);
+            --text-main: #ffffff;
+            --text-muted: #a1a1aa; /* zinc-400 */
+            --border-color: rgba(255, 255, 255, 0.1);
+            --grid-line: rgba(255,255,255,0.03);
+            --sidebar-bg: rgba(5, 5, 5, 0.95);
+            --sidebar-text: #ffffff;
+        }
+
+        /* Light Theme Overrides */
+        [data-theme="light"] {
+            --bg-primary: #f4f4f5; /* zinc-100 */
+            --bg-secondary: #ffffff;
+            --bg-card: rgba(255,255,255, 0.8);
+            --text-main: #18181b; /* zinc-900 */
+            --text-muted: #52525b; /* zinc-600 */
+            --border-color: rgba(0, 0, 0, 0.1);
+            --grid-line: rgba(0,0,0,0.05);
+            --sidebar-bg: rgba(255, 255, 255, 0.95);
+            --sidebar-text: #18181b;
+        }
+
+        body { 
+            background-color: var(--bg-primary); 
+            color: var(--text-main); 
+            cursor: none; 
+            overflow-y: auto; 
+            overflow-x: hidden;
+            transition: background-color 0.5s ease, color 0.5s ease;
+        }
+
         ::selection { background: #f97316; color: #000; }
 
         .noise {
@@ -38,17 +76,64 @@
         }
 
         .cursor-dot { width: 6px; height: 6px; background: #f97316; position: fixed; border-radius: 50%; z-index: 9999; pointer-events: none; transform: translate(-50%, -50%); }
-        .cursor-circle { width: 40px; height: 40px; border: 1px solid rgba(255, 255, 255, 0.2); position: fixed; border-radius: 50%; z-index: 9998; pointer-events: none; transform: translate(-50%, -50%); transition: width 0.3s, height 0.3s, background 0.3s; }
+        .cursor-circle { width: 40px; height: 40px; border: 1px solid var(--text-muted); position: fixed; border-radius: 50%; z-index: 9998; pointer-events: none; transform: translate(-50%, -50%); transition: width 0.3s, height 0.3s, background 0.3s, border-color 0.3s; }
         .cursor-circle.active { width: 60px; height: 60px; background-color: rgba(249, 115, 22, 0.1); border-color: #f97316; }
 
-        .card-spotlight { background: rgba(255,255,255,0.02); position: relative; overflow: hidden; transition: transform 0.3s ease; }
-        .card-spotlight::before { content: ''; position: absolute; inset: 0; background: radial-gradient(800px circle at var(--mouse-x) var(--mouse-y), rgba(255,255,255,0.06), transparent 40%); opacity: 0; transition: opacity 0.5s; pointer-events: none; }
+        .card-spotlight { background: var(--bg-card); position: relative; overflow: hidden; transition: transform 0.3s ease, border-color 0.3s ease; border: 1px solid var(--border-color); }
+        .card-spotlight::before { content: ''; position: absolute; inset: 0; background: radial-gradient(800px circle at var(--mouse-x) var(--mouse-y), rgba(249,115,22,0.06), transparent 40%); opacity: 0; transition: opacity 0.5s; pointer-events: none; }
         .card-spotlight:hover::before { opacity: 1; }
-        .card-spotlight:hover { transform: translateY(-4px); }
+        .card-spotlight:hover { transform: translateY(-4px); border-color: var(--text-muted); }
 
         .anim-entry { opacity: 0; transform: translateY(20px); }
-        .grid-bg { background-image: linear-gradient(to right, rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,0.03) 1px, transparent 1px); background-size: 40px 40px; }
+        .grid-bg { background-image: linear-gradient(to right, var(--grid-line) 1px, transparent 1px), linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px); background-size: 40px 40px; }
+
+        /* Sidebar Styling */
+        .sidebar { background-color: var(--sidebar-bg); border-left: 1px solid var(--border-color); overflow-y: auto; }
+        
+        /* Custom Scrollbar for Sidebar */
+        .sidebar::-webkit-scrollbar { width: 4px; }
+        .sidebar::-webkit-scrollbar-track { background: transparent; }
+        .sidebar::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 4px; }
+        .sidebar::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+
+        /* Auth Modal Styling */
+        .auth-modal-overlay { opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
+        .auth-modal-overlay.open { opacity: 1; pointer-events: all; }
+        .auth-provider-btn {
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+            width: 100%; padding: 10px; margin-bottom: 8px;
+            border: 1px solid var(--border-color); border-radius: 4px;
+            background: var(--bg-card); color: var(--text-main);
+            font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;
+            transition: all 0.2s;
+        }
+        .auth-provider-btn:hover { background: rgba(249, 115, 22, 0.1); border-color: #f97316; }
+        
+        /* Utility classes for theme colors */
+        .text-theme-main { color: var(--text-main); }
+        .text-theme-muted { color: var(--text-muted); }
+        .border-theme { border-color: var(--border-color); }
+        .bg-theme-card { background-color: var(--bg-card); }
     </style>
+
+    <!-- CRITICAL: PREVENT THEME FLASH -->
+    <script>
+        (function() {
+            try {
+                const savedTheme = localStorage.getItem('theme') || 'dark';
+                const html = document.documentElement;
+                if (savedTheme === 'light') {
+                    html.setAttribute('data-theme', 'light');
+                } else if (savedTheme === 'system') {
+                    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
+                        html.setAttribute('data-theme', 'light');
+                    }
+                }
+            } catch (e) {
+                console.error("Theme access error", e);
+            }
+        })();
+    </script>
 </head>
 
 <body>
@@ -56,61 +141,215 @@
     <div class="cursor-dot hidden md:block"></div>
     <div class="cursor-circle hidden md:block"></div>
 
+    <!-- Auth Modal -->
+    <div id="auth-modal" class="auth-modal-overlay fixed inset-0 z-[200] flex items-center justify-center px-4">
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="closeAuthModal()"></div>
+        <div class="relative bg-zinc-900 border border-theme p-8 rounded-sm max-w-sm w-full shadow-2xl transform transition-transform scale-95" id="auth-content">
+            <!-- Header -->
+            <div class="text-center mb-6">
+                <h3 id="auth-title" class="text-2xl font-display text-white mb-1">Create Account</h3>
+                <p id="auth-subtitle" class="text-zinc-500 text-sm">Join the network of professional builders.</p>
+            </div>
+
+            <!-- Social Providers -->
+            <div class="space-y-2 mb-6">
+                <button class="auth-provider-btn">
+                    <iconify-icon icon="flat-color-icons:google" width="16"></iconify-icon> Sign up with Google
+                </button>
+                <div class="grid grid-cols-2 gap-2">
+                    <button class="auth-provider-btn">
+                        <iconify-icon icon="logos:microsoft-icon" width="16"></iconify-icon> Outlook
+                    </button>
+                    <button class="auth-provider-btn">
+                        <iconify-icon icon="logos:yahoo" width="16"></iconify-icon> Yahoo
+                    </button>
+                </div>
+            </div>
+
+            <!-- Divider -->
+            <div class="flex items-center gap-4 mb-6">
+                <div class="h-px bg-white/10 flex-grow"></div>
+                <span class="text-[10px] text-zinc-600 uppercase font-mono">Or use email</span>
+                <div class="h-px bg-white/10 flex-grow"></div>
+            </div>
+
+            <!-- Email Form -->
+            <form class="space-y-4">
+                <div id="name-field-container">
+                    <input type="text" placeholder="FULL NAME" class="w-full bg-white/5 border border-white/10 rounded-sm px-4 py-3 text-xs font-mono text-white placeholder-zinc-600 focus:outline-none focus:border-accent transition-all">
+                </div>
+                <input type="email" placeholder="EMAIL ADDRESS (GMAIL, YAHOO, OUTLOOK...)" class="w-full bg-white/5 border border-white/10 rounded-sm px-4 py-3 text-xs font-mono text-white placeholder-zinc-600 focus:outline-none focus:border-accent transition-all">
+                <input type="password" placeholder="PASSWORD" class="w-full bg-white/5 border border-white/10 rounded-sm px-4 py-3 text-xs font-mono text-white placeholder-zinc-600 focus:outline-none focus:border-accent transition-all">
+                
+                <button type="button" class="w-full bg-accent hover:bg-white text-black font-bold uppercase tracking-widest text-xs py-3 rounded-sm transition-colors mt-2">
+                    <span id="auth-submit-text">Create Account</span>
+                </button>
+            </form>
+
+            <!-- Toggle Mode -->
+            <div class="mt-6 text-center">
+                <p class="text-xs text-zinc-500">
+                    <span id="auth-footer-text">Already have an account?</span> 
+                    <button onclick="toggleAuthMode()" class="text-accent hover:underline font-bold ml-1" id="auth-toggle-btn">Sign In</button>
+                </p>
+            </div>
+
+            <button onclick="closeAuthModal()" class="absolute top-4 right-4 text-zinc-500 hover:text-white">
+                <iconify-icon icon="lucide:x" width="20"></iconify-icon>
+            </button>
+        </div>
+    </div>
+
     <!-- Navigation -->
-    <nav class="fixed top-0 left-0 w-full z-[100] px-6 py-6 border-b border-white/5 bg-black/80 backdrop-blur-md">
+    <nav class="fixed top-0 left-0 w-full z-[100] px-6 py-6 border-b border-theme bg-black/80 backdrop-blur-md">
         <div class="flex justify-between items-center max-w-[1800px] mx-auto">
             <a href="index.html" class="flex items-center gap-3 group magnetic">
                 <img src="logo.png" alt="FixitBw Logo" class="w-8 h-8 object-contain">
-                <span class="font-display font-semibold text-2xl tracking-tight text-white">FixitBw</span>
+                <span class="font-display font-semibold text-2xl tracking-tight text-theme-main">FixitBw</span>
             </a>
 
-            <!-- Updated Links to Match Catalog Page Style -->
+            <!-- Updated Links -->
             <div class="hidden md:flex gap-1">
-                <a href="#" class="magnetic px-5 py-2 text-xs font-body font-medium uppercase tracking-widest text-white bg-white/5 rounded-full">About</a>
-                <a href="catalog.html" class="magnetic px-5 py-2 text-xs font-body font-medium uppercase tracking-widest text-zinc-500 hover:text-white hover:bg-white/5 rounded-full transition-all">Catalog</a>
-                <a href="promise.html" class="magnetic px-5 py-2 text-xs font-body font-medium uppercase tracking-widest text-zinc-500 hover:text-white hover:bg-white/5 rounded-full transition-all">Promise</a>
+                <a href="#" class="magnetic px-5 py-2 text-xs font-body font-medium uppercase tracking-widest text-theme-main bg-theme-card rounded-full">About</a>
+                <a href="catalog.html" class="magnetic px-5 py-2 text-xs font-body font-medium uppercase tracking-widest text-theme-muted hover:text-theme-main hover:bg-theme-card rounded-full transition-all">Catalog</a>
+                <a href="promise.html" class="magnetic px-5 py-2 text-xs font-body font-medium uppercase tracking-widest text-theme-muted hover:text-theme-main hover:bg-theme-card rounded-full transition-all">Promise</a>
             </div>
 
-            <a href="mailto:lekgotlamoroka53@gmail.com" class="magnetic hidden md:flex items-center gap-2 border border-white/20 px-6 py-2 rounded-sm hover:bg-accent hover:border-accent hover:text-black transition-all duration-300">
-                <span class="text-xs font-body font-semibold uppercase tracking-widest">Request Quote</span>
-            </a>
+            <div class="flex items-center gap-4">
+                <!-- Sign In Button -->
+                <button onclick="openAuthModal('signin')" class="magnetic hidden md:block text-xs font-body font-bold uppercase tracking-widest text-theme-muted hover:text-theme-main transition-colors px-3">
+                    Sign In
+                </button>
+                
+                <!-- Sign Up Button -->
+                <button onclick="openAuthModal('signup')" class="magnetic hidden md:flex items-center gap-2 bg-accent hover:bg-white border border-transparent px-5 py-2 rounded-sm text-black transition-all duration-300 group shadow-[0_0_15px_rgba(249,115,22,0.3)] hover:shadow-[0_0_20px_rgba(255,255,255,0.3)]">
+                    <span class="text-xs font-body font-bold uppercase tracking-widest">Sign Up</span>
+                </button>
+
+                 <!-- Sidebar Toggle Button -->
+                <button id="menu-btn" class="magnetic flex items-center justify-center w-10 h-10 border border-theme rounded-full hover:border-accent hover:text-accent text-theme-main transition-all">
+                    <iconify-icon icon="lucide:menu" width="20"></iconify-icon>
+                </button>
+            </div>
         </div>
     </nav>
+
+    <!-- Sidebar / Offcanvas Menu -->
+    <div id="sidebar-overlay" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-[150] opacity-0 pointer-events-none transition-opacity duration-300"></div>
+    <aside id="sidebar" class="sidebar fixed top-0 right-0 h-full w-[300px] z-[160] translate-x-full transition-transform duration-500 backdrop-blur-xl flex flex-col justify-between py-10 px-8 text-theme-main">
+        
+        <div>
+            <div class="flex justify-between items-center mb-8">
+                <span class="text-xs font-mono uppercase tracking-widest text-accent">Menu</span>
+                <button id="close-btn" class="text-theme-muted hover:text-accent transition-colors">
+                    <iconify-icon icon="lucide:x" width="24"></iconify-icon>
+                </button>
+            </div>
+
+            <!-- Mobile Auth Buttons inside Sidebar -->
+            <div class="grid grid-cols-2 gap-3 mb-8">
+                <button onclick="openAuthModal('signin')" class="border border-theme hover:border-accent hover:text-accent text-theme-main font-bold uppercase tracking-widest text-[10px] py-3 rounded-sm transition-colors text-center">
+                    Sign In
+                </button>
+                <button onclick="openAuthModal('signup')" class="bg-accent hover:bg-white text-black font-bold uppercase tracking-widest text-[10px] py-3 rounded-sm transition-colors text-center shadow-[0_0_10px_rgba(249,115,22,0.2)]">
+                    Sign Up
+                </button>
+            </div>
+
+            <ul class="space-y-6">
+                <li>
+                    <a href="index.html" class="flex items-center gap-4 text-2xl font-display text-theme-main hover:translate-x-2 transition-transform group">
+                        <iconify-icon icon="lucide:home" class="text-accent opacity-0 group-hover:opacity-100 transition-opacity text-lg"></iconify-icon>
+                        Home
+                    </a>
+                </li>
+                <li>
+                    <a href="catalog.html" class="flex items-center gap-4 text-2xl font-display text-theme-main hover:translate-x-2 transition-transform group">
+                        <iconify-icon icon="lucide:shopping-bag" class="text-accent opacity-0 group-hover:opacity-100 transition-opacity text-lg"></iconify-icon>
+                        Catalog
+                    </a>
+                </li>
+                <li>
+                    <a href="about.html" class="flex items-center gap-4 text-2xl font-display text-theme-main hover:translate-x-2 transition-transform group">
+                        <iconify-icon icon="lucide:users" class="text-accent opacity-0 group-hover:opacity-100 transition-opacity text-lg"></iconify-icon>
+                        About
+                    </a>
+                </li>
+            </ul>
+
+            <div class="mt-12 pt-12 border-t border-theme">
+                <span class="text-xs font-mono uppercase tracking-widest text-theme-muted block mb-4">Follow Us</span>
+                <div class="flex gap-4">
+                    <a href="https://www.facebook.com/profile.php?id=61586193443792" target="_blank" class="text-theme-muted hover:text-accent transition-colors"><iconify-icon icon="lucide:facebook" width="20"></iconify-icon></a>
+                    <a href="https://www.instagram.com/fixitbw/" target="_blank" class="text-theme-muted hover:text-accent transition-colors"><iconify-icon icon="lucide:instagram" width="20"></iconify-icon></a>
+                    <a href="https://x.com/Fixitbw" target="_blank" class="text-theme-muted hover:text-accent transition-colors"><iconify-icon icon="simple-icons:x" width="20"></iconify-icon></a>
+                    <a href="https://www.tiktok.com/@fixitbw" target="_blank" class="text-theme-muted hover:text-accent transition-colors"><iconify-icon icon="ic:baseline-tiktok" width="20"></iconify-icon></a>
+                </div>
+            </div>
+            
+            <div class="mt-8 pt-8 border-t border-theme">
+                <span class="text-xs font-mono uppercase tracking-widest text-theme-muted block mb-4">Appearance</span>
+                <div class="flex gap-2">
+                    <button onclick="setTheme('dark')" class="flex-1 py-2 px-3 border border-theme rounded-sm flex items-center justify-center gap-2 hover:border-accent hover:text-accent text-theme-muted transition-all text-xs uppercase" title="Dark Mode">
+                        <iconify-icon icon="lucide:moon"></iconify-icon>
+                    </button>
+                    <button onclick="setTheme('light')" class="flex-1 py-2 px-3 border border-theme rounded-sm flex items-center justify-center gap-2 hover:border-accent hover:text-accent text-theme-muted transition-all text-xs uppercase" title="Light Mode">
+                        <iconify-icon icon="lucide:sun"></iconify-icon>
+                    </button>
+                    <button onclick="setTheme('system')" class="flex-1 py-2 px-3 border border-theme rounded-sm flex items-center justify-center gap-2 hover:border-accent hover:text-accent text-theme-muted transition-all text-xs uppercase" title="System Auto">
+                        <iconify-icon icon="lucide:monitor"></iconify-icon>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="py-6">
+            <a href="#" class="flex items-center gap-3 p-4 bg-theme-card border border-theme rounded-sm group hover:border-accent transition-colors">
+                <div class="w-10 h-10 bg-accent/20 rounded-full flex items-center justify-center text-accent">
+                    <iconify-icon icon="lucide:settings-2"></iconify-icon>
+                </div>
+                <div>
+                    <div class="text-sm font-bold text-theme-main">Settings</div>
+                    <div class="text-[10px] text-theme-muted">Account & Preferences</div>
+                </div>
+            </a>
+        </div>
+    </aside>
 
     <main class="min-h-screen">
         
         <!-- Hero Section -->
-        <section class="pt-40 pb-20 px-6 max-w-[1800px] mx-auto relative border-b border-white/5">
+        <section class="pt-40 pb-20 px-6 max-w-[1800px] mx-auto relative border-b border-theme">
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-16">
                 <div class="anim-entry">
-                    <span class="inline-block px-3 py-1 bg-white/5 rounded-full text-[10px] font-mono uppercase tracking-widest text-accent mb-6">Since 2024</span>
-                    <h1 class="text-6xl md:text-8xl font-display font-medium text-white tracking-tighter mb-8 leading-[0.9]">
+                    <span class="inline-block px-3 py-1 bg-theme-card rounded-full text-[10px] font-mono uppercase tracking-widest text-accent mb-6">Since 2024</span>
+                    <h1 class="text-6xl md:text-8xl font-display font-medium text-theme-main tracking-tighter mb-8 leading-[0.9]">
                         Equipping<br>
                         Botswana's<br>
                         Builders.
                     </h1>
-                    <p class="text-zinc-400 text-lg max-w-md leading-relaxed">
+                    <p class="text-theme-muted text-lg max-w-md leading-relaxed">
                         We bridge the gap between industrial-grade requirements and accessibility. Whether you are building a home or a skyscraper, FIXIT ensures you have the right tool, right now.
                     </p>
                 </div>
-                <div class="relative anim-entry grid-bg border-l border-white/5 p-8 lg:p-16 flex flex-col justify-end">
+                <div class="relative anim-entry grid-bg border-l border-theme p-8 lg:p-16 flex flex-col justify-end">
                     <div class="absolute top-0 right-0 w-32 h-32 bg-accent/20 blur-[100px]"></div>
                     <div class="grid grid-cols-2 gap-8">
                         <div>
-                            <h3 class="text-4xl font-display text-white mb-2">500+</h3>
-                            <p class="text-xs font-mono text-zinc-500 uppercase tracking-wider">Tools in Stock</p>
+                            <h3 class="text-4xl font-display text-theme-main mb-2">500+</h3>
+                            <p class="text-xs font-mono text-theme-muted uppercase tracking-wider">Tools in Stock</p>
                         </div>
                         <div>
-                            <h3 class="text-4xl font-display text-white mb-2">24/7</h3>
-                            <p class="text-xs font-mono text-zinc-500 uppercase tracking-wider">Support Line</p>
+                            <h3 class="text-4xl font-display text-theme-main mb-2">24/7</h3>
+                            <p class="text-xs font-mono text-theme-muted uppercase tracking-wider">Support Line</p>
                         </div>
                         <div>
-                            <h3 class="text-4xl font-display text-white mb-2">0%</h3>
-                            <p class="text-xs font-mono text-zinc-500 uppercase tracking-wider">Rental Downtime</p>
+                            <h3 class="text-4xl font-display text-theme-main mb-2">0%</h3>
+                            <p class="text-xs font-mono text-theme-muted uppercase tracking-wider">Rental Downtime</p>
                         </div>
                         <div>
-                            <h3 class="text-4xl font-display text-white mb-2">BW</h3>
-                            <p class="text-xs font-mono text-zinc-500 uppercase tracking-wider">Nationwide Service</p>
+                            <h3 class="text-4xl font-display text-theme-main mb-2">BW</h3>
+                            <p class="text-xs font-mono text-theme-muted uppercase tracking-wider">Nationwide Service</p>
                         </div>
                     </div>
                 </div>
@@ -120,40 +359,40 @@
         <!-- Values Grid -->
         <section class="px-6 max-w-[1800px] mx-auto py-24">
             <div class="mb-12 anim-entry">
-                <h2 class="text-2xl font-display text-white mb-2">Why Professionals Choose Us</h2>
-                <p class="text-zinc-500 text-sm">The FIXIT Standard of Operation</p>
+                <h2 class="text-2xl font-display text-theme-main mb-2">Why Professionals Choose Us</h2>
+                <p class="text-theme-muted text-sm">The FIXIT Standard of Operation</p>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-1">
                 <!-- Value 1 -->
-                <div class="card-spotlight border border-white/5 p-8 group anim-entry">
-                    <div class="w-12 h-12 bg-zinc-900 rounded-sm flex items-center justify-center mb-6 border border-white/5 group-hover:border-accent/50 transition-colors">
-                        <iconify-icon icon="lucide:shield-check" class="text-xl text-zinc-400 group-hover:text-accent transition-colors"></iconify-icon>
+                <div class="card-spotlight border border-theme p-8 group anim-entry">
+                    <div class="w-12 h-12 bg-theme-card rounded-sm flex items-center justify-center mb-6 border border-theme group-hover:border-accent/50 transition-colors">
+                        <iconify-icon icon="lucide:shield-check" class="text-xl text-theme-muted group-hover:text-accent transition-colors"></iconify-icon>
                     </div>
-                    <h3 class="text-xl font-display text-white mb-3">Quality Assured</h3>
-                    <p class="text-zinc-500 text-sm leading-relaxed">
+                    <h3 class="text-xl font-display text-theme-main mb-3">Quality Assured</h3>
+                    <p class="text-theme-muted text-sm leading-relaxed">
                         Every tool in our inventory is inspected, serviced, and calibrated after every rental cycle. We stock only top-tier brands like Makita, Bosch, and DeWalt.
                     </p>
                 </div>
 
                 <!-- Value 2 -->
-                <div class="card-spotlight border border-white/5 p-8 group anim-entry">
-                    <div class="w-12 h-12 bg-zinc-900 rounded-sm flex items-center justify-center mb-6 border border-white/5 group-hover:border-accent/50 transition-colors">
-                        <iconify-icon icon="lucide:zap" class="text-xl text-zinc-400 group-hover:text-accent transition-colors"></iconify-icon>
+                <div class="card-spotlight border border-theme p-8 group anim-entry">
+                    <div class="w-12 h-12 bg-theme-card rounded-sm flex items-center justify-center mb-6 border border-theme group-hover:border-accent/50 transition-colors">
+                        <iconify-icon icon="lucide:zap" class="text-xl text-theme-muted group-hover:text-accent transition-colors"></iconify-icon>
                     </div>
-                    <h3 class="text-xl font-display text-white mb-3">Instant Deployment</h3>
-                    <p class="text-zinc-500 text-sm leading-relaxed">
+                    <h3 class="text-xl font-display text-theme-main mb-3">Instant Deployment</h3>
+                    <p class="text-theme-muted text-sm leading-relaxed">
                         Time is money on a construction site. Our streamlined rental process gets tools in your hands in under 15 minutes. No complex paperwork.
                     </p>
                 </div>
 
                 <!-- Value 3 -->
-                <div class="card-spotlight border border-white/5 p-8 group anim-entry">
-                    <div class="w-12 h-12 bg-zinc-900 rounded-sm flex items-center justify-center mb-6 border border-white/5 group-hover:border-accent/50 transition-colors">
-                        <iconify-icon icon="lucide:coins" class="text-xl text-zinc-400 group-hover:text-accent transition-colors"></iconify-icon>
+                <div class="card-spotlight border border-theme p-8 group anim-entry">
+                    <div class="w-12 h-12 bg-theme-card rounded-sm flex items-center justify-center mb-6 border border-theme group-hover:border-accent/50 transition-colors">
+                        <iconify-icon icon="lucide:coins" class="text-xl text-theme-muted group-hover:text-accent transition-colors"></iconify-icon>
                     </div>
-                    <h3 class="text-xl font-display text-white mb-3">Flexible Economics</h3>
-                    <p class="text-zinc-500 text-sm leading-relaxed">
+                    <h3 class="text-xl font-display text-theme-main mb-3">Flexible Economics</h3>
+                    <p class="text-theme-muted text-sm leading-relaxed">
                         Rent for a day, a week, or buy outright. We offer transparent pricing structures designed to fit the cash flow of independent contractors.
                     </p>
                 </div>
@@ -161,11 +400,11 @@
         </section>
 
         <!-- Team / Story -->
-        <section class="border-y border-white/5 bg-white/[0.01]">
+        <section class="border-y border-theme bg-theme-card">
             <div class="max-w-[1800px] mx-auto grid grid-cols-1 lg:grid-cols-2">
-                <div class="p-8 lg:p-24 border-r border-white/5 anim-entry">
-                    <h2 class="text-4xl md:text-5xl font-display text-white mb-8 tracking-tight">Built by Builders.</h2>
-                    <div class="space-y-6 text-zinc-400 leading-relaxed">
+                <div class="p-8 lg:p-24 border-r border-theme anim-entry">
+                    <h2 class="text-4xl md:text-5xl font-display text-theme-main mb-8 tracking-tight">Built by Builders.</h2>
+                    <div class="space-y-6 text-theme-muted leading-relaxed">
                         <p>
                             FixitBw was born out of frustration. As contractors ourselves, we tired of the unreliable rental market in Gaborone. Tools were either broken, unavailable, or overpriced.
                         </p>
@@ -173,35 +412,35 @@
                             We decided to fix it. We built the inventory we wished we had access to. A centralized hub where reliability isn't an upgrade—it's the standard.
                         </p>
                         <div class="pt-8">
-                            <img src="https://ui-avatars.com/api/?name=Lekgotla+M&amp;background=18181b&amp;color=f97316&amp;size=64" alt="Founder" class="w-12 h-12 rounded-full border border-white/10 mb-4">
-                            <p class="text-white font-medium">Lekgotla M.</p>
-                            <p class="text-xs font-mono uppercase text-zinc-600">Founder &amp; Head Technician</p>
+                            <img src="https://ui-avatars.com/api/?name=Lekgotla+M&amp;background=18181b&amp;color=f97316&amp;size=64" alt="Founder" class="w-12 h-12 rounded-full border border-theme mb-4">
+                            <p class="text-theme-main font-medium">Lekgotla M.</p>
+                            <p class="text-xs font-mono uppercase text-theme-muted">Founder &amp; Head Technician</p>
                         </div>
                     </div>
                 </div>
                 <div class="p-8 lg:p-24 flex items-center justify-center anim-entry relative overflow-hidden">
                     <div class="absolute inset-0 grid-bg opacity-30"></div>
                     <!-- Abstract Visualization -->
-                    <div class="relative w-full max-w-sm aspect-[4/5] border border-white/10 p-6 flex flex-col justify-between bg-black/40 backdrop-blur-sm">
+                    <div class="relative w-full max-w-sm aspect-[4/5] border border-theme p-6 flex flex-col justify-between bg-black/40 backdrop-blur-sm">
                         <div class="flex justify-between items-center">
                             <iconify-icon icon="lucide:map-pin" class="text-accent text-2xl"></iconify-icon>
-                            <div class="h-[1px] flex-grow bg-white/10 mx-4"></div>
-                            <span class="text-xs font-mono text-zinc-500">HQ</span>
+                            <div class="h-[1px] flex-grow bg-theme-muted/20 mx-4"></div>
+                            <span class="text-xs font-mono text-theme-muted">HQ</span>
                         </div>
                         <div class="space-y-4">
-                            <div class="h-1 w-full bg-white/5 rounded overflow-hidden">
+                            <div class="h-1 w-full bg-theme-muted/10 rounded overflow-hidden">
                                 <div class="h-full bg-accent w-3/4"></div>
                             </div>
-                            <div class="h-1 w-full bg-white/5 rounded overflow-hidden">
-                                <div class="h-full bg-zinc-600 w-1/2"></div>
+                            <div class="h-1 w-full bg-theme-muted/10 rounded overflow-hidden">
+                                <div class="h-full bg-theme-muted w-1/2"></div>
                             </div>
-                            <div class="h-1 w-full bg-white/5 rounded overflow-hidden">
-                                <div class="h-full bg-zinc-800 w-full"></div>
+                            <div class="h-1 w-full bg-theme-muted/10 rounded overflow-hidden">
+                                <div class="h-full bg-theme-muted/50 w-full"></div>
                             </div>
                         </div>
                         <div class="text-right">
-                            <p class="text-2xl font-display text-white">Gaborone</p>
-                            <p class="text-xs font-mono text-zinc-500">Main Workshop &amp; Showroom</p>
+                            <p class="text-2xl font-display text-theme-main">Gaborone</p>
+                            <p class="text-xs font-mono text-theme-muted">Main Workshop &amp; Showroom</p>
                         </div>
                     </div>
                 </div>
@@ -211,13 +450,13 @@
         <!-- CTA -->
         <section class="py-32 px-6 text-center">
             <div class="max-w-2xl mx-auto anim-entry">
-                <h2 class="text-4xl md:text-5xl font-display text-white mb-6">Ready to get to work?</h2>
-                <p class="text-zinc-500 mb-8">Browse our catalog or visit our showroom to see the tools in person.</p>
+                <h2 class="text-4xl md:text-5xl font-display text-theme-main mb-6">Ready to get to work?</h2>
+                <p class="text-theme-muted mb-8">Browse our catalog or visit our showroom to see the tools in person.</p>
                 <div class="flex items-center justify-center gap-4">
-                    <a href="catalog.html" class="bg-white text-black px-8 py-3 rounded-sm text-xs font-bold uppercase tracking-widest hover:bg-zinc-200 transition-colors">
+                    <a href="catalog.html" class="bg-theme-main text-bg-primary px-8 py-3 rounded-sm text-xs font-bold uppercase tracking-widest hover:bg-theme-muted transition-colors">
                         View Catalog
                     </a>
-                    <a href="tel:+26773318758" class="border border-white/20 text-white px-8 py-3 rounded-sm text-xs font-bold uppercase tracking-widest hover:bg-white/5 transition-colors">
+                    <a href="tel:+26773318758" class="border border-theme text-theme-main px-8 py-3 rounded-sm text-xs font-bold uppercase tracking-widest hover:bg-theme-card transition-colors">
                         Contact Us
                     </a>
                 </div>
@@ -227,24 +466,24 @@
     </main>
 
     <!-- Footer -->
-    <footer class="bg-zinc-950 pt-20 pb-12 px-6 border-t border-white/10 relative z-20">
+    <footer class="bg-zinc-950 pt-20 pb-12 px-6 border-t border-theme relative z-20">
         <div class="max-w-[1600px] mx-auto text-center">
             <div class="flex items-center justify-center gap-1 mb-8">
                 <span class="font-display font-semibold text-xl tracking-tight text-white">FI</span>
-                <!-- Replaced Wrench with Hammer to match your logo -->
                 <iconify-icon icon="mdi:hammer" class="text-white text-lg bg-black rounded-full p-[3px] border border-white/20"></iconify-icon>
                 <span class="font-display font-semibold text-xl tracking-tight text-white">IT</span>
             </div>
             
             <div class="mt-6 space-y-2 text-xs font-mono text-zinc-500">
                 <p>📞 +267 7331 8758</p>
-                <p>✉️ lekgotlamoroka53@gmail.com</p>
-                <p>
-                    TikTok:
-                    <a href="https://www.tiktok.com/@prodmoroka" target="_blank" class="text-accent hover:underline">
-                        @prodmoroka
-                    </a>
-                </p>
+                <p>✉️ fixitbotswana@gmail.com</p>
+            </div>
+            
+            <div class="flex justify-center gap-6 mt-8 mb-8">
+                <a href="https://www.facebook.com/profile.php?id=61586193443792" target="_blank" class="text-zinc-500 hover:text-white transition-colors"><iconify-icon icon="lucide:facebook" width="20"></iconify-icon></a>
+                <a href="https://www.instagram.com/fixitbw/" target="_blank" class="text-zinc-500 hover:text-white transition-colors"><iconify-icon icon="lucide:instagram" width="20"></iconify-icon></a>
+                <a href="https://x.com/Fixitbw" target="_blank" class="text-zinc-500 hover:text-white transition-colors"><iconify-icon icon="simple-icons:x" width="20"></iconify-icon></a>
+                <a href="https://www.tiktok.com/@fixitbw" target="_blank" class="text-zinc-500 hover:text-white transition-colors"><iconify-icon icon="ic:baseline-tiktok" width="20"></iconify-icon></a>
             </div>
 
             <p class="text-[10px] font-mono text-zinc-600 uppercase">© 2024 FixitBw. About Us.</p>
@@ -252,6 +491,36 @@
     </footer>
 
     <script>
+        // --- THEME LOGIC (Interaction) ---
+        function applyTheme(themeName) {
+            const html = document.documentElement;
+            
+            // Remove previous theme attributes
+            html.removeAttribute('data-theme');
+            
+            if (themeName === 'light') {
+                html.setAttribute('data-theme', 'light');
+            } else if (themeName === 'system') {
+                if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
+                    html.setAttribute('data-theme', 'light');
+                }
+            } else {
+                // Default dark
+            }
+        }
+
+        function setTheme(themeName) {
+            localStorage.setItem('theme', themeName);
+            applyTheme(themeName);
+        }
+
+        // Listen for storage changes from other tabs
+        window.addEventListener('storage', (e) => {
+            if (e.key === 'theme') {
+                applyTheme(e.newValue);
+            }
+        });
+
         // Animations
         gsap.to(".anim-entry", {
             y: 0,
@@ -327,6 +596,76 @@
                 gsap.to(btn, { x: 0, y: 0, duration: 0.3 });
             });
         });
+
+        // --- SIDEBAR LOGIC ---
+        const menuBtn = document.getElementById('menu-btn');
+        const closeBtn = document.getElementById('close-btn');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('sidebar-overlay');
+
+        function toggleSidebar() {
+            const isClosed = sidebar.classList.contains('translate-x-full');
+            if (isClosed) {
+                sidebar.classList.remove('translate-x-full');
+                overlay.classList.remove('opacity-0', 'pointer-events-none');
+            } else {
+                sidebar.classList.add('translate-x-full');
+                overlay.classList.add('opacity-0', 'pointer-events-none');
+            }
+        }
+
+        menuBtn.addEventListener('click', toggleSidebar);
+        closeBtn.addEventListener('click', toggleSidebar);
+        overlay.addEventListener('click', toggleSidebar);
+
+        // --- AUTH MODAL LOGIC ---
+        let authMode = 'signup'; // 'signup' or 'signin'
+
+        function openAuthModal(mode) {
+            authMode = mode;
+            updateAuthUI();
+            document.getElementById('auth-modal').classList.add('open');
+            // If sidebar is open, close it for better UX
+            if (!sidebar.classList.contains('translate-x-full')) {
+                toggleSidebar();
+            }
+            gsap.fromTo("#auth-content", {scale: 0.9, opacity: 0}, {scale: 1, opacity: 1, duration: 0.3, ease: "back.out(1.7)"});
+        }
+
+        function closeAuthModal() {
+            document.getElementById('auth-modal').classList.remove('open');
+        }
+
+        function toggleAuthMode() {
+            authMode = authMode === 'signup' ? 'signin' : 'signup';
+            updateAuthUI();
+        }
+
+        function updateAuthUI() {
+            const title = document.getElementById('auth-title');
+            const subtitle = document.getElementById('auth-subtitle');
+            const submitText = document.getElementById('auth-submit-text');
+            const footerText = document.getElementById('auth-footer-text');
+            const toggleBtn = document.getElementById('auth-toggle-btn');
+            const nameField = document.getElementById('name-field-container');
+
+            if (authMode === 'signup') {
+                title.innerText = 'Create Account';
+                subtitle.innerText = 'Join the network of professional builders.';
+                submitText.innerText = 'Create Account';
+                footerText.innerText = 'Already have an account?';
+                toggleBtn.innerText = 'Sign In';
+                nameField.style.display = 'block';
+            } else {
+                title.innerText = 'Welcome Back';
+                subtitle.innerText = 'Sign in to manage your rentals.';
+                submitText.innerText = 'Sign In';
+                footerText.innerText = "Don't have an account?";
+                toggleBtn.innerText = 'Sign Up';
+                nameField.style.display = 'none';
+            }
+        }
     </script>
 
-</body></html>
+</body>
+</html>
