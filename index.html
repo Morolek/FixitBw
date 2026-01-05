@@ -112,8 +112,28 @@
         .sidebar {
             background-color: var(--sidebar-bg);
             border-left: 1px solid var(--border-color);
+            overflow-y: auto;
         }
-        
+
+        /* Custom Scrollbar for Sidebar */
+        .sidebar::-webkit-scrollbar { width: 4px; }
+        .sidebar::-webkit-scrollbar-track { background: transparent; }
+        .sidebar::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 4px; }
+        .sidebar::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+
+        /* Auth Modal Styling */
+        .auth-modal-overlay { opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
+        .auth-modal-overlay.open { opacity: 1; pointer-events: all; }
+        .auth-provider-btn {
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+            width: 100%; padding: 10px; margin-bottom: 8px;
+            border: 1px solid var(--border-color); border-radius: 4px;
+            background: var(--bg-card); color: var(--text-main);
+            font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;
+            transition: all 0.2s;
+        }
+        .auth-provider-btn:hover { background: rgba(249, 115, 22, 0.1); border-color: #f97316; }
+
         /* Utility classes for theme colors */
         .text-theme-main { color: var(--text-main); }
         .text-theme-muted { color: var(--text-muted); }
@@ -151,6 +171,65 @@
     <!-- Loader -->
     <div class="loader-wrap"><div class="loader-bar"></div><div class="mt-4 text-[10px] font-body font-medium tracking-widest uppercase fade-text text-white">Initializing FixitBw...</div></div>
 
+    <!-- Auth Modal -->
+    <div id="auth-modal" class="auth-modal-overlay fixed inset-0 z-[200] flex items-center justify-center px-4">
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="closeAuthModal()"></div>
+        <div class="relative bg-zinc-900 border border-theme p-8 rounded-sm max-w-sm w-full shadow-2xl transform transition-transform scale-95" id="auth-content">
+            <!-- Header -->
+            <div class="text-center mb-6">
+                <h3 id="auth-title" class="text-2xl font-display text-white mb-1">Create Account</h3>
+                <p id="auth-subtitle" class="text-zinc-500 text-sm">Join the network of professional builders.</p>
+            </div>
+
+            <!-- Social Providers -->
+            <div class="space-y-2 mb-6">
+                <button class="auth-provider-btn">
+                    <iconify-icon icon="flat-color-icons:google" width="16"></iconify-icon> Sign up with Google
+                </button>
+                <div class="grid grid-cols-2 gap-2">
+                    <button class="auth-provider-btn">
+                        <iconify-icon icon="logos:microsoft-icon" width="16"></iconify-icon> Outlook
+                    </button>
+                    <button class="auth-provider-btn">
+                        <iconify-icon icon="logos:yahoo" width="16"></iconify-icon> Yahoo
+                    </button>
+                </div>
+            </div>
+
+            <!-- Divider -->
+            <div class="flex items-center gap-4 mb-6">
+                <div class="h-px bg-white/10 flex-grow"></div>
+                <span class="text-[10px] text-zinc-600 uppercase font-mono">Or use email</span>
+                <div class="h-px bg-white/10 flex-grow"></div>
+            </div>
+
+            <!-- Email Form -->
+            <form class="space-y-4">
+                <div id="name-field-container">
+                    <input type="text" placeholder="FULL NAME" class="w-full bg-white/5 border border-white/10 rounded-sm px-4 py-3 text-xs font-mono text-white placeholder-zinc-600 focus:outline-none focus:border-accent transition-all">
+                </div>
+                <input type="email" placeholder="EMAIL ADDRESS (GMAIL, YAHOO, OUTLOOK...)" class="w-full bg-white/5 border border-white/10 rounded-sm px-4 py-3 text-xs font-mono text-white placeholder-zinc-600 focus:outline-none focus:border-accent transition-all">
+                <input type="password" placeholder="PASSWORD" class="w-full bg-white/5 border border-white/10 rounded-sm px-4 py-3 text-xs font-mono text-white placeholder-zinc-600 focus:outline-none focus:border-accent transition-all">
+                
+                <button type="button" class="w-full bg-accent hover:bg-white text-black font-bold uppercase tracking-widest text-xs py-3 rounded-sm transition-colors mt-2">
+                    <span id="auth-submit-text">Create Account</span>
+                </button>
+            </form>
+
+            <!-- Toggle Mode -->
+            <div class="mt-6 text-center">
+                <p class="text-xs text-zinc-500">
+                    <span id="auth-footer-text">Already have an account?</span> 
+                    <button onclick="toggleAuthMode()" class="text-accent hover:underline font-bold ml-1" id="auth-toggle-btn">Sign In</button>
+                </p>
+            </div>
+
+            <button onclick="closeAuthModal()" class="absolute top-4 right-4 text-zinc-500 hover:text-white">
+                <iconify-icon icon="lucide:x" width="20"></iconify-icon>
+            </button>
+        </div>
+    </div>
+
     <!-- Navigation -->
     <nav class="fixed top-0 left-0 w-full z-[100] px-6 py-5 border-b border-theme backdrop-blur-xl transition-colors duration-500">
         <div class="flex justify-between items-center max-w-[1600px] mx-auto">
@@ -169,9 +248,15 @@
             </div>
 
             <div class="flex items-center gap-4">
-                <a href="#contact" class="magnetic hidden md:flex items-center gap-2 border border-theme px-5 py-2 rounded-sm hover:border-accent hover:bg-accent/10 hover:text-accent text-theme-main transition-all duration-300 group">
-                    <span class="text-xs font-body font-bold uppercase tracking-widest">Connect</span>
-                </a>
+                <!-- Sign In Button -->
+                <button onclick="openAuthModal('signin')" class="magnetic hidden md:block text-xs font-body font-bold uppercase tracking-widest text-theme-muted hover:text-theme-main transition-colors px-3">
+                    Sign In
+                </button>
+                
+                <!-- Sign Up Button -->
+                <button onclick="openAuthModal('signup')" class="magnetic hidden md:flex items-center gap-2 bg-accent hover:bg-white border border-transparent px-5 py-2 rounded-sm text-black transition-all duration-300 group shadow-[0_0_15px_rgba(249,115,22,0.3)] hover:shadow-[0_0_20px_rgba(255,255,255,0.3)]">
+                    <span class="text-xs font-body font-bold uppercase tracking-widest">Sign Up</span>
+                </button>
                 
                 <!-- Sidebar Toggle Button -->
                 <button id="menu-btn" class="magnetic flex items-center justify-center w-10 h-10 border border-theme rounded-full hover:border-accent hover:text-accent text-theme-main transition-all">
@@ -201,22 +286,31 @@
                     </a>
                 </li>
                 <li>
-                    <a href="#" class="flex items-center gap-4 text-2xl font-display text-theme-main hover:translate-x-2 transition-transform group">
-                        <iconify-icon icon="lucide:user" class="text-accent opacity-0 group-hover:opacity-100 transition-opacity text-lg"></iconify-icon>
-                        Profile
-                    </a>
-                </li>
-                <li>
                     <a href="catalog.html" class="flex items-center gap-4 text-2xl font-display text-theme-main hover:translate-x-2 transition-transform group">
                         <iconify-icon icon="lucide:shopping-bag" class="text-accent opacity-0 group-hover:opacity-100 transition-opacity text-lg"></iconify-icon>
                         Catalog
                     </a>
                 </li>
+                <li>
+                    <a href="about.html" class="flex items-center gap-4 text-2xl font-display text-theme-main hover:translate-x-2 transition-transform group">
+                        <iconify-icon icon="lucide:users" class="text-accent opacity-0 group-hover:opacity-100 transition-opacity text-lg"></iconify-icon>
+                        About
+                    </a>
+                </li>
             </ul>
 
             <div class="mt-12 pt-12 border-t border-theme">
+                <span class="text-xs font-mono uppercase tracking-widest text-theme-muted block mb-4">Follow Us</span>
+                <div class="flex gap-4">
+                    <a href="https://www.facebook.com/profile.php?id=61586193443792" target="_blank" class="text-theme-muted hover:text-accent transition-colors"><iconify-icon icon="lucide:facebook" width="20"></iconify-icon></a>
+                    <a href="https://www.instagram.com/fixitbw/" target="_blank" class="text-theme-muted hover:text-accent transition-colors"><iconify-icon icon="lucide:instagram" width="20"></iconify-icon></a>
+                    <a href="https://x.com/Fixitbw" target="_blank" class="text-theme-muted hover:text-accent transition-colors"><iconify-icon icon="simple-icons:x" width="20"></iconify-icon></a>
+                    <a href="https://www.tiktok.com/@fixitbw" target="_blank" class="text-theme-muted hover:text-accent transition-colors"><iconify-icon icon="ic:baseline-tiktok" width="20"></iconify-icon></a>
+                </div>
+            </div>
+            
+            <div class="mt-8 pt-8 border-t border-theme">
                 <span class="text-xs font-mono uppercase tracking-widest text-theme-muted block mb-4">Appearance</span>
-                
                 <!-- Theme Switcher -->
                 <div class="flex gap-2">
                     <button onclick="setTheme('dark')" class="flex-1 py-2 px-3 border border-theme rounded-sm flex items-center justify-center gap-2 hover:border-accent hover:text-accent text-theme-muted transition-all text-xs uppercase" title="Dark Mode">
@@ -229,11 +323,10 @@
                         <iconify-icon icon="lucide:monitor"></iconify-icon>
                     </button>
                 </div>
-                <div id="current-theme-label" class="mt-2 text-[10px] text-accent font-mono text-center opacity-70">Active: Dark</div>
             </div>
         </div>
 
-        <div>
+        <div class="py-6">
             <a href="#" class="flex items-center gap-3 p-4 bg-theme-card border border-theme rounded-sm group hover:border-accent transition-colors">
                 <div class="w-10 h-10 bg-accent/20 rounded-full flex items-center justify-center text-accent">
                     <iconify-icon icon="lucide:settings-2"></iconify-icon>
@@ -365,14 +458,17 @@
                         <h4 class="text-xs font-mono text-zinc-400 uppercase tracking-widest mb-4">Direct Line</h4>
                         <ul class="space-y-2">
                             <li><a href="tel:+26773318758" class="text-sm font-body text-white hover:text-accent transition-colors">+267 7331 8758</a></li>
-                            <li><a href="mailto:lekgotlamoroka53@gmail.com" class="text-sm font-body text-zinc-400 hover:text-white transition-colors">lekgotlamoroka53@gmail.com</a></li>
+                            <li><a href="mailto:fixitbotswana@gmail.com" class="text-sm font-body text-zinc-400 hover:text-white transition-colors">fixitbotswana@gmail.com</a></li>
                         </ul>
                     </div>
                     <div>
                         <h4 class="text-xs font-mono text-zinc-400 uppercase tracking-widest mb-4">Socials</h4>
-                        <ul class="space-y-2">
-                            <li><a href="https://www.tiktok.com/@prodmoroka" target="_blank" class="flex items-center gap-2 text-sm font-body text-zinc-400 hover:text-white transition-colors group"><iconify-icon icon="ic:baseline-tiktok" class="group-hover:text-accent transition-colors"></iconify-icon> TikTok</a></li>
-                        </ul>
+                        <div class="flex gap-4">
+                            <a href="https://www.facebook.com/profile.php?id=61586193443792" target="_blank" class="text-zinc-400 hover:text-white transition-colors"><iconify-icon icon="lucide:facebook" width="20"></iconify-icon></a>
+                            <a href="https://www.instagram.com/fixitbw/" target="_blank" class="text-zinc-400 hover:text-white transition-colors"><iconify-icon icon="lucide:instagram" width="20"></iconify-icon></a>
+                            <a href="https://x.com/Fixitbw" target="_blank" class="text-zinc-400 hover:text-white transition-colors"><iconify-icon icon="simple-icons:x" width="20"></iconify-icon></a>
+                            <a href="https://www.tiktok.com/@fixitbw" target="_blank" class="text-zinc-400 hover:text-white transition-colors"><iconify-icon icon="ic:baseline-tiktok" width="20"></iconify-icon></a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -472,6 +568,50 @@
         menuBtn.addEventListener('click', toggleSidebar);
         closeBtn.addEventListener('click', toggleSidebar);
         overlay.addEventListener('click', toggleSidebar);
+
+        // --- AUTH MODAL LOGIC ---
+        let authMode = 'signup'; // 'signup' or 'signin'
+
+        function openAuthModal(mode) {
+            authMode = mode;
+            updateAuthUI();
+            document.getElementById('auth-modal').classList.add('open');
+            gsap.fromTo("#auth-content", {scale: 0.9, opacity: 0}, {scale: 1, opacity: 1, duration: 0.3, ease: "back.out(1.7)"});
+        }
+
+        function closeAuthModal() {
+            document.getElementById('auth-modal').classList.remove('open');
+        }
+
+        function toggleAuthMode() {
+            authMode = authMode === 'signup' ? 'signin' : 'signup';
+            updateAuthUI();
+        }
+
+        function updateAuthUI() {
+            const title = document.getElementById('auth-title');
+            const subtitle = document.getElementById('auth-subtitle');
+            const submitText = document.getElementById('auth-submit-text');
+            const footerText = document.getElementById('auth-footer-text');
+            const toggleBtn = document.getElementById('auth-toggle-btn');
+            const nameField = document.getElementById('name-field-container');
+
+            if (authMode === 'signup') {
+                title.innerText = 'Create Account';
+                subtitle.innerText = 'Join the network of professional builders.';
+                submitText.innerText = 'Create Account';
+                footerText.innerText = 'Already have an account?';
+                toggleBtn.innerText = 'Sign In';
+                nameField.style.display = 'block';
+            } else {
+                title.innerText = 'Welcome Back';
+                subtitle.innerText = 'Sign in to manage your rentals.';
+                submitText.innerText = 'Sign In';
+                footerText.innerText = "Don't have an account?";
+                toggleBtn.innerText = 'Sign Up';
+                nameField.style.display = 'none';
+            }
+        }
 
     </script>
 </body>
