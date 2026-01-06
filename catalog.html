@@ -1,71 +1,200 @@
-<html lang="en">
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Catalog | FixitBw</title>
     <link rel="icon" type="image/png" href="logo.png">
 
-    <!-- Tailwind CSS -->
+    <!-- Libraries -->
     <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- Fonts -->
     <link href="https://api.fontshare.com/v2/css?f[]=clash-display@200,300,400,500,600,700&amp;f[]=general-sans@200,300,400,500,600&amp;display=swap" rel="stylesheet">
-    
-    <!-- GSAP -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
 
     <script>
         tailwind.config = {
-            theme: { extend: { fontFamily: { display: ['Clash Display', 'sans-serif'], body: ['General Sans', 'sans-serif'], mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'monospace'], }, colors: { 'accent': '#f97316', 'accent-dark': '#ea580c', 'dark': '#050505', } } }
+            theme: { 
+                extend: { 
+                    fontFamily: { 
+                        display: ['Clash Display', 'sans-serif'], 
+                        body: ['General Sans', 'sans-serif'], 
+                        mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'monospace'], 
+                    }, 
+                    colors: { 
+                        'accent': '#f97316', 
+                        'dark': '#050505', 
+                    }, 
+                    animation: { 
+                        'pulse-slow': 'pulse 8s cubic-bezier(0.4, 0, 0.6, 1) infinite', 
+                    } 
+                } 
+            }
         }
     </script>
 
     <style>
-        :root { --cursor-size: 20px; }
-        body { background-color: #030303; color: #ffffff; cursor: none; overflow-x: hidden; }
+        /* --- THEME VARIABLES --- */
+        :root {
+            --cursor-size: 20px;
+            --bg-primary: #030303;
+            --bg-secondary: #0a0a0a;
+            --bg-card: rgba(255,255,255,0.02);
+            --text-main: #ffffff;
+            --text-muted: #a1a1aa;
+            --border-color: rgba(255, 255, 255, 0.1);
+            --grid-line: rgba(255,255,255,0.03);
+            --sidebar-bg: rgba(5, 5, 5, 0.95);
+            --sidebar-text: #ffffff;
+        }
+
+        [data-theme="light"] {
+            --bg-primary: #f4f4f5;
+            --bg-secondary: #ffffff;
+            --bg-card: rgba(255,255,255, 0.8);
+            --text-main: #18181b;
+            --text-muted: #52525b;
+            --border-color: rgba(0, 0, 0, 0.1);
+            --grid-line: rgba(0,0,0,0.05);
+            --sidebar-bg: rgba(255, 255, 255, 0.95);
+            --sidebar-text: #18181b;
+        }
+
+        body { 
+            background-color: var(--bg-primary); 
+            color: var(--text-main); 
+            cursor: none; 
+            overflow-x: hidden; 
+            transition: background-color 0.5s ease, color 0.5s ease;
+        }
+
         ::selection { background: #f97316; color: #000; }
+        
         .noise { position: fixed; inset: 0; pointer-events: none; z-index: 50; opacity: 0.04; background: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E"); }
-        .ambient-glow { position: fixed; top: 20%; right: -10%; width: 50vw; height: 50vw; background: radial-gradient(circle, rgba(249, 115, 22, 0.08) 0%, rgba(0,0,0,0) 70%); pointer-events: none; z-index: -1; }
+        
+        .ambient-glow { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 90vw; height: 90vw; background: radial-gradient(circle, rgba(249, 115, 22, 0.06) 0%, rgba(0,0,0,0) 60%); pointer-events: none; z-index: -1; }
+        
+        /* Cursor */
         .cursor-dot { width: 6px; height: 6px; background: #f97316; position: fixed; border-radius: 50%; z-index: 9999; pointer-events: none; transform: translate(-50%, -50%); }
-        .cursor-circle { width: 40px; height: 40px; border: 1px solid rgba(255, 255, 255, 0.15); position: fixed; border-radius: 50%; z-index: 9998; pointer-events: none; transform: translate(-50%, -50%); transition: width 0.3s, height 0.3s, border-color 0.3s, background 0.3s; }
-        .cursor-circle.active { width: 60px; height: 60px; background-color: rgba(249, 115, 22, 0.05); border-color: #f97316; }
-        .card-spotlight { background: rgba(255,255,255,0.02); position: relative; overflow: hidden; transition: transform 0.3s ease, border-color 0.3s ease, opacity 0.3s ease; border: 1px solid rgba(255,255,255,0.05); will-change: transform; }
+        .cursor-circle { width: 40px; height: 40px; border: 1px solid var(--text-muted); opacity: 0.5; position: fixed; border-radius: 50%; z-index: 9998; pointer-events: none; transform: translate(-50%, -50%); transition: width 0.3s, height 0.3s, border-color 0.3s, background 0.3s; }
+        .cursor-circle.active { width: 60px; height: 60px; background-color: rgba(249, 115, 22, 0.05); border-color: #f97316; opacity: 1; }
+        
+        /* Spotlight Card */
+        .card-spotlight { 
+            position: relative; overflow: hidden; 
+            background: var(--bg-card); 
+            border: 1px solid var(--border-color); 
+            transition: border-color 0.3s, background-color 0.3s, transform 0.3s, opacity 0.3s;
+            will-change: transform;
+        }
         .card-spotlight.selected { border-color: #f97316; background: rgba(249, 115, 22, 0.05); }
-        .card-spotlight:hover { transform: translateY(-4px); border-color: rgba(249, 115, 22, 0.3); }
-        .card-spotlight::before { content: ''; position: absolute; inset: 0; background: radial-gradient(600px circle at var(--mouse-x) var(--mouse-y), rgba(249, 115, 22, 0.08), transparent 40%); opacity: 0; transition: opacity 0.3s; pointer-events: none; z-index: 10; }
+        .card-spotlight:hover { transform: translateY(-4px); border-color: var(--text-muted); }
+        .card-spotlight::before { content: ''; position: absolute; inset: 0; background: radial-gradient(600px circle at var(--mouse-x) var(--mouse-y), rgba(249, 115, 22, 0.06), transparent 40%); opacity: 0; transition: opacity 0.5s; pointer-events: none; z-index: 10; }
         .card-spotlight:hover::before { opacity: 1; }
+
+        /* Quote Bar */
         #quote-bar { transform: translateY(150%); transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1); }
         #quote-bar.visible { transform: translateY(0%); }
-        #choice-modal { opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
-        #choice-modal.open { opacity: 1; pointer-events: all; }
+
+        /* Sidebar Styling */
+        .sidebar { background-color: var(--sidebar-bg); border-left: 1px solid var(--border-color); overflow-y: auto; }
+        .sidebar::-webkit-scrollbar { width: 4px; }
+        .sidebar::-webkit-scrollbar-track { background: transparent; }
+        .sidebar::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 4px; }
+        .sidebar::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+
+        /* Modals */
+        .modal-overlay { opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
+        .modal-overlay.open { opacity: 1; pointer-events: all; }
+        
+        .auth-provider-btn {
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+            width: 100%; padding: 10px; margin-bottom: 8px;
+            border: 1px solid var(--border-color); border-radius: 4px;
+            background: var(--bg-card); color: var(--text-main);
+            font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;
+            transition: all 0.2s;
+        }
+        .auth-provider-btn:hover { background: rgba(249, 115, 22, 0.1); border-color: #f97316; }
+
+        /* UI Elements */
         .custom-checkbox input:checked + div { background-color: #f97316; border-color: #f97316; }
         .custom-checkbox input:checked + div svg { opacity: 1; }
-        .anim-entry { opacity: 0; transform: translateY(20px); }
         .filter-btn.active { background-color: #f97316; color: black; border-color: #f97316; }
         .tool-img { transition: all 0.5s ease-out; }
+        .anim-entry { opacity: 0; transform: translateY(20px); }
+
+        /* Utility classes for theme colors */
+        .text-theme-main { color: var(--text-main); }
+        .text-theme-muted { color: var(--text-muted); }
+        .border-theme { border-color: var(--border-color); }
+        .bg-theme-card { background-color: var(--bg-card); }
     </style>
+
+    <!-- CRITICAL: PREVENT THEME FLASH -->
+    <script>
+        (function() {
+            try {
+                const savedTheme = localStorage.getItem('theme') || 'dark';
+                const html = document.documentElement;
+                if (savedTheme === 'light') {
+                    html.setAttribute('data-theme', 'light');
+                } else if (savedTheme === 'system') {
+                    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
+                        html.setAttribute('data-theme', 'light');
+                    }
+                }
+            } catch (e) { console.error("Theme access error", e); }
+        })();
+    </script>
 </head>
 
 <body>
     <div class="noise"></div>
-    <div class="ambient-glow"></div>
+    <div class="ambient-glow animate-pulse-slow"></div>
     <div class="cursor-dot hidden md:block"></div>
     <div class="cursor-circle hidden md:block"></div>
 
-    <!-- Choice Modal -->
-    <div id="choice-modal" class="fixed inset-0 z-[200] flex items-center justify-center px-4">
+    <!-- Auth Modal -->
+    <div id="auth-modal" class="modal-overlay fixed inset-0 z-[200] flex items-center justify-center px-4">
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="closeAuthModal()"></div>
+        <div class="relative bg-zinc-900 border border-theme p-8 rounded-sm max-w-sm w-full shadow-2xl transform transition-transform scale-95" id="auth-content">
+            <div class="text-center mb-6">
+                <h3 id="auth-title" class="text-2xl font-display text-white mb-1">Create Account</h3>
+                <p id="auth-subtitle" class="text-zinc-500 text-sm">Join the network of professional builders.</p>
+            </div>
+            <div class="space-y-2 mb-6">
+                <button class="auth-provider-btn"><iconify-icon icon="flat-color-icons:google" width="16"></iconify-icon> Sign up with Google</button>
+                <div class="grid grid-cols-2 gap-2">
+                    <button class="auth-provider-btn"><iconify-icon icon="logos:microsoft-icon" width="16"></iconify-icon> Outlook</button>
+                    <button class="auth-provider-btn"><iconify-icon icon="logos:yahoo" width="16"></iconify-icon> Yahoo</button>
+                </div>
+            </div>
+            <div class="flex items-center gap-4 mb-6"><div class="h-px bg-white/10 flex-grow"></div><span class="text-[10px] text-zinc-600 uppercase font-mono">Or use email</span><div class="h-px bg-white/10 flex-grow"></div></div>
+            <form class="space-y-4">
+                <div id="name-field-container"><input type="text" placeholder="FULL NAME" class="w-full bg-white/5 border border-white/10 rounded-sm px-4 py-3 text-xs font-mono text-white placeholder-zinc-600 focus:outline-none focus:border-accent transition-all"></div>
+                <input type="email" placeholder="EMAIL ADDRESS" class="w-full bg-white/5 border border-white/10 rounded-sm px-4 py-3 text-xs font-mono text-white placeholder-zinc-600 focus:outline-none focus:border-accent transition-all">
+                <input type="password" placeholder="PASSWORD" class="w-full bg-white/5 border border-white/10 rounded-sm px-4 py-3 text-xs font-mono text-white placeholder-zinc-600 focus:outline-none focus:border-accent transition-all">
+                <button type="button" class="w-full bg-accent hover:bg-white text-black font-bold uppercase tracking-widest text-xs py-3 rounded-sm transition-colors mt-2"><span id="auth-submit-text">Create Account</span></button>
+            </form>
+            <div class="mt-6 text-center"><p class="text-xs text-zinc-500"><span id="auth-footer-text">Already have an account?</span> <button onclick="toggleAuthMode()" class="text-accent hover:underline font-bold ml-1" id="auth-toggle-btn">Sign In</button></p></div>
+            <button onclick="closeAuthModal()" class="absolute top-4 right-4 text-zinc-500 hover:text-white"><iconify-icon icon="lucide:x" width="20"></iconify-icon></button>
+        </div>
+    </div>
+
+    <!-- Choice Modal (Buy/Rent) -->
+    <div id="choice-modal" class="modal-overlay fixed inset-0 z-[200] flex items-center justify-center px-4">
         <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="closeModal()"></div>
-        <div class="relative bg-zinc-900 border border-white/10 p-8 rounded-sm max-w-sm w-full shadow-2xl transform transition-transform scale-95" id="modal-content">
+        <div class="relative bg-zinc-900 border border-theme p-8 rounded-sm max-w-sm w-full shadow-2xl transform transition-transform scale-95" id="modal-content">
             <h3 class="text-2xl font-display text-white mb-2">Choose Option</h3>
             <p class="text-zinc-500 text-sm mb-6">How would you like to acquire this tool?</p>
             <div class="space-y-3">
                 <button onclick="confirmSelection('Buy')" class="w-full flex justify-between items-center p-4 border border-white/10 rounded-sm hover:border-accent hover:bg-accent/5 transition-all group">
-                    <span class="font-bold text-sm uppercase">Buy Outright</span>
+                    <span class="font-bold text-sm text-white uppercase">Buy Outright</span>
                     <span class="text-accent font-mono" id="modal-buy-price">P 0</span>
                 </button>
                 <button onclick="confirmSelection('Rent')" class="w-full flex justify-between items-center p-4 border border-white/10 rounded-sm hover:border-accent hover:bg-accent/5 transition-all group">
-                    <span class="font-bold text-sm uppercase">Rent Daily</span>
+                    <span class="font-bold text-sm text-white uppercase">Rent Daily</span>
                     <span class="text-accent font-mono" id="modal-rent-price">P 0/day</span>
                 </button>
             </div>
@@ -74,42 +203,137 @@
     </div>
 
     <!-- Navigation -->
-    <nav class="fixed top-0 left-0 w-full z-[100] px-6 py-5 border-b border-white/5 bg-black/80 backdrop-blur-md">
+    <nav class="fixed top-0 left-0 w-full z-[100] px-6 py-5 border-b border-theme backdrop-blur-xl transition-colors duration-500">
         <div class="flex justify-between items-center max-w-[1600px] mx-auto">
             <a href="index.html" class="flex items-center gap-3 group magnetic">
                 <img src="logo.png" alt="FixitBw" class="w-8 h-8 object-contain opacity-90 group-hover:opacity-100 transition-opacity">
-                <span class="font-display font-semibold text-xl tracking-tight text-white group-hover:text-zinc-200 transition-colors">FixitBw</span>
+                <span class="font-display font-semibold text-xl tracking-tight text-theme-main group-hover:text-zinc-200 transition-colors">FixitBw</span>
             </a>
             <div class="hidden md:flex gap-1">
-                <a href="about.html" class="magnetic px-5 py-2 text-xs font-body font-medium uppercase tracking-widest text-zinc-500 hover:text-white hover:bg-white/5 rounded-full transition-all">About</a>
-                <a href="catalog.html" class="magnetic px-5 py-2 text-xs font-body font-medium uppercase tracking-widest text-white bg-white/5 rounded-full">Catalog</a>
-                <a href="promise.html" class="magnetic px-5 py-2 text-xs font-body font-medium uppercase tracking-widest text-zinc-500 hover:text-white hover:bg-white/5 rounded-full transition-all">Promise</a>
+                <a href="about.html" class="magnetic px-5 py-2 text-xs font-body font-medium uppercase tracking-widest text-theme-muted hover:text-theme-main hover:bg-theme-card rounded-full transition-all">About</a>
+                <a href="catalog.html" class="magnetic px-5 py-2 text-xs font-body font-medium uppercase tracking-widest text-theme-main bg-theme-card rounded-full">Catalog</a>
+                <a href="promise.html" class="magnetic px-5 py-2 text-xs font-body font-medium uppercase tracking-widest text-theme-muted hover:text-theme-main hover:bg-theme-card rounded-full transition-all">Promise</a>
             </div>
-            <a href="mailto:lekgotlamoroka53@gmail.com" class="magnetic hidden md:flex items-center gap-2 border border-white/10 px-5 py-2 rounded-sm hover:border-accent hover:bg-accent/10 hover:text-accent transition-all duration-300 group">
-                <span class="text-xs font-body font-bold uppercase tracking-widest">Request Quote</span>
-            </a>
-             <button class="md:hidden text-white"><iconify-icon icon="lucide:menu" width="24"></iconify-icon></button>
+            <div class="flex items-center gap-4">
+                <!-- Sign In Button -->
+                <button onclick="openAuthModal('signin')" class="magnetic hidden md:block text-xs font-body font-bold uppercase tracking-widest text-theme-muted hover:text-theme-main transition-colors px-3">
+                    Sign In
+                </button>
+                
+                <!-- Sign Up Button -->
+                <button onclick="openAuthModal('signup')" class="magnetic hidden md:flex items-center gap-2 bg-accent hover:bg-white border border-transparent px-5 py-2 rounded-sm text-black transition-all duration-300 group shadow-[0_0_15px_rgba(249,115,22,0.3)] hover:shadow-[0_0_20px_rgba(255,255,255,0.3)]">
+                    <span class="text-xs font-body font-bold uppercase tracking-widest">Sign Up</span>
+                </button>
+                
+                <!-- Sidebar Toggle Button -->
+                <button id="menu-btn" class="magnetic flex items-center justify-center w-10 h-10 border border-theme rounded-full hover:border-accent hover:text-accent text-theme-main transition-all">
+                    <iconify-icon icon="lucide:menu" width="20"></iconify-icon>
+                </button>
+            </div>
         </div>
     </nav>
+
+    <!-- Sidebar / Offcanvas Menu -->
+    <div id="sidebar-overlay" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-[150] opacity-0 pointer-events-none transition-opacity duration-300"></div>
+    <aside id="sidebar" class="sidebar fixed top-0 right-0 h-full w-[300px] z-[160] translate-x-full transition-transform duration-500 backdrop-blur-xl flex flex-col justify-between py-10 px-8 text-theme-main">
+        
+        <div>
+            <div class="flex justify-between items-center mb-8">
+                <span class="text-xs font-mono uppercase tracking-widest text-accent">Menu</span>
+                <button id="close-btn" class="text-theme-muted hover:text-accent transition-colors">
+                    <iconify-icon icon="lucide:x" width="24"></iconify-icon>
+                </button>
+            </div>
+
+            <!-- Mobile Auth Buttons inside Sidebar -->
+            <div class="grid grid-cols-2 gap-3 mb-8">
+                <button onclick="openAuthModal('signin')" class="border border-theme hover:border-accent hover:text-accent text-theme-main font-bold uppercase tracking-widest text-[10px] py-3 rounded-sm transition-colors text-center">
+                    Sign In
+                </button>
+                <button onclick="openAuthModal('signup')" class="bg-accent hover:bg-white text-black font-bold uppercase tracking-widest text-[10px] py-3 rounded-sm transition-colors text-center shadow-[0_0_10px_rgba(249,115,22,0.2)]">
+                    Sign Up
+                </button>
+            </div>
+
+            <ul class="space-y-6">
+                <li>
+                    <a href="index.html" class="flex items-center gap-4 text-2xl font-display text-theme-main hover:translate-x-2 transition-transform group">
+                        <iconify-icon icon="lucide:home" class="text-accent opacity-0 group-hover:opacity-100 transition-opacity text-lg"></iconify-icon>
+                        Home
+                    </a>
+                </li>
+                <li>
+                    <a href="catalog.html" class="flex items-center gap-4 text-2xl font-display text-theme-main hover:translate-x-2 transition-transform group">
+                        <iconify-icon icon="lucide:shopping-bag" class="text-accent opacity-0 group-hover:opacity-100 transition-opacity text-lg"></iconify-icon>
+                        Catalog
+                    </a>
+                </li>
+                <li>
+                    <a href="about.html" class="flex items-center gap-4 text-2xl font-display text-theme-main hover:translate-x-2 transition-transform group">
+                        <iconify-icon icon="lucide:users" class="text-accent opacity-0 group-hover:opacity-100 transition-opacity text-lg"></iconify-icon>
+                        About
+                    </a>
+                </li>
+            </ul>
+
+            <div class="mt-12 pt-12 border-t border-theme">
+                <span class="text-xs font-mono uppercase tracking-widest text-theme-muted block mb-4">Follow Us</span>
+                <div class="flex gap-4">
+                    <a href="https://www.facebook.com/profile.php?id=61586193443792" target="_blank" class="text-theme-muted hover:text-accent transition-colors"><iconify-icon icon="lucide:facebook" width="20"></iconify-icon></a>
+                    <a href="https://www.instagram.com/fixitbw/" target="_blank" class="text-theme-muted hover:text-accent transition-colors"><iconify-icon icon="lucide:instagram" width="20"></iconify-icon></a>
+                    <a href="https://x.com/Fixitbw" target="_blank" class="text-theme-muted hover:text-accent transition-colors"><iconify-icon icon="simple-icons:x" width="20"></iconify-icon></a>
+                    <a href="https://www.tiktok.com/@fixitbw" target="_blank" class="text-theme-muted hover:text-accent transition-colors"><iconify-icon icon="ic:baseline-tiktok" width="20"></iconify-icon></a>
+                </div>
+            </div>
+            
+            <div class="mt-8 pt-8 border-t border-theme">
+                <span class="text-xs font-mono uppercase tracking-widest text-theme-muted block mb-4">Appearance</span>
+                <!-- Theme Switcher -->
+                <div class="flex gap-2">
+                    <button onclick="setTheme('dark')" class="flex-1 py-2 px-3 border border-theme rounded-sm flex items-center justify-center gap-2 hover:border-accent hover:text-accent text-theme-muted transition-all text-xs uppercase" title="Dark Mode">
+                        <iconify-icon icon="lucide:moon"></iconify-icon>
+                    </button>
+                    <button onclick="setTheme('light')" class="flex-1 py-2 px-3 border border-theme rounded-sm flex items-center justify-center gap-2 hover:border-accent hover:text-accent text-theme-muted transition-all text-xs uppercase" title="Light Mode">
+                        <iconify-icon icon="lucide:sun"></iconify-icon>
+                    </button>
+                    <button onclick="setTheme('system')" class="flex-1 py-2 px-3 border border-theme rounded-sm flex items-center justify-center gap-2 hover:border-accent hover:text-accent text-theme-muted transition-all text-xs uppercase" title="System Auto">
+                        <iconify-icon icon="lucide:monitor"></iconify-icon>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="py-6">
+            <a href="#" class="flex items-center gap-3 p-4 bg-theme-card border border-theme rounded-sm group hover:border-accent transition-colors">
+                <div class="w-10 h-10 bg-accent/20 rounded-full flex items-center justify-center text-accent">
+                    <iconify-icon icon="lucide:settings-2"></iconify-icon>
+                </div>
+                <div>
+                    <div class="text-sm font-bold text-theme-main">Settings</div>
+                    <div class="text-[10px] text-theme-muted">Account & Preferences</div>
+                </div>
+            </a>
+        </div>
+    </aside>
 
     <main class="pt-32 pb-40 px-6 max-w-[1600px] mx-auto min-h-screen">
         <header class="mb-12 anim-entry">
             <div class="inline-flex items-center gap-2 mb-4"><div class="h-px w-8 bg-accent"></div><span class="text-accent text-[10px] font-mono uppercase tracking-widest">The Arsenal</span></div>
-            <h1 class="text-5xl md:text-7xl font-display font-medium text-white tracking-tighter mb-6">Select Your Tools</h1>
-            <p class="text-zinc-400 font-body text-lg max-w-xl leading-relaxed">Click the <span class="text-white font-bold">+</span> button. You can choose to buy or rent any tool in our inventory.</p>
+            <h1 class="text-5xl md:text-7xl font-display font-medium text-theme-main tracking-tighter mb-6">Select Your Tools</h1>
+            <p class="text-theme-muted font-body text-lg max-w-xl leading-relaxed">Click the <span class="text-theme-main font-bold">+</span> button. You can choose to buy or rent any tool in our inventory.</p>
         </header>
 
-        <div class="sticky top-20 z-40 bg-black/90 backdrop-blur-xl border-y border-white/10 py-4 mb-12 anim-entry">
+        <div class="sticky top-20 z-40 bg-black/90 backdrop-blur-xl border-y border-theme py-4 mb-12 anim-entry">
             <div class="flex flex-col md:flex-row gap-6 md:items-center justify-between">
-                <div class="flex bg-white/5 p-1 rounded-sm w-max">
-                    <button onclick="filterGrid('all')" class="filter-btn active px-6 py-2 rounded-sm text-[10px] font-bold uppercase tracking-widest text-zinc-400 hover:text-white transition-all border border-transparent">All Tools</button>
-                    <button onclick="filterGrid('sale')" class="filter-btn px-6 py-2 rounded-sm text-[10px] font-bold uppercase tracking-widest text-zinc-400 hover:text-white transition-all border border-transparent">For Sale</button>
-                    <button onclick="filterGrid('rent')" class="filter-btn px-6 py-2 rounded-sm text-[10px] font-bold uppercase tracking-widest text-zinc-400 hover:text-white transition-all border border-transparent">Rentals</button>
+                <div class="flex bg-theme-card p-1 rounded-sm w-max">
+                    <button onclick="filterGrid('all')" class="filter-btn active px-6 py-2 rounded-sm text-[10px] font-bold uppercase tracking-widest text-theme-muted hover:text-theme-main transition-all border border-transparent">All Tools</button>
+                    <button onclick="filterGrid('sale')" class="filter-btn px-6 py-2 rounded-sm text-[10px] font-bold uppercase tracking-widest text-theme-muted hover:text-theme-main transition-all border border-transparent">For Sale</button>
+                    <button onclick="filterGrid('rent')" class="filter-btn px-6 py-2 rounded-sm text-[10px] font-bold uppercase tracking-widest text-theme-muted hover:text-theme-main transition-all border border-transparent">Rentals</button>
                 </div>
                 <div class="flex gap-4 overflow-x-auto pb-2 md:pb-0 no-scrollbar">
                     <div class="relative flex-grow md:flex-grow-0 group">
-                        <input type="text" placeholder="SEARCH TOOLS..." class="bg-white/5 border border-white/10 rounded-sm px-4 py-2 pl-10 text-[10px] font-mono text-white placeholder-zinc-600 focus:outline-none focus:border-accent focus:bg-accent/5 transition-all w-[200px]">
-                        <iconify-icon icon="lucide:search" class="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-600 group-hover:text-accent transition-colors"></iconify-icon>
+                        <input type="text" placeholder="SEARCH TOOLS..." class="bg-theme-card border border-theme rounded-sm px-4 py-2 pl-10 text-[10px] font-mono text-theme-main placeholder-theme-muted focus:outline-none focus:border-accent focus:bg-accent/5 transition-all w-[200px]">
+                        <iconify-icon icon="lucide:search" class="absolute left-3 top-1/2 -translate-y-1/2 text-theme-muted group-hover:text-accent transition-colors"></iconify-icon>
                     </div>
                 </div>
             </div>
@@ -118,120 +342,116 @@
         <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
             <aside class="hidden md:block col-span-1 space-y-8 anim-entry sticky top-48 h-fit">
                 <div>
-                    <h3 class="font-display text-sm text-white uppercase tracking-wider mb-6 border-b border-white/10 pb-2">Categories</h3>
+                    <h3 class="font-display text-sm text-theme-main uppercase tracking-wider mb-6 border-b border-theme pb-2">Categories</h3>
                     <div class="space-y-3">
                         <label class="custom-checkbox flex items-center gap-3 cursor-pointer group">
                             <input type="checkbox" class="hidden" checked="">
-                            <div class="w-4 h-4 border border-zinc-700 rounded-sm flex items-center justify-center transition-colors group-hover:border-accent"><iconify-icon icon="lucide:check" class="text-black text-[10px] opacity-0 transition-opacity"></iconify-icon></div>
-                            <span class="text-sm font-body text-zinc-400 group-hover:text-white transition-colors">All Tools</span>
+                            <div class="w-4 h-4 border border-theme rounded-sm flex items-center justify-center transition-colors group-hover:border-accent"><iconify-icon icon="lucide:check" class="text-black text-[10px] opacity-0 transition-opacity"></iconify-icon></div>
+                            <span class="text-sm font-body text-theme-muted group-hover:text-theme-main transition-colors">All Tools</span>
                         </label>
                     </div>
                 </div>
                 <div class="bg-accent/5 border border-accent/20 p-6 rounded-sm">
                     <h3 class="text-accent font-display text-lg mb-2">Bulk Order?</h3>
-                    <p class="text-zinc-500 text-xs mb-4">Building a large site? We offer special rates for bulk rentals.</p>
+                    <p class="text-theme-muted text-xs mb-4">Building a large site? We offer special rates for bulk rentals.</p>
                 </div>
             </aside>
 
             <div class="col-span-1 md:col-span-3 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="product-grid">
                 
                 <!-- 1. Drill -->
-                <div class="card-spotlight group flex flex-col justify-between anim-entry bg-zinc-900/40 rounded-sm" data-id="drill-1" data-name="Impact Drill X2" data-sell="P 1,299" data-rent="P 100/day" data-tags="sale rent">
+                <div class="card-spotlight group flex flex-col justify-between anim-entry rounded-sm" data-id="drill-1" data-name="Impact Drill X2" data-sell="P 1,299" data-rent="P 100/day" data-tags="sale rent">
                     <div class="p-5">
                         <div class="aspect-square bg-zinc-900 rounded-sm mb-4 relative overflow-hidden group-hover:border group-hover:border-accent/20 transition-all">
                             <img src="https://images.unsplash.com/photo-1504148455328-c376907d081c?auto=format&fit=crop&q=80&w=500" class="tool-img absolute inset-0 w-full h-full object-cover opacity-60 grayscale group-hover:opacity-100 group-hover:grayscale-0 group-hover:scale-105">
                             <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-80 group-hover:opacity-40 transition-opacity"></div>
                         </div>
-                        <h3 class="text-lg font-display font-medium text-white mb-1 group-hover:text-accent transition-colors">Impact Drill X2</h3>
-                        <p class="text-zinc-500 text-[10px] font-mono mb-2 uppercase tracking-wider">18V Cordless • Heavy Duty</p>
+                        <h3 class="text-lg font-display font-medium text-theme-main mb-1 group-hover:text-accent transition-colors">Impact Drill X2</h3>
+                        <p class="text-theme-muted text-[10px] font-mono mb-2 uppercase tracking-wider">18V Cordless • Heavy Duty</p>
                     </div>
-                    <div class="flex items-center justify-between border-t border-white/5 p-4 bg-white/[0.02] relative z-20">
-                        <span class="font-display text-lg text-white">P 1,299</span>
-                        <button class="add-btn text-zinc-400 hover:text-white hover:bg-accent/20 p-2 rounded-full transition-all border border-transparent hover:border-accent/50" onclick="initToggle(this)"><iconify-icon icon="lucide:plus" class="text-lg"></iconify-icon></button>
+                    <div class="flex items-center justify-between border-t border-theme p-4 bg-theme-card relative z-20">
+                        <span class="font-display text-lg text-theme-main">P 1,299</span>
+                        <button class="add-btn text-theme-muted hover:text-white hover:bg-accent/20 p-2 rounded-full transition-all border border-transparent hover:border-accent/50" onclick="initToggle(this)"><iconify-icon icon="lucide:plus" class="text-lg"></iconify-icon></button>
                     </div>
                 </div>
 
                 <!-- 2. Hammer -->
-                <div class="card-spotlight group flex flex-col justify-between anim-entry bg-zinc-900/40 rounded-sm" data-id="hammer-1" data-name="Demo Hammer 5kg" data-sell="P 2,800" data-rent="P 150/day" data-tags="sale rent">
+                <div class="card-spotlight group flex flex-col justify-between anim-entry rounded-sm" data-id="hammer-1" data-name="Demo Hammer 5kg" data-sell="P 2,800" data-rent="P 150/day" data-tags="sale rent">
                     <div class="p-5">
                         <div class="aspect-square bg-zinc-900 rounded-sm mb-4 relative overflow-hidden group-hover:border group-hover:border-accent/20 transition-all">
-                            <!-- Image Fallback Added -->
-                            <img src="demo-hammer.jpg" onerror="this.src='https://images.unsplash.com/photo-1581147036324-c17ac41dfa6c?auto=format&fit=crop&q=80&w=500'" class="tool-img absolute inset-0 w-full h-full object-cover opacity-60 grayscale group-hover:opacity-100 group-hover:grayscale-0 group-hover:scale-105">
+                            <img src="demo-hammer (1).jpg" class="tool-img absolute inset-0 w-full h-full object-cover opacity-60 grayscale group-hover:opacity-100 group-hover:grayscale-0 group-hover:scale-105">
                             <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-80 group-hover:opacity-40 transition-opacity"></div>
                         </div>
-                        <h3 class="text-lg font-display font-medium text-white mb-1 group-hover:text-accent transition-colors">Demo Hammer 5kg</h3>
-                        <p class="text-zinc-500 text-[10px] font-mono mb-2 uppercase tracking-wider">Pneumatic • Construction</p>
+                        <h3 class="text-lg font-display font-medium text-theme-main mb-1 group-hover:text-accent transition-colors">Demo Hammer 5kg</h3>
+                        <p class="text-theme-muted text-[10px] font-mono mb-2 uppercase tracking-wider">Pneumatic • Construction</p>
                     </div>
-                    <div class="flex items-center justify-between border-t border-white/5 p-4 bg-white/[0.02] relative z-20">
-                        <span class="font-display text-lg text-white">P 2,800</span>
-                        <button class="add-btn text-zinc-400 hover:text-white hover:bg-accent/20 p-2 rounded-full transition-all border border-transparent hover:border-accent/50" onclick="initToggle(this)"><iconify-icon icon="lucide:plus" class="text-lg"></iconify-icon></button>
+                    <div class="flex items-center justify-between border-t border-theme p-4 bg-theme-card relative z-20">
+                        <span class="font-display text-lg text-theme-main">P 2,800</span>
+                        <button class="add-btn text-theme-muted hover:text-white hover:bg-accent/20 p-2 rounded-full transition-all border border-transparent hover:border-accent/50" onclick="initToggle(this)"><iconify-icon icon="lucide:plus" class="text-lg"></iconify-icon></button>
                     </div>
                 </div>
 
                 <!-- 3. Saw -->
-                <div class="card-spotlight group flex flex-col justify-between anim-entry bg-zinc-900/40 rounded-sm" data-id="saw-1" data-name="Circular Saw Pro" data-sell="P 2,450" data-rent="P 120/day" data-tags="sale rent">
+                <div class="card-spotlight group flex flex-col justify-between anim-entry rounded-sm" data-id="saw-1" data-name="Circular Saw Pro" data-sell="P 2,450" data-rent="P 120/day" data-tags="sale rent">
                     <div class="p-5">
                         <div class="aspect-square bg-zinc-900 rounded-sm mb-4 relative overflow-hidden group-hover:border group-hover:border-accent/20 transition-all">
-                            <!-- Image Fallback Added -->
-                            <img src="circular-saw.jpg" onerror="this.src='https://images.unsplash.com/photo-1572981779307-38b8cabb2407?auto=format&fit=crop&q=80&w=500'" class="tool-img absolute inset-0 w-full h-full object-cover opacity-60 grayscale group-hover:opacity-100 group-hover:grayscale-0 group-hover:scale-105">
+                            <img src="circular-saw.jpg" class="tool-img absolute inset-0 w-full h-full object-cover opacity-60 grayscale group-hover:opacity-100 group-hover:grayscale-0 group-hover:scale-105">
                             <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-80 group-hover:opacity-40 transition-opacity"></div>
                         </div>
-                        <h3 class="text-lg font-display font-medium text-white mb-1 group-hover:text-accent transition-colors">Circular Saw Pro</h3>
-                        <p class="text-zinc-500 text-[10px] font-mono mb-2 uppercase tracking-wider">235mm Blade • 2400W</p>
+                        <h3 class="text-lg font-display font-medium text-theme-main mb-1 group-hover:text-accent transition-colors">Circular Saw Pro</h3>
+                        <p class="text-theme-muted text-[10px] font-mono mb-2 uppercase tracking-wider">235mm Blade • 2400W</p>
                     </div>
-                    <div class="flex items-center justify-between border-t border-white/5 p-4 bg-white/[0.02] relative z-20">
-                        <span class="font-display text-lg text-white">P 2,450</span>
-                        <button class="add-btn text-zinc-400 hover:text-white hover:bg-accent/20 p-2 rounded-full transition-all border border-transparent hover:border-accent/50" onclick="initToggle(this)"><iconify-icon icon="lucide:plus" class="text-lg"></iconify-icon></button>
+                    <div class="flex items-center justify-between border-t border-theme p-4 bg-theme-card relative z-20">
+                        <span class="font-display text-lg text-theme-main">P 2,450</span>
+                        <button class="add-btn text-theme-muted hover:text-white hover:bg-accent/20 p-2 rounded-full transition-all border border-transparent hover:border-accent/50" onclick="initToggle(this)"><iconify-icon icon="lucide:plus" class="text-lg"></iconify-icon></button>
                     </div>
                 </div>
 
                 <!-- 4. Generator -->
-                <div class="card-spotlight group flex flex-col justify-between anim-entry bg-zinc-900/40 rounded-sm" data-id="gen-1" data-name="Generator 5.5kVA" data-sell="P 8,500" data-rent="P 450/day" data-tags="rent">
+                <div class="card-spotlight group flex flex-col justify-between anim-entry rounded-sm" data-id="gen-1" data-name="Generator 5.5kVA" data-sell="P 8,500" data-rent="P 450/day" data-tags="rent">
                     <div class="p-5">
                         <div class="aspect-square bg-zinc-900 rounded-sm mb-4 relative overflow-hidden group-hover:border group-hover:border-accent/20 transition-all">
-                             <!-- Image Fallback Added -->
-                            <img src="generator.jpg" onerror="this.src='https://images.unsplash.com/photo-1621252179027-94459d27d3ee?auto=format&fit=crop&q=80&w=500'" class="tool-img absolute inset-0 w-full h-full object-cover opacity-60 grayscale group-hover:opacity-100 group-hover:grayscale-0 group-hover:scale-105">
+                            <img src="generator (1).jpg" class="tool-img absolute inset-0 w-full h-full object-cover opacity-60 grayscale group-hover:opacity-100 group-hover:grayscale-0 group-hover:scale-105">
                             <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-80 group-hover:opacity-40 transition-opacity"></div>
                         </div>
-                        <h3 class="text-lg font-display font-medium text-white mb-1 group-hover:text-accent transition-colors">Generator 5.5kVA</h3>
-                        <p class="text-zinc-500 text-[10px] font-mono mb-2 uppercase tracking-wider">Petrol • Industrial</p>
+                        <h3 class="text-lg font-display font-medium text-theme-main mb-1 group-hover:text-accent transition-colors">Generator 5.5kVA</h3>
+                        <p class="text-theme-muted text-[10px] font-mono mb-2 uppercase tracking-wider">Petrol • Industrial</p>
                     </div>
-                    <div class="flex items-center justify-between border-t border-white/5 p-4 bg-white/[0.02] relative z-20">
-                        <span class="font-display text-lg text-white">P 8,500</span>
-                        <button class="add-btn text-zinc-400 hover:text-white hover:bg-accent/20 p-2 rounded-full transition-all border border-transparent hover:border-accent/50" onclick="initToggle(this)"><iconify-icon icon="lucide:plus" class="text-lg"></iconify-icon></button>
+                    <div class="flex items-center justify-between border-t border-theme p-4 bg-theme-card relative z-20">
+                        <span class="font-display text-lg text-theme-main">P 8,500</span>
+                        <button class="add-btn text-theme-muted hover:text-white hover:bg-accent/20 p-2 rounded-full transition-all border border-transparent hover:border-accent/50" onclick="initToggle(this)"><iconify-icon icon="lucide:plus" class="text-lg"></iconify-icon></button>
                     </div>
                 </div>
 
-                <!-- 5. Angle Grinder (UPDATED HERE) -->
-                <div class="card-spotlight group flex flex-col justify-between anim-entry bg-zinc-900/40 rounded-sm" data-id="grind-1" data-name="Angle Grinder" data-sell="P 890" data-rent="P 80/day" data-tags="sale rent">
+                <!-- 5. Angle Grinder -->
+                <div class="card-spotlight group flex flex-col justify-between anim-entry rounded-sm" data-id="grind-1" data-name="Angle Grinder" data-sell="P 890" data-rent="P 80/day" data-tags="sale rent">
                     <div class="p-5">
                         <div class="aspect-square bg-zinc-900 rounded-sm mb-4 relative overflow-hidden group-hover:border group-hover:border-accent/20 transition-all">
-                             <!-- Updated Image Link -->
-                            <img src="angle-grinder.jpg" onerror="this.src='https://images.unsplash.com/photo-1540305893333-3d0d54032d84?auto=format&fit=crop&q=80&w=500'" class="tool-img absolute inset-0 w-full h-full object-cover opacity-60 grayscale group-hover:opacity-100 group-hover:grayscale-0 group-hover:scale-105">
+                            <img src="angle grinder (1).jpg" class="tool-img absolute inset-0 w-full h-full object-cover opacity-60 grayscale group-hover:opacity-100 group-hover:grayscale-0 group-hover:scale-105">
                             <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-80 group-hover:opacity-40 transition-opacity"></div>
                         </div>
-                        <h3 class="text-lg font-display font-medium text-white mb-1 group-hover:text-accent transition-colors">Angle Grinder</h3>
-                        <p class="text-zinc-500 text-[10px] font-mono mb-2 uppercase tracking-wider">115mm • Corded</p>
+                        <h3 class="text-lg font-display font-medium text-theme-main mb-1 group-hover:text-accent transition-colors">Angle Grinder</h3>
+                        <p class="text-theme-muted text-[10px] font-mono mb-2 uppercase tracking-wider">115mm • Corded</p>
                     </div>
-                    <div class="flex items-center justify-between border-t border-white/5 p-4 bg-white/[0.02] relative z-20">
-                        <span class="font-display text-lg text-white">P 890</span>
-                        <button class="add-btn text-zinc-400 hover:text-white hover:bg-accent/20 p-2 rounded-full transition-all border border-transparent hover:border-accent/50" onclick="initToggle(this)"><iconify-icon icon="lucide:plus" class="text-lg"></iconify-icon></button>
+                    <div class="flex items-center justify-between border-t border-theme p-4 bg-theme-card relative z-20">
+                        <span class="font-display text-lg text-theme-main">P 890</span>
+                        <button class="add-btn text-theme-muted hover:text-white hover:bg-accent/20 p-2 rounded-full transition-all border border-transparent hover:border-accent/50" onclick="initToggle(this)"><iconify-icon icon="lucide:plus" class="text-lg"></iconify-icon></button>
                     </div>
                 </div>
 
                 <!-- 6. Welder -->
-                <div class="card-spotlight group flex flex-col justify-between anim-entry bg-zinc-900/40 rounded-sm" data-id="weld-1" data-name="Welding Machine" data-sell="P 3,500" data-rent="P 300/day" data-tags="rent sale">
+                <div class="card-spotlight group flex flex-col justify-between anim-entry rounded-sm" data-id="weld-1" data-name="Welding Machine" data-sell="P 3,500" data-rent="P 300/day" data-tags="rent sale">
                     <div class="p-5">
                         <div class="aspect-square bg-zinc-900 rounded-sm mb-4 relative overflow-hidden group-hover:border group-hover:border-accent/20 transition-all">
                             <img src="https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?auto=format&fit=crop&q=80&w=500" class="tool-img absolute inset-0 w-full h-full object-cover opacity-60 grayscale group-hover:opacity-100 group-hover:grayscale-0 group-hover:scale-105">
                             <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-80 group-hover:opacity-40 transition-opacity"></div>
                         </div>
-                        <h3 class="text-lg font-display font-medium text-white mb-1 group-hover:text-accent transition-colors">Welding Machine</h3>
-                        <p class="text-zinc-500 text-[10px] font-mono mb-2 uppercase tracking-wider">Inverter • 200AMP</p>
+                        <h3 class="text-lg font-display font-medium text-theme-main mb-1 group-hover:text-accent transition-colors">Welding Machine</h3>
+                        <p class="text-theme-muted text-[10px] font-mono mb-2 uppercase tracking-wider">Inverter • 200AMP</p>
                     </div>
-                    <div class="flex items-center justify-between border-t border-white/5 p-4 bg-white/[0.02] relative z-20">
-                        <span class="font-display text-lg text-white">P 3,500</span>
-                        <button class="add-btn text-zinc-400 hover:text-white hover:bg-accent/20 p-2 rounded-full transition-all border border-transparent hover:border-accent/50" onclick="initToggle(this)"><iconify-icon icon="lucide:plus" class="text-lg"></iconify-icon></button>
+                    <div class="flex items-center justify-between border-t border-theme p-4 bg-theme-card relative z-20">
+                        <span class="font-display text-lg text-theme-main">P 3,500</span>
+                        <button class="add-btn text-theme-muted hover:text-white hover:bg-accent/20 p-2 rounded-full transition-all border border-transparent hover:border-accent/50" onclick="initToggle(this)"><iconify-icon icon="lucide:plus" class="text-lg"></iconify-icon></button>
                     </div>
                 </div>
 
@@ -240,7 +460,7 @@
     </main>
 
     <div id="quote-bar" class="fixed bottom-0 left-0 w-full z-50 p-4">
-        <div class="max-w-[1600px] mx-auto bg-zinc-900/90 backdrop-blur-md border border-accent/20 p-4 rounded-sm shadow-2xl flex flex-col md:flex-row justify-between items-center gap-4">
+        <div class="max-w-[1600px] mx-auto bg-black/90 backdrop-blur-md border border-accent/20 p-4 rounded-sm shadow-2xl flex flex-col md:flex-row justify-between items-center gap-4">
             <div class="flex items-center gap-4">
                 <div class="w-10 h-10 bg-accent/20 rounded-full flex items-center justify-center text-accent"><iconify-icon icon="lucide:shopping-bag" class="text-xl"></iconify-icon></div>
                 <div><h3 class="text-white font-display text-lg">Your Selection</h3><p class="text-zinc-400 text-xs font-mono"><span id="item-count">0</span> Items selected</p></div>
@@ -252,7 +472,7 @@
         </div>
     </div>
 
-    <footer id="contact" class="bg-zinc-950 pt-20 pb-12 px-6 border-t border-white/10 relative z-20">
+    <footer id="contact" class="bg-zinc-950 pt-20 pb-12 px-6 border-t border-theme relative z-20">
         <div class="max-w-[1600px] mx-auto text-center">
             <div class="flex items-center justify-center gap-3 mb-8">
                 <img src="logo.png" alt="FixitBw" class="w-10 h-10 object-contain grayscale opacity-80">
@@ -260,19 +480,38 @@
             </div>
             <div class="flex flex-col md:flex-row justify-center items-center gap-6 md:gap-12 text-zinc-500 mb-12">
                 <a href="tel:+26773318758" class="text-xs font-mono uppercase tracking-widest hover:text-accent transition-colors flex items-center gap-2"><iconify-icon icon="lucide:phone"></iconify-icon> +267 7331 8758</a>
-                <a href="mailto:lekgotlamoroka53@gmail.com" class="text-xs font-mono uppercase tracking-widest hover:text-white transition-colors flex items-center gap-2"><iconify-icon icon="lucide:mail"></iconify-icon> lekgotlamoroka53@gmail.com</a>
+                <a href="mailto:fixitbotswana@gmail.com" class="text-xs font-mono uppercase tracking-widest hover:text-white transition-colors flex items-center gap-2"><iconify-icon icon="lucide:mail"></iconify-icon> fixitbotswana@gmail.com</a>
             </div>
+            
+            <div class="flex justify-center gap-6 mb-12">
+                <a href="https://www.facebook.com/profile.php?id=61586193443792" target="_blank" class="text-zinc-500 hover:text-white transition-colors"><iconify-icon icon="lucide:facebook" width="20"></iconify-icon></a>
+                <a href="https://www.instagram.com/fixitbw/" target="_blank" class="text-zinc-500 hover:text-white transition-colors"><iconify-icon icon="lucide:instagram" width="20"></iconify-icon></a>
+                <a href="https://x.com/Fixitbw" target="_blank" class="text-zinc-500 hover:text-white transition-colors"><iconify-icon icon="simple-icons:x" width="20"></iconify-icon></a>
+                <a href="https://www.tiktok.com/@fixitbw" target="_blank" class="text-zinc-500 hover:text-white transition-colors"><iconify-icon icon="ic:baseline-tiktok" width="20"></iconify-icon></a>
+            </div>
+
             <p class="text-[10px] font-mono text-zinc-700 uppercase">© 2024 FIXIT Botswana.</p>
         </div>
     </footer>
 
     <script>
+        // --- THEME LOGIC ---
+        function applyTheme(themeName) {
+            const html = document.documentElement;
+            html.removeAttribute('data-theme');
+            if (themeName === 'light') html.setAttribute('data-theme', 'light');
+            else if (themeName === 'system' && window.matchMedia('(prefers-color-scheme: light)').matches) html.setAttribute('data-theme', 'light');
+        }
+        function setTheme(themeName) { localStorage.setItem('theme', themeName); applyTheme(themeName); }
+        window.addEventListener('storage', (e) => { if (e.key === 'theme') applyTheme(e.newValue); });
+
+        // --- FILTER & MODAL LOGIC ---
         function filterGrid(category) {
             document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active', 'bg-accent', 'text-black', 'border-accent'));
-            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.add('text-zinc-400', 'border-transparent'));
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.add('text-theme-muted', 'border-transparent'));
             const activeBtn = event.target;
             activeBtn.classList.add('active', 'bg-accent', 'text-black', 'border-accent');
-            activeBtn.classList.remove('text-zinc-400', 'border-transparent');
+            activeBtn.classList.remove('text-theme-muted', 'border-transparent');
             const items = document.querySelectorAll('.card-spotlight');
             items.forEach(item => {
                 const tags = item.getAttribute('data-tags');
@@ -312,7 +551,7 @@
             const price = type === 'Buy' ? activeCard.getAttribute('data-sell') : activeCard.getAttribute('data-rent');
             selectedItems.push({ id, name, type, price });
             activeCard.classList.add('selected');
-            activeBtn.classList.remove('text-zinc-400');
+            activeBtn.classList.remove('text-theme-muted');
             activeBtn.classList.add('bg-accent', 'text-black', 'border-accent');
             activeBtn.innerHTML = '<iconify-icon icon="lucide:check" class="text-lg"></iconify-icon>';
             updateQuoteBar();
@@ -323,7 +562,7 @@
             selectedItems = selectedItems.filter(item => item.id !== id);
             card.classList.remove('selected');
             btn.classList.remove('bg-accent', 'text-black', 'border-accent');
-            btn.classList.add('text-zinc-400');
+            btn.classList.add('text-theme-muted');
             btn.innerHTML = '<iconify-icon icon="lucide:plus" class="text-lg"></iconify-icon>';
             updateQuoteBar();
         }
@@ -349,9 +588,50 @@
             let subject = "Quote Request - FixitBw";
             let body = "Hello, I would like a quote for:\n\n";
             selectedItems.forEach(item => { body += `- ${item.name} [${item.type} @ ${item.price}]\n`; });
-            window.location.href = `mailto:lekgotlamoroka53@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+            window.location.href = `mailto:fixitbotswana@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
         }
 
+        // --- AUTH & SIDEBAR LOGIC ---
+        const menuBtn = document.getElementById('menu-btn');
+        const closeBtn = document.getElementById('close-btn');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('sidebar-overlay');
+
+        function toggleSidebar() {
+            const isClosed = sidebar.classList.contains('translate-x-full');
+            if (isClosed) { sidebar.classList.remove('translate-x-full'); overlay.classList.remove('opacity-0', 'pointer-events-none'); } 
+            else { sidebar.classList.add('translate-x-full'); overlay.classList.add('opacity-0', 'pointer-events-none'); }
+        }
+
+        menuBtn.addEventListener('click', toggleSidebar);
+        closeBtn.addEventListener('click', toggleSidebar);
+        overlay.addEventListener('click', toggleSidebar);
+
+        let authMode = 'signup';
+        function openAuthModal(mode) {
+            authMode = mode;
+            updateAuthUI();
+            document.getElementById('auth-modal').classList.add('open');
+            if (!sidebar.classList.contains('translate-x-full')) toggleSidebar();
+            gsap.fromTo("#auth-content", {scale: 0.9, opacity: 0}, {scale: 1, opacity: 1, duration: 0.3, ease: "back.out(1.7)"});
+        }
+        function closeAuthModal() { document.getElementById('auth-modal').classList.remove('open'); }
+        function toggleAuthMode() { authMode = authMode === 'signup' ? 'signin' : 'signup'; updateAuthUI(); }
+        function updateAuthUI() {
+            const title = document.getElementById('auth-title');
+            const subtitle = document.getElementById('auth-subtitle');
+            const submitText = document.getElementById('auth-submit-text');
+            const footerText = document.getElementById('auth-footer-text');
+            const toggleBtn = document.getElementById('auth-toggle-btn');
+            const nameField = document.getElementById('name-field-container');
+            if (authMode === 'signup') {
+                title.innerText = 'Create Account'; subtitle.innerText = 'Join the network of professional builders.'; submitText.innerText = 'Create Account'; footerText.innerText = 'Already have an account?'; toggleBtn.innerText = 'Sign In'; nameField.style.display = 'block';
+            } else {
+                title.innerText = 'Welcome Back'; subtitle.innerText = 'Sign in to manage your rentals.'; submitText.innerText = 'Sign In'; footerText.innerText = "Don't have an account?"; toggleBtn.innerText = 'Sign Up'; nameField.style.display = 'none';
+            }
+        }
+
+        // --- ANIMATIONS ---
         gsap.to(".anim-entry", { y: 0, opacity: 1, duration: 1, stagger: 0.1, ease: "power3.out" });
         const cursorDot = document.querySelector('.cursor-dot');
         const cursorCircle = document.querySelector('.cursor-circle');
