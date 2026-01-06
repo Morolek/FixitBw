@@ -1,10 +1,12 @@
-<html lang="en">
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>About | FixitBw</title>
     <link rel="icon" type="image/png" href="logo.png">
     
+    <!-- Libraries -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://api.fontshare.com/v2/css?f[]=clash-display@200,300,400,500,600,700&amp;f[]=general-sans@200,300,400,500,600&amp;display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
@@ -23,6 +25,9 @@
                     colors: {
                         'accent': '#f97316', 
                         'dark': '#050505',
+                    },
+                    animation: { 
+                        'pulse-slow': 'pulse 8s cubic-bezier(0.4, 0, 0.6, 1) infinite', 
                     }
                 }
             }
@@ -33,26 +38,23 @@
         /* --- THEME VARIABLES --- */
         :root {
             --cursor-size: 20px;
-            
-            /* Default (Dark) Variables */
             --bg-primary: #030303;
             --bg-secondary: #0a0a0a;
             --bg-card: rgba(255,255,255,0.02);
             --text-main: #ffffff;
-            --text-muted: #a1a1aa; /* zinc-400 */
+            --text-muted: #a1a1aa;
             --border-color: rgba(255, 255, 255, 0.1);
             --grid-line: rgba(255,255,255,0.03);
             --sidebar-bg: rgba(5, 5, 5, 0.95);
             --sidebar-text: #ffffff;
         }
 
-        /* Light Theme Overrides */
         [data-theme="light"] {
-            --bg-primary: #f4f4f5; /* zinc-100 */
+            --bg-primary: #f4f4f5;
             --bg-secondary: #ffffff;
             --bg-card: rgba(255,255,255, 0.8);
-            --text-main: #18181b; /* zinc-900 */
-            --text-muted: #52525b; /* zinc-600 */
+            --text-main: #18181b;
+            --text-muted: #52525b;
             --border-color: rgba(0, 0, 0, 0.1);
             --grid-line: rgba(0,0,0,0.05);
             --sidebar-bg: rgba(255, 255, 255, 0.95);
@@ -63,22 +65,21 @@
             background-color: var(--bg-primary); 
             color: var(--text-main); 
             cursor: none; 
-            overflow-y: auto; 
-            overflow-x: hidden;
+            overflow-x: hidden; 
             transition: background-color 0.5s ease, color 0.5s ease;
         }
 
         ::selection { background: #f97316; color: #000; }
 
-        .noise {
-            position: fixed; inset: 0; pointer-events: none; z-index: 50; opacity: 0.05;
-            background: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-        }
+        .noise { position: fixed; inset: 0; pointer-events: none; z-index: 50; opacity: 0.04; background: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E"); }
+        .ambient-glow { position: fixed; top: 20%; right: -10%; width: 50vw; height: 50vw; background: radial-gradient(circle, rgba(249, 115, 22, 0.08) 0%, rgba(0,0,0,0) 70%); pointer-events: none; z-index: -1; }
 
+        /* Cursor */
         .cursor-dot { width: 6px; height: 6px; background: #f97316; position: fixed; border-radius: 50%; z-index: 9999; pointer-events: none; transform: translate(-50%, -50%); }
         .cursor-circle { width: 40px; height: 40px; border: 1px solid var(--text-muted); position: fixed; border-radius: 50%; z-index: 9998; pointer-events: none; transform: translate(-50%, -50%); transition: width 0.3s, height 0.3s, background 0.3s, border-color 0.3s; }
-        .cursor-circle.active { width: 60px; height: 60px; background-color: rgba(249, 115, 22, 0.1); border-color: #f97316; }
+        .cursor-circle.active { width: 60px; height: 60px; background-color: rgba(249, 115, 22, 0.05); border-color: #f97316; }
 
+        /* Card Spotlight */
         .card-spotlight { background: var(--bg-card); position: relative; overflow: hidden; transition: transform 0.3s ease, border-color 0.3s ease; border: 1px solid var(--border-color); }
         .card-spotlight::before { content: ''; position: absolute; inset: 0; background: radial-gradient(800px circle at var(--mouse-x) var(--mouse-y), rgba(249,115,22,0.06), transparent 40%); opacity: 0; transition: opacity 0.5s; pointer-events: none; }
         .card-spotlight:hover::before { opacity: 1; }
@@ -89,14 +90,12 @@
 
         /* Sidebar Styling */
         .sidebar { background-color: var(--sidebar-bg); border-left: 1px solid var(--border-color); overflow-y: auto; }
-        
-        /* Custom Scrollbar for Sidebar */
         .sidebar::-webkit-scrollbar { width: 4px; }
         .sidebar::-webkit-scrollbar-track { background: transparent; }
         .sidebar::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 4px; }
         .sidebar::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
 
-        /* Auth Modal Styling */
+        /* Auth Modal */
         .auth-modal-overlay { opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
         .auth-modal-overlay.open { opacity: 1; pointer-events: all; }
         .auth-provider-btn {
@@ -109,7 +108,7 @@
         }
         .auth-provider-btn:hover { background: rgba(249, 115, 22, 0.1); border-color: #f97316; }
         
-        /* Utility classes for theme colors */
+        /* Utility classes */
         .text-theme-main { color: var(--text-main); }
         .text-theme-muted { color: var(--text-muted); }
         .border-theme { border-color: var(--border-color); }
@@ -129,9 +128,7 @@
                         html.setAttribute('data-theme', 'light');
                     }
                 }
-            } catch (e) {
-                console.error("Theme access error", e);
-            }
+            } catch (e) { console.error("Theme access error", e); }
         })();
     </script>
 </head>
@@ -145,70 +142,37 @@
     <div id="auth-modal" class="auth-modal-overlay fixed inset-0 z-[200] flex items-center justify-center px-4">
         <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="closeAuthModal()"></div>
         <div class="relative bg-zinc-900 border border-theme p-8 rounded-sm max-w-sm w-full shadow-2xl transform transition-transform scale-95" id="auth-content">
-            <!-- Header -->
             <div class="text-center mb-6">
                 <h3 id="auth-title" class="text-2xl font-display text-white mb-1">Create Account</h3>
                 <p id="auth-subtitle" class="text-zinc-500 text-sm">Join the network of professional builders.</p>
             </div>
-
-            <!-- Social Providers -->
             <div class="space-y-2 mb-6">
-                <button class="auth-provider-btn">
-                    <iconify-icon icon="flat-color-icons:google" width="16"></iconify-icon> Sign up with Google
-                </button>
+                <button class="auth-provider-btn"><iconify-icon icon="flat-color-icons:google" width="16"></iconify-icon> Sign up with Google</button>
                 <div class="grid grid-cols-2 gap-2">
-                    <button class="auth-provider-btn">
-                        <iconify-icon icon="logos:microsoft-icon" width="16"></iconify-icon> Outlook
-                    </button>
-                    <button class="auth-provider-btn">
-                        <iconify-icon icon="logos:yahoo" width="16"></iconify-icon> Yahoo
-                    </button>
+                    <button class="auth-provider-btn"><iconify-icon icon="logos:microsoft-icon" width="16"></iconify-icon> Outlook</button>
+                    <button class="auth-provider-btn"><iconify-icon icon="logos:yahoo" width="16"></iconify-icon> Yahoo</button>
                 </div>
             </div>
-
-            <!-- Divider -->
-            <div class="flex items-center gap-4 mb-6">
-                <div class="h-px bg-white/10 flex-grow"></div>
-                <span class="text-[10px] text-zinc-600 uppercase font-mono">Or use email</span>
-                <div class="h-px bg-white/10 flex-grow"></div>
-            </div>
-
-            <!-- Email Form -->
+            <div class="flex items-center gap-4 mb-6"><div class="h-px bg-white/10 flex-grow"></div><span class="text-[10px] text-zinc-600 uppercase font-mono">Or use email</span><div class="h-px bg-white/10 flex-grow"></div></div>
             <form class="space-y-4">
-                <div id="name-field-container">
-                    <input type="text" placeholder="FULL NAME" class="w-full bg-white/5 border border-white/10 rounded-sm px-4 py-3 text-xs font-mono text-white placeholder-zinc-600 focus:outline-none focus:border-accent transition-all">
-                </div>
-                <input type="email" placeholder="EMAIL ADDRESS (GMAIL, YAHOO, OUTLOOK...)" class="w-full bg-white/5 border border-white/10 rounded-sm px-4 py-3 text-xs font-mono text-white placeholder-zinc-600 focus:outline-none focus:border-accent transition-all">
+                <div id="name-field-container"><input type="text" placeholder="FULL NAME" class="w-full bg-white/5 border border-white/10 rounded-sm px-4 py-3 text-xs font-mono text-white placeholder-zinc-600 focus:outline-none focus:border-accent transition-all"></div>
+                <input type="email" placeholder="EMAIL ADDRESS" class="w-full bg-white/5 border border-white/10 rounded-sm px-4 py-3 text-xs font-mono text-white placeholder-zinc-600 focus:outline-none focus:border-accent transition-all">
                 <input type="password" placeholder="PASSWORD" class="w-full bg-white/5 border border-white/10 rounded-sm px-4 py-3 text-xs font-mono text-white placeholder-zinc-600 focus:outline-none focus:border-accent transition-all">
-                
-                <button type="button" class="w-full bg-accent hover:bg-white text-black font-bold uppercase tracking-widest text-xs py-3 rounded-sm transition-colors mt-2">
-                    <span id="auth-submit-text">Create Account</span>
-                </button>
+                <button type="button" class="w-full bg-accent hover:bg-white text-black font-bold uppercase tracking-widest text-xs py-3 rounded-sm transition-colors mt-2"><span id="auth-submit-text">Create Account</span></button>
             </form>
-
-            <!-- Toggle Mode -->
-            <div class="mt-6 text-center">
-                <p class="text-xs text-zinc-500">
-                    <span id="auth-footer-text">Already have an account?</span> 
-                    <button onclick="toggleAuthMode()" class="text-accent hover:underline font-bold ml-1" id="auth-toggle-btn">Sign In</button>
-                </p>
-            </div>
-
-            <button onclick="closeAuthModal()" class="absolute top-4 right-4 text-zinc-500 hover:text-white">
-                <iconify-icon icon="lucide:x" width="20"></iconify-icon>
-            </button>
+            <div class="mt-6 text-center"><p class="text-xs text-zinc-500"><span id="auth-footer-text">Already have an account?</span> <button onclick="toggleAuthMode()" class="text-accent hover:underline font-bold ml-1" id="auth-toggle-btn">Sign In</button></p></div>
+            <button onclick="closeAuthModal()" class="absolute top-4 right-4 text-zinc-500 hover:text-white"><iconify-icon icon="lucide:x" width="20"></iconify-icon></button>
         </div>
     </div>
 
     <!-- Navigation -->
-    <nav class="fixed top-0 left-0 w-full z-[100] px-6 py-6 border-b border-theme bg-black/80 backdrop-blur-md">
+    <nav class="fixed top-0 left-0 w-full z-[100] px-6 py-5 border-b border-theme backdrop-blur-xl transition-colors duration-500">
         <div class="flex justify-between items-center max-w-[1800px] mx-auto">
             <a href="index.html" class="flex items-center gap-3 group magnetic">
                 <img src="logo.png" alt="FixitBw Logo" class="w-8 h-8 object-contain">
                 <span class="font-display font-semibold text-2xl tracking-tight text-theme-main">FixitBw</span>
             </a>
 
-            <!-- Updated Links -->
             <div class="hidden md:flex gap-1">
                 <a href="#" class="magnetic px-5 py-2 text-xs font-body font-medium uppercase tracking-widest text-theme-main bg-theme-card rounded-full">About</a>
                 <a href="catalog.html" class="magnetic px-5 py-2 text-xs font-body font-medium uppercase tracking-widest text-theme-muted hover:text-theme-main hover:bg-theme-card rounded-full transition-all">Catalog</a>
@@ -470,6 +434,7 @@
         <div class="max-w-[1600px] mx-auto text-center">
             <div class="flex items-center justify-center gap-1 mb-8">
                 <span class="font-display font-semibold text-xl tracking-tight text-white">FI</span>
+                <!-- Replaced Wrench with Hammer to match your logo -->
                 <iconify-icon icon="mdi:hammer" class="text-white text-lg bg-black rounded-full p-[3px] border border-white/20"></iconify-icon>
                 <span class="font-display font-semibold text-xl tracking-tight text-white">IT</span>
             </div>
