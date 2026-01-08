@@ -37,26 +37,23 @@
         /* --- THEME VARIABLES --- */
         :root {
             --cursor-size: 20px;
-            
-            /* Default (Dark) Variables */
             --bg-primary: #030303;
             --bg-secondary: #0a0a0a;
             --bg-card: rgba(255,255,255,0.02);
             --text-main: #ffffff;
-            --text-muted: #a1a1aa; /* zinc-400 */
+            --text-muted: #a1a1aa;
             --border-color: rgba(255, 255, 255, 0.1);
             --grid-line: rgba(255,255,255,0.03);
             --sidebar-bg: rgba(5, 5, 5, 0.95);
             --sidebar-text: #ffffff;
         }
 
-        /* Light Theme Overrides */
         [data-theme="light"] {
-            --bg-primary: #f4f4f5; /* zinc-100 */
+            --bg-primary: #f4f4f5;
             --bg-secondary: #ffffff;
             --bg-card: rgba(255,255,255, 0.8);
-            --text-main: #18181b; /* zinc-900 */
-            --text-muted: #52525b; /* zinc-600 */
+            --text-main: #18181b;
+            --text-muted: #52525b;
             --border-color: rgba(0, 0, 0, 0.1);
             --grid-line: rgba(0,0,0,0.05);
             --sidebar-bg: rgba(255, 255, 255, 0.95);
@@ -120,20 +117,7 @@
         .sidebar::-webkit-scrollbar-track { background: transparent; }
         .sidebar::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 4px; }
         .sidebar::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
-
-        /* Auth Modal Styling */
-        .auth-modal-overlay { opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
-        .auth-modal-overlay.open { opacity: 1; pointer-events: all; }
-        .auth-provider-btn {
-            display: flex; align-items: center; justify-content: center; gap: 10px;
-            width: 100%; padding: 10px; margin-bottom: 8px;
-            border: 1px solid var(--border-color); border-radius: 4px;
-            background: var(--bg-card); color: var(--text-main);
-            font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;
-            transition: all 0.2s;
-        }
-        .auth-provider-btn:hover { background: rgba(249, 115, 22, 0.1); border-color: #f97316; }
-
+        
         /* Utility classes for theme colors */
         .text-theme-main { color: var(--text-main); }
         .text-theme-muted { color: var(--text-muted); }
@@ -171,65 +155,6 @@
     <!-- Loader -->
     <div class="loader-wrap"><div class="loader-bar"></div><div class="mt-4 text-[10px] font-body font-medium tracking-widest uppercase fade-text text-white">Initializing FixitBw...</div></div>
 
-    <!-- Auth Modal -->
-    <div id="auth-modal" class="auth-modal-overlay fixed inset-0 z-[200] flex items-center justify-center px-4">
-        <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="closeAuthModal()"></div>
-        <div class="relative bg-zinc-900 border border-theme p-8 rounded-sm max-w-sm w-full shadow-2xl transform transition-transform scale-95" id="auth-content">
-            <!-- Header -->
-            <div class="text-center mb-6">
-                <h3 id="auth-title" class="text-2xl font-display text-white mb-1">Create Account</h3>
-                <p id="auth-subtitle" class="text-zinc-500 text-sm">Join the network of professional builders.</p>
-            </div>
-
-            <!-- Social Providers -->
-            <div class="space-y-2 mb-6">
-                <button class="auth-provider-btn">
-                    <iconify-icon icon="flat-color-icons:google" width="16"></iconify-icon> Sign up with Google
-                </button>
-                <div class="grid grid-cols-2 gap-2">
-                    <button class="auth-provider-btn">
-                        <iconify-icon icon="logos:microsoft-icon" width="16"></iconify-icon> Outlook
-                    </button>
-                    <button class="auth-provider-btn">
-                        <iconify-icon icon="logos:yahoo" width="16"></iconify-icon> Yahoo
-                    </button>
-                </div>
-            </div>
-
-            <!-- Divider -->
-            <div class="flex items-center gap-4 mb-6">
-                <div class="h-px bg-white/10 flex-grow"></div>
-                <span class="text-[10px] text-zinc-600 uppercase font-mono">Or use email</span>
-                <div class="h-px bg-white/10 flex-grow"></div>
-            </div>
-
-            <!-- Email Form -->
-            <form class="space-y-4">
-                <div id="name-field-container">
-                    <input type="text" placeholder="FULL NAME" class="w-full bg-white/5 border border-white/10 rounded-sm px-4 py-3 text-xs font-mono text-white placeholder-zinc-600 focus:outline-none focus:border-accent transition-all">
-                </div>
-                <input type="email" placeholder="EMAIL ADDRESS (GMAIL, YAHOO, OUTLOOK...)" class="w-full bg-white/5 border border-white/10 rounded-sm px-4 py-3 text-xs font-mono text-white placeholder-zinc-600 focus:outline-none focus:border-accent transition-all">
-                <input type="password" placeholder="PASSWORD" class="w-full bg-white/5 border border-white/10 rounded-sm px-4 py-3 text-xs font-mono text-white placeholder-zinc-600 focus:outline-none focus:border-accent transition-all">
-                
-                <button type="button" class="w-full bg-accent hover:bg-white text-black font-bold uppercase tracking-widest text-xs py-3 rounded-sm transition-colors mt-2">
-                    <span id="auth-submit-text">Create Account</span>
-                </button>
-            </form>
-
-            <!-- Toggle Mode -->
-            <div class="mt-6 text-center">
-                <p class="text-xs text-zinc-500">
-                    <span id="auth-footer-text">Already have an account?</span> 
-                    <button onclick="toggleAuthMode()" class="text-accent hover:underline font-bold ml-1" id="auth-toggle-btn">Sign In</button>
-                </p>
-            </div>
-
-            <button onclick="closeAuthModal()" class="absolute top-4 right-4 text-zinc-500 hover:text-white">
-                <iconify-icon icon="lucide:x" width="20"></iconify-icon>
-            </button>
-        </div>
-    </div>
-
     <!-- Navigation -->
     <nav class="fixed top-0 left-0 w-full z-[100] px-6 py-5 border-b border-theme backdrop-blur-xl transition-colors duration-500">
         <div class="flex justify-between items-center max-w-[1600px] mx-auto">
@@ -248,15 +173,23 @@
             </div>
 
             <div class="flex items-center gap-4">
-                <!-- Sign In Button -->
-                <button onclick="openAuthModal('signin')" class="magnetic hidden md:block text-xs font-body font-bold uppercase tracking-widest text-theme-muted hover:text-theme-main transition-colors px-3">
-                    Sign In
-                </button>
-                
-                <!-- Sign Up Button -->
-                <button onclick="openAuthModal('signup')" class="magnetic hidden md:flex items-center gap-2 bg-accent hover:bg-white border border-transparent px-5 py-2 rounded-sm text-black transition-all duration-300 group shadow-[0_0_15px_rgba(249,115,22,0.3)] hover:shadow-[0_0_20px_rgba(255,255,255,0.3)]">
-                    <span class="text-xs font-body font-bold uppercase tracking-widest">Sign Up</span>
-                </button>
+                <!-- Logged OUT State -->
+                <div id="nav-auth-buttons" class="flex items-center gap-4">
+                    <a href="auth.html" class="magnetic hidden md:block text-xs font-body font-bold uppercase tracking-widest text-theme-muted hover:text-theme-main transition-colors px-3">
+                        Sign In
+                    </a>
+                    <a href="auth.html" class="magnetic hidden md:flex items-center gap-2 bg-accent hover:bg-white border border-transparent px-5 py-2 rounded-sm text-black transition-all duration-300 group shadow-[0_0_15px_rgba(249,115,22,0.3)] hover:shadow-[0_0_20px_rgba(255,255,255,0.3)]">
+                        <span class="text-xs font-body font-bold uppercase tracking-widest">Sign Up</span>
+                    </a>
+                </div>
+
+                <!-- Logged IN State (Hidden by default) -->
+                <div id="nav-user-menu" class="hidden items-center gap-4">
+                    <span class="text-xs font-mono text-accent">Welcome</span>
+                    <button onclick="logout()" class="text-xs font-bold uppercase tracking-widest text-theme-muted hover:text-red-500 transition-colors">
+                        Log Out
+                    </button>
+                </div>
                 
                 <!-- Sidebar Toggle Button -->
                 <button id="menu-btn" class="magnetic flex items-center justify-center w-10 h-10 border border-theme rounded-full hover:border-accent hover:text-accent text-theme-main transition-all">
@@ -278,13 +211,24 @@
                 </button>
             </div>
 
-            <!-- Mobile Auth Buttons inside Sidebar -->
-            <div class="grid grid-cols-2 gap-3 mb-8">
-                <button onclick="openAuthModal('signin')" class="border border-theme hover:border-accent hover:text-accent text-theme-main font-bold uppercase tracking-widest text-[10px] py-3 rounded-sm transition-colors text-center">
+            <!-- Auth Buttons (Sidebar) -->
+            <div id="sidebar-auth-buttons" class="grid grid-cols-2 gap-3 mb-8">
+                <a href="auth.html" class="border border-theme hover:border-accent hover:text-accent text-theme-main font-bold uppercase tracking-widest text-[10px] py-3 rounded-sm transition-colors text-center block">
                     Sign In
-                </button>
-                <button onclick="openAuthModal('signup')" class="bg-accent hover:bg-white text-black font-bold uppercase tracking-widest text-[10px] py-3 rounded-sm transition-colors text-center shadow-[0_0_10px_rgba(249,115,22,0.2)]">
+                </a>
+                <a href="auth.html" class="bg-accent hover:bg-white text-black font-bold uppercase tracking-widest text-[10px] py-3 rounded-sm transition-colors text-center shadow-[0_0_10px_rgba(249,115,22,0.2)] block">
                     Sign Up
+                </a>
+            </div>
+
+            <!-- Logged In User Menu (Sidebar) -->
+            <div id="sidebar-user-menu" class="hidden mb-8">
+                <div class="p-4 border border-theme rounded-sm bg-theme-card mb-3">
+                    <p class="text-xs text-theme-muted mb-1">Signed in as</p>
+                    <p class="text-sm font-bold text-theme-main truncate" id="user-email-display">user@example.com</p>
+                </div>
+                <button onclick="logout()" class="w-full border border-red-500/30 text-red-500 hover:bg-red-500 hover:text-white font-bold uppercase tracking-widest text-[10px] py-3 rounded-sm transition-colors text-center">
+                    Log Out
                 </button>
             </div>
 
@@ -323,13 +267,13 @@
                 <span class="text-xs font-mono uppercase tracking-widest text-theme-muted block mb-4">Appearance</span>
                 <!-- Theme Switcher -->
                 <div class="flex gap-2">
-                    <button onclick="setTheme('dark')" class="flex-1 py-2 px-3 border border-theme rounded-sm flex items-center justify-center gap-2 hover:border-accent hover:text-accent text-theme-muted transition-all text-xs uppercase" title="Dark Mode">
+                    <button onclick="setTheme('dark')" class="theme-btn flex-1 py-2 px-3 border border-theme rounded-sm flex items-center justify-center gap-2 hover:border-accent hover:text-accent text-theme-muted transition-all text-xs uppercase" title="Dark Mode" data-theme-value="dark">
                         <iconify-icon icon="lucide:moon"></iconify-icon>
                     </button>
-                    <button onclick="setTheme('light')" class="flex-1 py-2 px-3 border border-theme rounded-sm flex items-center justify-center gap-2 hover:border-accent hover:text-accent text-theme-muted transition-all text-xs uppercase" title="Light Mode">
+                    <button onclick="setTheme('light')" class="theme-btn flex-1 py-2 px-3 border border-theme rounded-sm flex items-center justify-center gap-2 hover:border-accent hover:text-accent text-theme-muted transition-all text-xs uppercase" title="Light Mode" data-theme-value="light">
                         <iconify-icon icon="lucide:sun"></iconify-icon>
                     </button>
-                    <button onclick="setTheme('system')" class="flex-1 py-2 px-3 border border-theme rounded-sm flex items-center justify-center gap-2 hover:border-accent hover:text-accent text-theme-muted transition-all text-xs uppercase" title="System Auto">
+                    <button onclick="setTheme('system')" class="theme-btn flex-1 py-2 px-3 border border-theme rounded-sm flex items-center justify-center gap-2 hover:border-accent hover:text-accent text-theme-muted transition-all text-xs uppercase" title="System Auto" data-theme-value="system">
                         <iconify-icon icon="lucide:monitor"></iconify-icon>
                     </button>
                 </div>
@@ -493,29 +437,37 @@
         // --- THEME LOGIC (Interaction) ---
         function applyTheme(themeName) {
             const html = document.documentElement;
-            const label = document.getElementById('current-theme-label');
-            
-            // Remove previous theme attributes
             html.removeAttribute('data-theme');
-            
-            if (themeName === 'light') {
-                html.setAttribute('data-theme', 'light');
-                if(label) label.innerText = "Active: Light";
-            } else if (themeName === 'system') {
-                if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
-                    html.setAttribute('data-theme', 'light');
-                }
-                if(label) label.innerText = "Active: System";
-            } else {
-                // Default dark
-                if(label) label.innerText = "Active: Dark";
-            }
+            if (themeName === 'light') html.setAttribute('data-theme', 'light');
+            else if (themeName === 'system' && window.matchMedia('(prefers-color-scheme: light)').matches) html.setAttribute('data-theme', 'light');
+            updateThemeUI(themeName);
         }
 
         function setTheme(themeName) {
             localStorage.setItem('theme', themeName);
             applyTheme(themeName);
         }
+
+        function updateThemeUI(activeTheme) {
+            document.querySelectorAll('.theme-btn').forEach(btn => {
+                btn.classList.remove('border-accent', 'text-accent');
+                btn.classList.add('border-theme', 'text-theme-muted');
+            });
+            const activeBtn = document.querySelector(`.theme-btn[data-theme-value="${activeTheme}"]`);
+            if (activeBtn) {
+                activeBtn.classList.remove('border-theme', 'text-theme-muted');
+                activeBtn.classList.add('border-accent', 'text-accent');
+            }
+        }
+
+        window.addEventListener('storage', (e) => {
+            if (e.key === 'theme') {
+                applyTheme(e.newValue);
+            }
+        });
+
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        applyTheme(savedTheme);
 
         // --- ANIMATIONS & INTERACTION ---
         const tl = gsap.timeline();
@@ -524,7 +476,6 @@
           .to('.loader-wrap', { y: '-100%', duration: 0.8, ease: "power4.inOut" })
           .to('.hero-anim', { y: 0, opacity: 1, duration: 1, stagger: 0.1, ease: "power3.out" }, "-=0.4");
 
-        // Spotlight
         const spotlightCards = document.querySelectorAll('.spotlight');
         document.addEventListener('mousemove', e => {
             spotlightCards.forEach(card => {
@@ -534,7 +485,6 @@
             });
         });
 
-        // Custom Cursor
         const cursorDot = document.querySelector('.cursor-dot');
         const cursorCircle = document.querySelector('.cursor-circle');
         document.addEventListener('mousemove', (e) => {
@@ -548,7 +498,6 @@
             el.addEventListener('mouseleave', () => cursorCircle.classList.remove('active'));
         });
 
-        // Magnetic Buttons
         const magnets = document.querySelectorAll('.magnetic');
         magnets.forEach(btn => {
             btn.addEventListener('mousemove', (e) => {
@@ -579,49 +528,48 @@
         closeBtn.addEventListener('click', toggleSidebar);
         overlay.addEventListener('click', toggleSidebar);
 
-        // --- AUTH MODAL LOGIC ---
-        let authMode = 'signup'; // 'signup' or 'signin'
+        // --- SESSION MANAGEMENT ---
+        function checkSession() {
+            const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+            const navAuthBtns = document.getElementById('nav-auth-buttons');
+            const navUserMenu = document.getElementById('nav-user-menu');
+            
+            const sidebarAuthBtns = document.getElementById('sidebar-auth-buttons');
+            const sidebarUserMenu = document.getElementById('sidebar-user-menu');
+            const userEmail = localStorage.getItem('userEmail') || 'User';
 
-        function openAuthModal(mode) {
-            authMode = mode;
-            updateAuthUI();
-            document.getElementById('auth-modal').classList.add('open');
-            gsap.fromTo("#auth-content", {scale: 0.9, opacity: 0}, {scale: 1, opacity: 1, duration: 0.3, ease: "back.out(1.7)"});
-        }
+            // Sidebar Email
+            const sidebarEmailDisplay = document.getElementById('user-email-display');
+            if(sidebarEmailDisplay) sidebarEmailDisplay.innerText = userEmail;
 
-        function closeAuthModal() {
-            document.getElementById('auth-modal').classList.remove('open');
-        }
-
-        function toggleAuthMode() {
-            authMode = authMode === 'signup' ? 'signin' : 'signup';
-            updateAuthUI();
-        }
-
-        function updateAuthUI() {
-            const title = document.getElementById('auth-title');
-            const subtitle = document.getElementById('auth-subtitle');
-            const submitText = document.getElementById('auth-submit-text');
-            const footerText = document.getElementById('auth-footer-text');
-            const toggleBtn = document.getElementById('auth-toggle-btn');
-            const nameField = document.getElementById('name-field-container');
-
-            if (authMode === 'signup') {
-                title.innerText = 'Create Account';
-                subtitle.innerText = 'Join the network of professional builders.';
-                submitText.innerText = 'Create Account';
-                footerText.innerText = 'Already have an account?';
-                toggleBtn.innerText = 'Sign In';
-                nameField.style.display = 'block';
+            if (isLoggedIn) {
+                if(navAuthBtns) navAuthBtns.classList.add('hidden');
+                if(navUserMenu) {
+                    navUserMenu.classList.remove('hidden');
+                    navUserMenu.classList.add('flex');
+                }
+                
+                if(sidebarAuthBtns) sidebarAuthBtns.classList.add('hidden');
+                if(sidebarUserMenu) sidebarUserMenu.classList.remove('hidden');
             } else {
-                title.innerText = 'Welcome Back';
-                subtitle.innerText = 'Sign in to manage your rentals.';
-                submitText.innerText = 'Sign In';
-                footerText.innerText = "Don't have an account?";
-                toggleBtn.innerText = 'Sign Up';
-                nameField.style.display = 'none';
+                if(navAuthBtns) navAuthBtns.classList.remove('hidden');
+                if(navUserMenu) {
+                    navUserMenu.classList.add('hidden');
+                    navUserMenu.classList.remove('flex');
+                }
+
+                if(sidebarAuthBtns) sidebarAuthBtns.classList.remove('hidden');
+                if(sidebarUserMenu) sidebarUserMenu.classList.add('hidden');
             }
         }
+
+        function logout() {
+            localStorage.removeItem('isLoggedIn');
+            localStorage.removeItem('userEmail');
+            window.location.reload(); 
+        }
+
+        document.addEventListener('DOMContentLoaded', checkSession);
 
     </script>
 </body>
