@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account Access | FixitBw</title>
+    <link rel="icon" type="image/png" href="logo.png">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Fonts -->
+    <link href="https://api.fontshare.com/v2/css?f[]=clash-display@200,300,400,500,600,700&amp;f[]=general-sans@200,300,400,500,600&amp;display=swap" rel="stylesheet">
+    
+    <!-- GSAP -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: { 
+                extend: { 
+                    fontFamily: { 
+                        display: ['Clash Display', 'sans-serif'], 
+                        body: ['General Sans', 'sans-serif'], 
+                        mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'monospace'], 
+                    }, 
+                    colors: { 
+                        'accent': '#f97316', 
+                        'dark': '#050505', 
+                    }
+                } 
+            }
+        }
+    </script>
+
+    <style>
+        :root {
+            --bg-primary: #030303;
+            --text-main: #ffffff;
+            --text-muted: #a1a1aa;
+            --border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        [data-theme="light"] {
+            --bg-primary: #f4f4f5;
+            --text-main: #18181b;
+            --text-muted: #52525b;
+            --border-color: rgba(0, 0, 0, 0.1);
+        }
+
+        body { 
+            background-color: var(--bg-primary); 
+            color: var(--text-main); 
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.5s ease, color 0.5s ease;
+        }
+
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border-color);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+        [data-theme="light"] .glass-panel {
+            background: rgba(255, 255, 255, 0.8);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.1);
+        }
+
+        .auth-btn {
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+            width: 100%; padding: 12px;
+            border: 1px solid var(--border-color); border-radius: 4px;
+            background: transparent; color: var(--text-main);
+            font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;
+            transition: all 0.2s;
+        }
+        .auth-btn:hover { background: rgba(249, 115, 22, 0.1); border-color: #f97316; }
+
+        .input-field {
+            width: 100%; background: transparent; 
+            border: 1px solid var(--border-color); 
+            padding: 12px 16px; border-radius: 4px;
+            color: var(--text-main); font-family: 'ui-monospace', monospace; font-size: 0.8rem;
+            transition: all 0.3s;
+        }
+        .input-field:focus { outline: none; border-color: #f97316; }
+        
+        .tab-btn { opacity: 0.5; transition: all 0.3s; border-bottom: 2px solid transparent; }
+        .tab-btn.active { opacity: 1; border-bottom-color: #f97316; color: #f97316; }
+
+        .noise { position: fixed; inset: 0; pointer-events: none; z-index: 0; opacity: 0.04; background: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E"); }
+    </style>
+
+    <script>
+        // Apply theme immediately
+        (function() {
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            const html = document.documentElement;
+            if (savedTheme === 'light') html.setAttribute('data-theme', 'light');
+            else if (savedTheme === 'system' && window.matchMedia('(prefers-color-scheme: light)').matches) html.setAttribute('data-theme', 'light');
+        })();
+    </script>
+</head>
+<body>
+
+    <div class="noise"></div>
+
+    <!-- Main Container -->
+    <div class="relative z-10 w-full max-w-4xl grid grid-cols-1 md:grid-cols-2 min-h-[600px] glass-panel rounded-lg overflow-hidden anim-entry opacity-0 translate-y-4">
+        
+        <!-- Left Side: Artwork/Branding -->
+        <div class="hidden md:flex flex-col justify-between p-12 bg-black/20 relative">
+            <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1581147036324-c17ac41dfa6c?auto=format&fit=crop&q=80')] bg-cover bg-center opacity-40 grayscale mix-blend-overlay"></div>
+            <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent"></div>
+            
+            <div class="relative z-10">
+                <a href="index.html" class="flex items-center gap-3 group">
+                    <img src="logo.png" alt="FixitBw" class="w-8 h-8 object-contain">
+                    <span class="font-display font-semibold text-xl tracking-tight text-white">FixitBw</span>
+                </a>
+            </div>
+
+            <div class="relative z-10">
+                <h2 class="text-4xl font-display text-white mb-4">Build Without<br><span class="text-accent">Limits.</span></h2>
+                <p class="text-zinc-400 text-xs font-mono max-w-xs leading-relaxed">
+                    Join Botswana's premier tool rental network. Instant quotes, delivery tracking, and zero downtime guarantee.
+                </p>
+            </div>
+        </div>
+
+        <!-- Right Side: Form -->
+        <div class="p-8 md:p-12 flex flex-col justify-center relative">
+            <!-- Close Button -->
+            <a href="index.html" class="absolute top-6 right-6 text-theme-muted hover:text-accent transition-colors">
+                <iconify-icon icon="lucide:x" width="24"></iconify-icon>
+            </a>
+
+            <!-- Tabs -->
+            <div class="flex gap-6 mb-8 border-b border-white/10">
+                <button onclick="switchTab('signin')" id="tab-signin" class="tab-btn active pb-3 text-sm font-bold uppercase tracking-widest">Sign In</button>
+                <button onclick="switchTab('signup')" id="tab-signup" class="tab-btn pb-3 text-sm font-bold uppercase tracking-widest">Sign Up</button>
+            </div>
+
+            <!-- Social Logins -->
+            <div class="space-y-3 mb-6">
+                <button onclick="handleSocialLogin('Google')" class="auth-btn">
+                    <iconify-icon icon="flat-color-icons:google" width="20"></iconify-icon> Continue with Google
+                </button>
+                <div class="grid grid-cols-2 gap-3">
+                    <button onclick="handleSocialLogin('Outlook')" class="auth-btn">
+                        <iconify-icon icon="logos:microsoft-icon" width="20"></iconify-icon> Outlook
+                    </button>
+                    <button onclick="handleSocialLogin('Yahoo')" class="auth-btn">
+                        <iconify-icon icon="logos:yahoo" width="20"></iconify-icon> Yahoo
+                    </button>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-4 mb-6">
+                <div class="h-px bg-white/10 flex-grow"></div>
+                <span class="text-[10px] text-theme-muted uppercase font-mono">Or use credentials</span>
+                <div class="h-px bg-white/10 flex-grow"></div>
+            </div>
+
+            <!-- Inputs -->
+            <form id="auth-form" onsubmit="handleAuthSubmit(event)" class="space-y-4">
+                <div id="name-group" class="hidden opacity-0 transition-opacity duration-300">
+                    <input type="text" id="full-name" placeholder="FULL NAME" class="input-field">
+                </div>
+                
+                <input type="email" id="email" required placeholder="EMAIL ADDRESS" class="input-field">
+                <input type="password" id="password" required placeholder="PASSWORD" class="input-field">
+
+                <div class="flex items-center justify-between text-xs">
+                    <label class="flex items-center gap-2 cursor-pointer text-theme-muted hover:text-theme-main transition-colors">
+                        <input type="checkbox" checked class="accent-accent"> Stay logged in
+                    </label>
+                    <a href="#" class="text-accent hover:underline">Forgot password?</a>
+                </div>
+
+                <button type="submit" class="w-full bg-accent hover:bg-white text-black font-bold uppercase tracking-widest text-xs py-4 rounded-sm transition-all duration-300 shadow-[0_0_20px_rgba(249,115,22,0.3)] hover:shadow-[0_0_30px_rgba(255,255,255,0.4)] mt-4">
+                    <span id="submit-btn-text">Sign In</span>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Animations
+        gsap.to(".anim-entry", { y: 0, opacity: 1, duration: 1, ease: "power3.out" });
+
+        let currentMode = 'signin';
+
+        function switchTab(mode) {
+            currentMode = mode;
+            const nameGroup = document.getElementById('name-group');
+            const submitBtn = document.getElementById('submit-btn-text');
+            const tabSignIn = document.getElementById('tab-signin');
+            const tabSignUp = document.getElementById('tab-signup');
+
+            if (mode === 'signup') {
+                tabSignUp.classList.add('active');
+                tabSignIn.classList.remove('active');
+                submitBtn.innerText = 'Create Account';
+                
+                // Show Name Field
+                nameGroup.classList.remove('hidden');
+                setTimeout(() => nameGroup.classList.remove('opacity-0'), 10);
+            } else {
+                tabSignIn.classList.add('active');
+                tabSignUp.classList.remove('active');
+                submitBtn.innerText = 'Sign In';
+                
+                // Hide Name Field
+                nameGroup.classList.add('opacity-0');
+                setTimeout(() => nameGroup.classList.add('hidden'), 300);
+            }
+        }
+
+        function handleSocialLogin(provider) {
+            // Simulate Social Login
+            localStorage.setItem('isLoggedIn', 'true');
+            localStorage.setItem('userEmail', `${provider}_user@example.com`);
+            
+            // Show loading or transition
+            const btn = event.currentTarget;
+            const originalText = btn.innerHTML;
+            btn.innerHTML = `<iconify-icon icon="line-md:loading-loop" width="20"></iconify-icon> Connecting...`;
+            
+            setTimeout(() => {
+                if (currentMode === 'signup' || !localStorage.getItem('notificationAsked')) {
+                    askForNotification();
+                } else {
+                    window.location.href = 'index.html';
+                }
+            }, 1500);
+        }
+
+        function handleAuthSubmit(e) {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            
+            // Simulate Backend Auth
+            localStorage.setItem('isLoggedIn', 'true');
+            localStorage.setItem('userEmail', email);
+
+            const btn = document.querySelector('button[type="submit"]');
+            btn.innerHTML = `<iconify-icon icon="line-md:loading-loop" width="20"></iconify-icon>`;
+
+            setTimeout(() => {
+                if (currentMode === 'signup') {
+                    askForNotification();
+                } else {
+                    window.location.href = 'index.html';
+                }
+            }, 1500);
+        }
+
+        function askForNotification() {
+            // Mark that we've asked
+            localStorage.setItem('notificationAsked', 'true');
+
+            // Browser Notification Logic
+            if (!("Notification" in window)) {
+                alert("This browser does not support desktop notifications");
+                window.location.href = 'index.html';
+            } else if (Notification.permission === "granted") {
+                // Already granted
+                new Notification("Welcome to FixitBw!", {
+                    body: "You will now receive updates on new stock and rental deals.",
+                    icon: "logo.png"
+                });
+                window.location.href = 'index.html';
+            } else if (Notification.permission !== "denied") {
+                // Request permission
+                Notification.requestPermission().then(function (permission) {
+                    if (permission === "granted") {
+                        new Notification("Success!", {
+                            body: "Notifications enabled. Welcome to FixitBw.",
+                            icon: "logo.png"
+                        });
+                    }
+                    window.location.href = 'index.html';
+                });
+            } else {
+                // Denied previously
+                window.location.href = 'index.html';
+            }
+        }
+    </script>
+</body>
+</html>
