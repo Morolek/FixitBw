@@ -42,19 +42,20 @@
             --bg-secondary: #0a0a0a;
             --bg-card: rgba(255,255,255,0.02);
             --text-main: #ffffff;
-            --text-muted: #a1a1aa;
+            --text-muted: #a1a1aa; /* zinc-400 */
             --border-color: rgba(255, 255, 255, 0.1);
             --grid-line: rgba(255,255,255,0.03);
             --sidebar-bg: rgba(5, 5, 5, 0.95);
             --sidebar-text: #ffffff;
         }
 
+        /* Light Theme Overrides */
         [data-theme="light"] {
-            --bg-primary: #f4f4f5;
+            --bg-primary: #f4f4f5; /* zinc-100 */
             --bg-secondary: #ffffff;
             --bg-card: rgba(255,255,255, 0.8);
-            --text-main: #18181b;
-            --text-muted: #52525b;
+            --text-main: #18181b; /* zinc-900 */
+            --text-muted: #52525b; /* zinc-600 */
             --border-color: rgba(0, 0, 0, 0.1);
             --grid-line: rgba(0,0,0,0.05);
             --sidebar-bg: rgba(255, 255, 255, 0.95);
@@ -66,7 +67,7 @@
             color: var(--text-main); 
             cursor: none; 
             overflow-x: hidden; 
-            transition: background-color 0.5s ease, color 0.5s ease;
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
 
         ::selection { background: #f97316; color: #000; }
@@ -124,6 +125,23 @@
         .border-theme { border-color: var(--border-color); }
         .bg-theme-card { background-color: var(--bg-card); }
     </style>
+
+    <!-- CRITICAL: PREVENT THEME FLASH -->
+    <script>
+        (function() {
+            try {
+                const savedTheme = localStorage.getItem('theme') || 'dark';
+                const html = document.documentElement;
+                if (savedTheme === 'light') {
+                    html.setAttribute('data-theme', 'light');
+                } else if (savedTheme === 'system') {
+                    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
+                        html.setAttribute('data-theme', 'light');
+                    }
+                }
+            } catch (e) { console.error("Theme access error", e); }
+        })();
+    </script>
 </head>
 
 <body>
@@ -248,14 +266,15 @@
             
             <div class="mt-8 pt-8 border-t border-theme">
                 <span class="text-xs font-mono uppercase tracking-widest text-theme-muted block mb-4">Appearance</span>
+                <!-- Theme Switcher -->
                 <div class="flex gap-2">
-                    <button onclick="setTheme('dark')" class="flex-1 py-2 px-3 border border-theme rounded-sm flex items-center justify-center gap-2 hover:border-accent hover:text-accent text-theme-muted transition-all text-xs uppercase" title="Dark Mode">
+                    <button onclick="setTheme('dark')" class="theme-btn flex-1 py-2 px-3 border border-theme rounded-sm flex items-center justify-center gap-2 hover:border-accent hover:text-accent text-theme-muted transition-all text-xs uppercase" title="Dark Mode" data-theme-value="dark">
                         <iconify-icon icon="lucide:moon"></iconify-icon>
                     </button>
-                    <button onclick="setTheme('light')" class="flex-1 py-2 px-3 border border-theme rounded-sm flex items-center justify-center gap-2 hover:border-accent hover:text-accent text-theme-muted transition-all text-xs uppercase" title="Light Mode">
+                    <button onclick="setTheme('light')" class="theme-btn flex-1 py-2 px-3 border border-theme rounded-sm flex items-center justify-center gap-2 hover:border-accent hover:text-accent text-theme-muted transition-all text-xs uppercase" title="Light Mode" data-theme-value="light">
                         <iconify-icon icon="lucide:sun"></iconify-icon>
                     </button>
-                    <button onclick="setTheme('system')" class="flex-1 py-2 px-3 border border-theme rounded-sm flex items-center justify-center gap-2 hover:border-accent hover:text-accent text-theme-muted transition-all text-xs uppercase" title="System Auto">
+                    <button onclick="setTheme('system')" class="theme-btn flex-1 py-2 px-3 border border-theme rounded-sm flex items-center justify-center gap-2 hover:border-accent hover:text-accent text-theme-muted transition-all text-xs uppercase" title="System Auto" data-theme-value="system">
                         <iconify-icon icon="lucide:monitor"></iconify-icon>
                     </button>
                 </div>
@@ -391,15 +410,42 @@
     </footer>
 
     <script>
-        // --- THEME LOGIC ---
+        // --- THEME LOGIC (Interaction) ---
         function applyTheme(themeName) {
             const html = document.documentElement;
             html.removeAttribute('data-theme');
             if (themeName === 'light') html.setAttribute('data-theme', 'light');
             else if (themeName === 'system' && window.matchMedia('(prefers-color-scheme: light)').matches) html.setAttribute('data-theme', 'light');
+            updateThemeUI(themeName);
         }
-        function setTheme(themeName) { localStorage.setItem('theme', themeName); applyTheme(themeName); }
-        window.addEventListener('storage', (e) => { if (e.key === 'theme') applyTheme(e.newValue); });
+
+        function setTheme(themeName) {
+            localStorage.setItem('theme', themeName);
+            applyTheme(themeName);
+        }
+
+        function updateThemeUI(activeTheme) {
+            document.querySelectorAll('.theme-btn').forEach(btn => {
+                btn.classList.remove('border-accent', 'text-accent');
+                btn.classList.add('border-theme', 'text-theme-muted');
+            });
+            const activeBtn = document.querySelector(`.theme-btn[data-theme-value="${activeTheme}"]`);
+            if (activeBtn) {
+                activeBtn.classList.remove('border-theme', 'text-theme-muted');
+                activeBtn.classList.add('border-accent', 'text-accent');
+            }
+        }
+
+        // Listen for storage changes from other tabs
+        window.addEventListener('storage', (e) => {
+            if (e.key === 'theme') {
+                applyTheme(e.newValue);
+            }
+        });
+
+        // Initialize Theme on Load
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        applyTheme(savedTheme);
 
         // Animations
         gsap.to(".anim-entry", {
@@ -459,8 +505,13 @@
 
         function toggleSidebar() {
             const isClosed = sidebar.classList.contains('translate-x-full');
-            if (isClosed) { sidebar.classList.remove('translate-x-full'); overlay.classList.remove('opacity-0', 'pointer-events-none'); } 
-            else { sidebar.classList.add('translate-x-full'); overlay.classList.add('opacity-0', 'pointer-events-none'); }
+            if (isClosed) {
+                sidebar.classList.remove('translate-x-full');
+                overlay.classList.remove('opacity-0', 'pointer-events-none');
+            } else {
+                sidebar.classList.add('translate-x-full');
+                overlay.classList.add('opacity-0', 'pointer-events-none');
+            }
         }
 
         menuBtn.addEventListener('click', toggleSidebar);
