@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -12,7 +13,7 @@
     <!-- Fonts -->
     <link href="https://api.fontshare.com/v2/css?f[]=clash-display@200,300,400,500,600,700&amp;f[]=general-sans@200,300,400,500,600&amp;display=swap" rel="stylesheet">
     
-    <!-- GSAP & Icons -->
+    <!-- GSAP -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
 
@@ -24,7 +25,10 @@
                         display: ['Clash Display', 'sans-serif'], 
                         body: ['General Sans', 'sans-serif'], 
                     }, 
-                    colors: { 'accent': '#f97316', 'dark': '#000000' }
+                    colors: { 
+                        'accent': '#f97316', 
+                        'dark': '#000000', 
+                    }
                 } 
             }
         }
@@ -51,16 +55,17 @@
             background-color: var(--bg-body); 
             color: var(--text-main); 
             font-family: 'General Sans', sans-serif;
-            height: 100vh;
+            min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            overflow-y: auto; /* Enable vertical scroll */
+            overflow-y: auto;
             overflow-x: hidden;
             transition: background-color 0.3s ease;
+            padding: 20px 0;
         }
 
-        /* Custom Scrollbar (The Scroll Wheel) */
+        /* --- CUSTOM SCROLLBAR --- */
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: var(--bg-body); }
         ::-webkit-scrollbar-thumb { background: var(--input-border); border-radius: 4px; }
@@ -71,31 +76,24 @@
             max-width: 600px;
             background: var(--bg-body);
             position: relative;
-            padding: 20px 32px;
+            padding: 0 32px;
             display: flex;
             flex-direction: column;
             margin: auto;
-            min-height: 100%; /* Ensures it fills screen on mobile */
         }
 
         @media (min-width: 768px) {
             .auth-container {
-                min-height: auto;
                 height: auto;
                 border-radius: 16px;
                 padding: 40px 80px;
                 box-shadow: 0 0 15px rgba(255,255,255,0.1);
-                margin: 40px auto; /* Add margin for scrolling space */
             }
             [data-theme="light"] .auth-container {
                 box-shadow: 0 0 15px rgba(0,0,0,0.1);
             }
-            body {
-                align-items: flex-start; /* Allows scrolling from top */
-            }
         }
 
-        /* Buttons */
         .btn-social {
             width: 100%;
             border-radius: 9999px;
@@ -113,6 +111,7 @@
             border: 1px solid transparent;
             cursor: pointer;
         }
+        
         .btn-social:hover { opacity: 0.9; }
 
         .btn-outline {
@@ -129,8 +128,8 @@
         }
         .btn-primary:hover { background-color: #ea580c; }
 
-        /* Inputs */
         .input-group { position: relative; margin-bottom: 20px; }
+        
         .input-field {
             width: 100%;
             background: transparent;
@@ -142,25 +141,40 @@
             outline: none;
             transition: border-color 0.2s, box-shadow 0.2s;
         }
-        .input-field:focus { border-color: #f97316; box-shadow: 0 0 0 1px #f97316; }
+        
+        .input-field:focus {
+            border-color: #f97316;
+            box-shadow: 0 0 0 1px #f97316;
+        }
 
         .divider {
-            display: flex; align-items: center; margin: 20px 0; color: var(--text-main);
+            display: flex;
+            align-items: center;
+            margin: 20px 0;
+            color: var(--text-main);
         }
         .divider::before, .divider::after {
-            content: ""; flex: 1; height: 1px; background: var(--input-border);
+            content: "";
+            flex: 1;
+            height: 1px;
+            background: var(--input-border);
         }
         .divider span { padding: 0 10px; font-size: 14px; }
 
         .error-msg {
-            color: #ef4444; font-size: 13px; text-align: center; margin-top: 10px;
-            padding: 8px; border-radius: 4px; background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+            font-size: 13px;
+            text-align: center;
+            margin-top: 10px;
+            background: rgba(239, 68, 68, 0.1);
+            padding: 10px;
+            border-radius: 4px;
             display: none;
+            font-weight: bold;
         }
     </style>
 
     <script>
-        // Immediate Theme Check
         (function() {
             const savedTheme = localStorage.getItem('theme') || 'dark';
             const html = document.documentElement;
@@ -173,7 +187,7 @@
 
     <div class="auth-container anim-entry">
         
-        <!-- Header -->
+        <!-- Header: Close + Logo -->
         <div class="flex justify-between items-center mb-8 relative">
             <a href="index.html" class="p-2 rounded-full hover:bg-zinc-800/10 transition-colors text-theme-main">
                 <iconify-icon icon="lucide:x" width="20"></iconify-icon>
@@ -184,32 +198,35 @@
             <div class="w-8"></div>
         </div>
 
-        <!-- Content -->
+        <!-- Dynamic Content Area -->
         <div class="flex flex-col flex-grow max-w-[380px] mx-auto w-full">
             
             <h1 id="auth-heading" class="text-3xl font-display font-bold mb-8 text-center sm:text-left">Sign in to FixitBw</h1>
 
-            <!-- Social Providers -->
+            <!-- Social Buttons -->
             <button id="btn-google" class="btn-social btn-outline">
                 <iconify-icon icon="flat-color-icons:google" width="18"></iconify-icon>
                 Sign in with Google
             </button>
             
-            <!-- (Optional) Other providers require manual enablement in Firebase Console -->
             <button id="btn-outlook" class="btn-social btn-outline font-bold">
                 <iconify-icon icon="logos:microsoft-icon" width="18"></iconify-icon>
                 Sign in with Outlook
             </button>
+            
             <button id="btn-yahoo" class="btn-social btn-outline font-bold">
                 <iconify-icon icon="logos:yahoo" width="18"></iconify-icon>
                 Sign in with Yahoo
             </button>
 
+            <!-- Divider -->
             <div class="divider"><span>or</span></div>
 
-            <!-- Email Form -->
+            <!-- Form -->
             <form id="auth-form">
-                <!-- Name Field (Only for Sign Up) -->
+                <div id="error-message" class="error-msg mb-4"></div>
+
+                <!-- Name Field -->
                 <div id="name-container" class="input-group hidden">
                     <input type="text" id="full-name" class="input-field" placeholder="Full Name">
                 </div>
@@ -222,46 +239,44 @@
                     <input type="password" id="password" required class="input-field" placeholder="Password">
                 </div>
 
-                <button type="submit" class="btn-social btn-primary mt-4">
+                <button type="submit" id="submit-btn" class="btn-social btn-primary mt-4">
                     <span id="submit-text">Next</span>
                 </button>
-
-                <div id="error-message" class="error-msg"></div>
                 
                 <button type="button" class="btn-social btn-outline mt-4 font-bold text-sm">
                     Forgot password?
                 </button>
             </form>
 
-            <!-- Toggle Mode -->
+            <!-- Footer Toggle -->
             <div class="mt-8 text-[15px] text-theme-muted mb-8">
                 <span id="footer-text">Don't have an account?</span>
-                <button onclick="toggleMode()" class="text-accent hover:underline ml-1 font-medium" id="toggle-btn">Sign up</button>
+                <!-- IMPORTANT: Removed onclick attribute, using ID instead -->
+                <button id="toggle-mode-btn" class="text-accent hover:underline ml-1 font-medium">Sign up</button>
             </div>
         </div>
 
     </div>
 
-    <!-- MAIN SCRIPT -->
+    <!-- Firebase Logic -->
     <script type="module">
-        // Import from your config file
         import { auth, GoogleAuthProvider, OAuthProvider, signInWithPopup, signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile } from './firebase-config.js';
 
-        // Animation
         gsap.from(".anim-entry", { opacity: 0, scale: 0.95, duration: 0.4, ease: "power2.out" });
 
         let currentMode = 'signin';
         
-        // UI Elements
+        // Cache DOM elements
         const nameContainer = document.getElementById('name-container');
         const heading = document.getElementById('auth-heading');
         const submitText = document.getElementById('submit-text');
         const footerText = document.getElementById('footer-text');
-        const toggleBtn = document.getElementById('toggle-btn');
+        const toggleBtn = document.getElementById('toggle-mode-btn');
         const errorMsg = document.getElementById('error-message');
+        const submitBtn = document.getElementById('submit-btn');
 
-        // Toggle Function
-        window.toggleMode = function() {
+        // --- UI TOGGLE FUNCTION ---
+        function toggleAuthMode() {
             errorMsg.style.display = 'none';
             if (currentMode === 'signin') {
                 currentMode = 'signup';
@@ -281,9 +296,39 @@
             }
         }
 
-        // --- HANDLERS ---
+        // Attach Toggle Event
+        toggleBtn.addEventListener('click', toggleAuthMode);
 
-        // 1. Social Login
+        // --- SUCCESS & REDIRECT ---
+        function handleAuthSuccess(user) {
+            console.log("Auth Successful:", user);
+            
+            // 1. Store Basic Data
+            localStorage.setItem('isLoggedIn', 'true');
+            localStorage.setItem('userEmail', user.email);
+
+            // 2. Notification Logic
+            if (currentMode === 'signup') {
+                 if ("Notification" in window && Notification.permission !== "denied") {
+                    Notification.requestPermission().then(permission => {
+                        if (permission === "granted") {
+                            new Notification(`Welcome ${user.displayName || 'Builder'}!`, {
+                                body: "You are successfully signed in.",
+                                icon: "logo.png"
+                            });
+                        }
+                        window.location.assign('index.html');
+                    });
+                } else {
+                    window.location.assign('index.html');
+                }
+            } else {
+                // Standard Login Redirect
+                window.location.assign('index.html');
+            }
+        }
+
+        // --- SOCIAL LOGIN ---
         async function socialLogin(providerName) {
             let provider;
             if (providerName === 'google') provider = new GoogleAuthProvider();
@@ -291,26 +336,30 @@
             if (providerName === 'yahoo') provider = new OAuthProvider('yahoo.com');
 
             try {
-                // This triggers the pop-up
                 const result = await signInWithPopup(auth, provider);
-                // If successful, run success logic
-                askForNotificationAndRedirect(result.user);
+                handleAuthSuccess(result.user);
             } catch (error) {
-                console.error(error);
+                console.error("Social Login Error:", error);
                 showError(error.message);
             }
         }
 
-        // 2. Email Login/Signup
+        // Attach Social Events
+        document.getElementById('btn-google').addEventListener('click', () => socialLogin('google'));
+        document.getElementById('btn-outlook').addEventListener('click', () => socialLogin('microsoft'));
+        document.getElementById('btn-yahoo').addEventListener('click', () => socialLogin('yahoo'));
+
+        // --- EMAIL FORM ---
         document.getElementById('auth-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
             const fullName = document.getElementById('full-name').value;
-            const btn = document.querySelector('button[type="submit"]');
 
-            // Show loading
-            btn.innerHTML = `<iconify-icon icon="line-md:loading-loop" width="20"></iconify-icon>`;
+            // Show loading state
+            const originalText = submitText.innerText;
+            submitBtn.innerHTML = `<iconify-icon icon="line-md:loading-loop" width="24"></iconify-icon>`;
+            submitBtn.disabled = true;
             errorMsg.style.display = 'none';
 
             try {
@@ -318,67 +367,35 @@
                 if (currentMode === 'signup') {
                     // Create Account
                     userCredential = await createUserWithEmailAndPassword(auth, email, password);
-                    // Set Name & Photo
+                    // Update Profile Name
                     await updateProfile(userCredential.user, {
                         displayName: fullName || 'Builder',
                         photoURL: `https://ui-avatars.com/api/?name=${encodeURIComponent(fullName || 'User')}&background=f97316&color=fff`
                     });
                 } else {
-                    // Sign In
+                    // Login
                     userCredential = await signInWithEmailAndPassword(auth, email, password);
                 }
-                // Success
-                askForNotificationAndRedirect(userCredential.user);
+                
+                handleAuthSuccess(userCredential.user);
 
             } catch (error) {
+                console.error("Auth Error:", error);
                 // Reset Button
-                btn.innerHTML = `<span id="submit-text">${currentMode === 'signup' ? 'Create Account' : 'Next'}</span>`;
-                // Show Error
-                let cleanMsg = error.code.replace('auth/', '').replace(/-/g, ' ');
-                cleanMsg = cleanMsg.charAt(0).toUpperCase() + cleanMsg.slice(1);
-                showError(cleanMsg);
+                submitBtn.innerHTML = `<span id="submit-text">${originalText}</span>`;
+                submitBtn.disabled = false;
+                
+                // Show User-Friendly Error
+                let msg = error.code ? error.code.replace('auth/', '').replace(/-/g, ' ') : error.message;
+                showError(msg);
             }
         });
 
-        // 3. Helper Functions
         function showError(msg) {
-            errorMsg.innerText = msg;
+            errorMsg.innerText = "Error: " + msg.charAt(0).toUpperCase() + msg.slice(1);
             errorMsg.style.display = 'block';
-            gsap.from(errorMsg, {y: -10, opacity: 0});
+            gsap.from(errorMsg, {y: -10, opacity: 0, duration: 0.3});
         }
-
-        function askForNotificationAndRedirect(user) {
-            // Store fallback data for quick loading on other pages
-            localStorage.setItem('isLoggedIn', 'true');
-            localStorage.setItem('userEmail', user.email);
-
-            // Notification Logic
-            if (currentMode === 'signup' && "Notification" in window) {
-                if (Notification.permission === "default") {
-                    Notification.requestPermission().then(permission => {
-                        if (permission === "granted") {
-                            new Notification("Welcome to FixitBw!", {
-                                body: "You will get updates on new tools.",
-                                icon: "logo.png"
-                            });
-                        }
-                        // Redirect after choice
-                        window.location.href = 'index.html';
-                    });
-                } else {
-                    window.location.href = 'index.html';
-                }
-            } else {
-                // Just redirect
-                window.location.href = 'index.html';
-            }
-        }
-
-        // Attach clicks
-        document.getElementById('btn-google').addEventListener('click', () => socialLogin('google'));
-        document.getElementById('btn-outlook').addEventListener('click', () => socialLogin('microsoft'));
-        document.getElementById('btn-yahoo').addEventListener('click', () => socialLogin('yahoo'));
-
     </script>
 </body>
 </html>
