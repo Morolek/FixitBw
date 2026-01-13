@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Account Access | FixitBw</title>
+    <title>Sign in to FixitBw</title>
     <link rel="icon" type="image/png" href="logo.png">
 
     <!-- Tailwind CSS -->
@@ -23,11 +23,10 @@
                     fontFamily: { 
                         display: ['Clash Display', 'sans-serif'], 
                         body: ['General Sans', 'sans-serif'], 
-                        mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'monospace'], 
                     }, 
                     colors: { 
                         'accent': '#f97316', 
-                        'dark': '#050505', 
+                        'dark': '#000000', 
                     }
                 } 
             }
@@ -36,68 +35,148 @@
 
     <style>
         :root {
-            --bg-primary: #030303;
+            --bg-body: #000000;
             --text-main: #ffffff;
-            --text-muted: #a1a1aa;
-            --border-color: rgba(255, 255, 255, 0.1);
+            --text-muted: #71767b;
+            --input-border: #333639;
+            --btn-hover: rgba(239, 243, 244, 0.1);
         }
 
         [data-theme="light"] {
-            --bg-primary: #f4f4f5;
-            --text-main: #18181b;
-            --text-muted: #52525b;
-            --border-color: rgba(0, 0, 0, 0.1);
+            --bg-body: #ffffff;
+            --text-main: #0f1419;
+            --text-muted: #536471;
+            --input-border: #cfd9de;
+            --btn-hover: rgba(15, 20, 25, 0.1);
         }
 
         body { 
-            background-color: var(--bg-primary); 
+            background-color: var(--bg-body); 
             color: var(--text-main); 
-            height: 100vh;
-            overflow: hidden;
+            font-family: 'General Sans', sans-serif;
+            min-height: 100vh; /* Changed from height to min-height for scrolling */
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: background-color 0.5s ease, color 0.5s ease;
+            overflow-y: auto; /* Enabled scrolling */
+            overflow-x: hidden;
+            transition: background-color 0.3s ease;
+            padding: 20px 0; /* Add padding for vertical spacing on small screens */
         }
 
-        .glass-panel {
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(20px);
-            border: 1px solid var(--border-color);
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-        }
-        [data-theme="light"] .glass-panel {
-            background: rgba(255, 255, 255, 0.8);
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.1);
+        /* --- CUSTOM SCROLLBAR --- */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--bg-body); }
+        ::-webkit-scrollbar-thumb { background: var(--input-border); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+
+        /* X-Style Modal */
+        .auth-container {
+            width: 100%;
+            max-width: 600px;
+            /* Removed min-height to fit content nicely */
+            background: var(--bg-body);
+            position: relative;
+            padding: 0 32px;
+            display: flex;
+            flex-direction: column;
+            margin: auto; /* Helps with centering when scrolling */
         }
 
-        .auth-btn {
-            display: flex; align-items: center; justify-content: center; gap: 10px;
-            width: 100%; padding: 12px;
-            border: 1px solid var(--border-color); border-radius: 4px;
-            background: transparent; color: var(--text-main);
-            font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;
+        @media (min-width: 768px) {
+            .auth-container {
+                height: auto;
+                border-radius: 16px;
+                padding: 40px 80px;
+                box-shadow: 0 0 15px rgba(255,255,255,0.1);
+            }
+            [data-theme="light"] .auth-container {
+                box-shadow: 0 0 15px rgba(0,0,0,0.1);
+            }
+        }
+
+        /* Pill Buttons */
+        .btn-social {
+            width: 100%;
+            border-radius: 9999px;
+            background-color: var(--text-main);
+            color: var(--bg-body);
+            font-weight: 600;
+            font-size: 15px;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 12px;
             transition: all 0.2s;
+            border: 1px solid transparent;
+            cursor: pointer;
         }
-        .auth-btn:hover { background: rgba(249, 115, 22, 0.1); border-color: #f97316; }
-
-        .input-field {
-            width: 100%; background: transparent; 
-            border: 1px solid var(--border-color); 
-            padding: 12px 16px; border-radius: 4px;
-            color: var(--text-main); font-family: 'ui-monospace', monospace; font-size: 0.8rem;
-            transition: all 0.3s;
-        }
-        .input-field:focus { outline: none; border-color: #f97316; }
         
-        .tab-btn { opacity: 0.5; transition: all 0.3s; border-bottom: 2px solid transparent; }
-        .tab-btn.active { opacity: 1; border-bottom-color: #f97316; color: #f97316; }
+        .btn-social:hover { opacity: 0.9; }
 
-        .noise { position: fixed; inset: 0; pointer-events: none; z-index: 0; opacity: 0.04; background: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E"); }
+        /* Outline Button (for other providers) */
+        .btn-outline {
+            background-color: transparent;
+            color: var(--text-main);
+            border: 1px solid var(--input-border);
+        }
+        .btn-outline:hover { background-color: var(--btn-hover); }
+
+        /* Primary Action Button */
+        .btn-primary {
+            background-color: #f97316; /* Fixit Orange */
+            color: white;
+            border: none;
+        }
+        .btn-primary:hover { background-color: #ea580c; }
+
+        /* Input Fields - Floating Label Style */
+        .input-group { position: relative; margin-bottom: 20px; }
+        
+        .input-field {
+            width: 100%;
+            background: transparent;
+            border: 1px solid var(--input-border);
+            border-radius: 4px;
+            padding: 16px 8px 8px 8px;
+            color: var(--text-main);
+            font-size: 16px;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        
+        .input-field:focus {
+            border-color: #f97316;
+            box-shadow: 0 0 0 1px #f97316;
+        }
+
+        /* Divider */
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: 20px 0;
+            color: var(--text-main);
+        }
+        .divider::before, .divider::after {
+            content: "";
+            flex: 1;
+            height: 1px;
+            background: var(--input-border);
+        }
+        .divider span { padding: 0 10px; font-size: 14px; }
+
+        .error-msg {
+            color: #ef4444;
+            font-size: 12px;
+            text-align: center;
+            margin-top: 10px;
+            display: none;
+        }
     </style>
 
     <script>
-        // Apply theme immediately
         (function() {
             const savedTheme = localStorage.getItem('theme') || 'dark';
             const html = document.documentElement;
@@ -108,187 +187,211 @@
 </head>
 <body>
 
-    <div class="noise"></div>
-
-    <!-- Main Container -->
-    <div class="relative z-10 w-full max-w-4xl grid grid-cols-1 md:grid-cols-2 min-h-[600px] glass-panel rounded-lg overflow-hidden anim-entry opacity-0 translate-y-4">
+    <!-- Main Modal -->
+    <div class="auth-container anim-entry">
         
-        <!-- Left Side: Artwork/Branding -->
-        <div class="hidden md:flex flex-col justify-between p-12 bg-black/20 relative">
-            <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1581147036324-c17ac41dfa6c?auto=format&fit=crop&q=80')] bg-cover bg-center opacity-40 grayscale mix-blend-overlay"></div>
-            <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent"></div>
-            
-            <div class="relative z-10">
-                <a href="index.html" class="flex items-center gap-3 group">
-                    <img src="logo.png" alt="FixitBw" class="w-8 h-8 object-contain">
-                    <span class="font-display font-semibold text-xl tracking-tight text-white">FixitBw</span>
-                </a>
+        <!-- Header: Close + Logo -->
+        <div class="flex justify-between items-center mb-8 relative">
+            <a href="index.html" class="p-2 rounded-full hover:bg-zinc-800/10 transition-colors text-theme-main">
+                <iconify-icon icon="lucide:x" width="20"></iconify-icon>
+            </a>
+            <div class="absolute left-1/2 -translate-x-1/2">
+                <img src="logo.png" alt="FixitBw" class="w-8 h-8 object-contain">
             </div>
-
-            <div class="relative z-10">
-                <h2 class="text-4xl font-display text-white mb-4">Build Without<br><span class="text-accent">Limits.</span></h2>
-                <p class="text-zinc-400 text-xs font-mono max-w-xs leading-relaxed">
-                    Join Botswana's premier tool rental network. Instant quotes, delivery tracking, and zero downtime guarantee.
-                </p>
-            </div>
+            <div class="w-8"></div> <!-- Spacer for centering -->
         </div>
 
-        <!-- Right Side: Form -->
-        <div class="p-8 md:p-12 flex flex-col justify-center relative">
-            <!-- Close Button -->
-            <a href="index.html" class="absolute top-6 right-6 text-theme-muted hover:text-accent transition-colors">
-                <iconify-icon icon="lucide:x" width="24"></iconify-icon>
-            </a>
+        <!-- Dynamic Content Area -->
+        <div class="flex flex-col flex-grow max-w-[380px] mx-auto w-full">
+            
+            <h1 id="auth-heading" class="text-3xl font-display font-bold mb-8 text-center sm:text-left">Sign in to FixitBw</h1>
 
-            <!-- Tabs -->
-            <div class="flex gap-6 mb-8 border-b border-white/10">
-                <button onclick="switchTab('signin')" id="tab-signin" class="tab-btn active pb-3 text-sm font-bold uppercase tracking-widest">Sign In</button>
-                <button onclick="switchTab('signup')" id="tab-signup" class="tab-btn pb-3 text-sm font-bold uppercase tracking-widest">Sign Up</button>
-            </div>
+            <!-- Social Buttons -->
+            <button id="btn-google" class="btn-social btn-outline">
+                <iconify-icon icon="flat-color-icons:google" width="18"></iconify-icon>
+                Sign in with Google
+            </button>
+            
+            <button id="btn-outlook" class="btn-social btn-outline font-bold">
+                <iconify-icon icon="logos:microsoft-icon" width="18"></iconify-icon>
+                Sign in with Outlook
+            </button>
+            
+            <button id="btn-yahoo" class="btn-social btn-outline font-bold">
+                <iconify-icon icon="logos:yahoo" width="18"></iconify-icon>
+                Sign in with Yahoo
+            </button>
 
-            <!-- Social Logins -->
-            <div class="space-y-3 mb-6">
-                <button onclick="handleSocialLogin('Google')" class="auth-btn">
-                    <iconify-icon icon="flat-color-icons:google" width="20"></iconify-icon> Continue with Google
-                </button>
-                <div class="grid grid-cols-2 gap-3">
-                    <button onclick="handleSocialLogin('Outlook')" class="auth-btn">
-                        <iconify-icon icon="logos:microsoft-icon" width="20"></iconify-icon> Outlook
-                    </button>
-                    <button onclick="handleSocialLogin('Yahoo')" class="auth-btn">
-                        <iconify-icon icon="logos:yahoo" width="20"></iconify-icon> Yahoo
-                    </button>
-                </div>
-            </div>
+            <!-- Divider -->
+            <div class="divider"><span>or</span></div>
 
-            <div class="flex items-center gap-4 mb-6">
-                <div class="h-px bg-white/10 flex-grow"></div>
-                <span class="text-[10px] text-theme-muted uppercase font-mono">Or use credentials</span>
-                <div class="h-px bg-white/10 flex-grow"></div>
-            </div>
-
-            <!-- Inputs -->
-            <form id="auth-form" onsubmit="handleAuthSubmit(event)" class="space-y-4">
-                <div id="name-group" class="hidden opacity-0 transition-opacity duration-300">
-                    <input type="text" id="full-name" placeholder="FULL NAME" class="input-field">
-                </div>
+            <!-- Form -->
+            <form id="auth-form">
                 
-                <input type="email" id="email" required placeholder="EMAIL ADDRESS" class="input-field">
-                <input type="password" id="password" required placeholder="PASSWORD" class="input-field">
-
-                <div class="flex items-center justify-between text-xs">
-                    <label class="flex items-center gap-2 cursor-pointer text-theme-muted hover:text-theme-main transition-colors">
-                        <input type="checkbox" checked class="accent-accent"> Stay logged in
-                    </label>
-                    <a href="#" class="text-accent hover:underline">Forgot password?</a>
+                <!-- Name Field (Hidden by default for Login) -->
+                <div id="name-container" class="input-group hidden">
+                    <input type="text" id="full-name" class="input-field" placeholder="Full Name">
                 </div>
 
-                <button type="submit" class="w-full bg-accent hover:bg-white text-black font-bold uppercase tracking-widest text-xs py-4 rounded-sm transition-all duration-300 shadow-[0_0_20px_rgba(249,115,22,0.3)] hover:shadow-[0_0_30px_rgba(255,255,255,0.4)] mt-4">
-                    <span id="submit-btn-text">Sign In</span>
+                <div class="input-group">
+                    <input type="email" id="email" required class="input-field" placeholder="Email address">
+                </div>
+
+                <div class="input-group">
+                    <input type="password" id="password" required class="input-field" placeholder="Password">
+                </div>
+
+                <button type="submit" class="btn-social btn-primary mt-4">
+                    <span id="submit-text">Next</span>
+                </button>
+
+                <div id="error-message" class="error-msg">Authentication failed</div>
+                
+                <button type="button" class="btn-social btn-outline mt-4 font-bold text-sm">
+                    Forgot password?
                 </button>
             </form>
+
+            <!-- Footer Toggle -->
+            <div class="mt-8 text-[15px] text-theme-muted mb-8">
+                <span id="footer-text">Don't have an account?</span>
+                <button onclick="toggleMode()" class="text-accent hover:underline ml-1 font-medium" id="toggle-btn">Sign up</button>
+            </div>
         </div>
+
     </div>
 
-    <script>
-        // Animations
-        gsap.to(".anim-entry", { y: 0, opacity: 1, duration: 1, ease: "power3.out" });
+    <!-- Firebase Logic -->
+    <script type="module">
+        import { auth, GoogleAuthProvider, OAuthProvider, signInWithPopup, signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile } from './firebase-config.js';
 
-        let currentMode = 'signin';
+        gsap.from(".anim-entry", { opacity: 0, scale: 0.95, duration: 0.4, ease: "power2.out" });
 
-        function switchTab(mode) {
-            currentMode = mode;
-            const nameGroup = document.getElementById('name-group');
-            const submitBtn = document.getElementById('submit-btn-text');
-            const tabSignIn = document.getElementById('tab-signin');
-            const tabSignUp = document.getElementById('tab-signup');
+        let currentMode = 'signin'; // 'signin' or 'signup'
+        
+        // Cache DOM elements
+        const nameContainer = document.getElementById('name-container');
+        const heading = document.getElementById('auth-heading');
+        const submitText = document.getElementById('submit-text');
+        const footerText = document.getElementById('footer-text');
+        const toggleBtn = document.getElementById('toggle-btn');
+        const errorMsg = document.getElementById('error-message');
 
-            if (mode === 'signup') {
-                tabSignUp.classList.add('active');
-                tabSignIn.classList.remove('active');
-                submitBtn.innerText = 'Create Account';
+        // Make toggle function global
+        window.toggleMode = function() {
+            errorMsg.style.display = 'none';
+            if (currentMode === 'signin') {
+                // Switch to Sign Up
+                currentMode = 'signup';
+                heading.innerText = "Join FixitBw today";
+                submitText.innerText = "Create account";
+                footerText.innerText = "Have an account already?";
+                toggleBtn.innerText = "Log in";
                 
-                // Show Name Field
-                nameGroup.classList.remove('hidden');
-                setTimeout(() => nameGroup.classList.remove('opacity-0'), 10);
+                // Show Name
+                nameContainer.classList.remove('hidden');
+                gsap.from(nameContainer, { height: 0, opacity: 0, duration: 0.3 });
             } else {
-                tabSignIn.classList.add('active');
-                tabSignUp.classList.remove('active');
-                submitBtn.innerText = 'Sign In';
+                // Switch to Sign In
+                currentMode = 'signin';
+                heading.innerText = "Sign in to FixitBw";
+                submitText.innerText = "Next";
+                footerText.innerText = "Don't have an account?";
+                toggleBtn.innerText = "Sign up";
                 
-                // Hide Name Field
-                nameGroup.classList.add('opacity-0');
-                setTimeout(() => nameGroup.classList.add('hidden'), 300);
+                // Hide Name
+                nameContainer.classList.add('hidden');
             }
         }
 
-        function handleSocialLogin(provider) {
-            // Simulate Social Login
-            localStorage.setItem('isLoggedIn', 'true');
-            localStorage.setItem('userEmail', `${provider}_user@example.com`);
-            
-            // Show loading or transition
-            const btn = event.currentTarget;
-            const originalText = btn.innerHTML;
-            btn.innerHTML = `<iconify-icon icon="line-md:loading-loop" width="20"></iconify-icon> Connecting...`;
-            
-            setTimeout(() => {
-                if (currentMode === 'signup' || !localStorage.getItem('notificationAsked')) {
-                    askForNotification();
-                } else {
-                    window.location.href = 'index.html';
-                }
-            }, 1500);
+        // Social Login Handler
+        async function socialLogin(providerName) {
+            let provider;
+            if (providerName === 'google') provider = new GoogleAuthProvider();
+            if (providerName === 'microsoft') provider = new OAuthProvider('microsoft.com');
+            if (providerName === 'yahoo') provider = new OAuthProvider('yahoo.com');
+
+            try {
+                const result = await signInWithPopup(auth, provider);
+                const user = result.user;
+                askForNotificationAndRedirect(user);
+            } catch (error) {
+                console.error(error);
+                showError(error.message);
+            }
         }
 
-        function handleAuthSubmit(e) {
+        // Attach Social Events
+        document.getElementById('btn-google').addEventListener('click', () => socialLogin('google'));
+        document.getElementById('btn-outlook').addEventListener('click', () => socialLogin('microsoft'));
+        document.getElementById('btn-yahoo').addEventListener('click', () => socialLogin('yahoo'));
+
+        // Email Form Handler
+        document.getElementById('auth-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const email = document.getElementById('email').value;
-            
-            // Simulate Backend Auth
-            localStorage.setItem('isLoggedIn', 'true');
-            localStorage.setItem('userEmail', email);
-
+            const password = document.getElementById('password').value;
+            const fullName = document.getElementById('full-name').value;
             const btn = document.querySelector('button[type="submit"]');
+            
+            // Loading State
             btn.innerHTML = `<iconify-icon icon="line-md:loading-loop" width="20"></iconify-icon>`;
+            errorMsg.style.display = 'none';
 
-            setTimeout(() => {
+            try {
                 if (currentMode === 'signup') {
-                    askForNotification();
+                    // Create User
+                    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                    // Update Name
+                    await updateProfile(userCredential.user, {
+                        displayName: fullName || 'Fixit Member',
+                        photoURL: `https://ui-avatars.com/api/?name=${encodeURIComponent(fullName || 'User')}&background=f97316&color=fff`
+                    });
+                    askForNotificationAndRedirect(userCredential.user);
                 } else {
-                    window.location.href = 'index.html';
+                    // Sign In
+                    const userCredential = await signInWithEmailAndPassword(auth, email, password);
+                    askForNotificationAndRedirect(userCredential.user);
                 }
-            }, 1500);
+            } catch (error) {
+                btn.innerHTML = `<span id="submit-text">${currentMode === 'signup' ? 'Create Account' : 'Next'}</span>`;
+                // Clean up error message
+                let cleanMsg = error.code.replace('auth/', '').replace(/-/g, ' ');
+                showError(cleanMsg);
+            }
+        });
+
+        function showError(msg) {
+            errorMsg.innerText = msg.charAt(0).toUpperCase() + msg.slice(1);
+            errorMsg.style.display = 'block';
+            gsap.from(errorMsg, {y: -10, opacity: 0});
         }
 
-        function askForNotification() {
-            // Mark that we've asked
-            localStorage.setItem('notificationAsked', 'true');
+        function askForNotificationAndRedirect(user) {
+            // Local Storage for legacy support/offline checks
+            localStorage.setItem('isLoggedIn', 'true');
+            localStorage.setItem('userEmail', user.email);
 
-            // Browser Notification Logic
-            if (!("Notification" in window)) {
-                alert("This browser does not support desktop notifications");
-                window.location.href = 'index.html';
-            } else if (Notification.permission === "granted") {
-                // Already granted
-                new Notification("Welcome to FixitBw!", {
-                    body: "You will now receive updates on new stock and rental deals.",
-                    icon: "logo.png"
-                });
-                window.location.href = 'index.html';
-            } else if (Notification.permission !== "denied") {
-                // Request permission
-                Notification.requestPermission().then(function (permission) {
-                    if (permission === "granted") {
-                        new Notification("Success!", {
-                            body: "Notifications enabled. Welcome to FixitBw.",
-                            icon: "logo.png"
-                        });
-                    }
+            if (currentMode === 'signup' || !localStorage.getItem('notificationAsked')) {
+                localStorage.setItem('notificationAsked', 'true');
+                
+                if (!("Notification" in window)) {
                     window.location.href = 'index.html';
-                });
+                } else if (Notification.permission !== "denied" && Notification.permission !== "granted") {
+                    Notification.requestPermission().then(function (permission) {
+                        if (permission === "granted") {
+                            new Notification(`Welcome ${user.displayName || 'Builder'}!`, {
+                                body: "You will receive updates on new stock.",
+                                icon: "logo.png"
+                            });
+                        }
+                        window.location.href = 'index.html';
+                    });
+                } else {
+                    // Already granted or denied
+                    window.location.href = 'index.html';
+                }
             } else {
-                // Denied previously
                 window.location.href = 'index.html';
             }
         }
