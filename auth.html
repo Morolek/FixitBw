@@ -243,7 +243,140 @@
     </div>
 
     <!-- MAIN SCRIPT -->
+    <!-- DEBUGGING SCRIPT -->
     <script type="module">
+        // 1. Try to import Firebase. If this fails, it alerts immediately.
+        let auth, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile, signInWithPopup, GoogleAuthProvider, OAuthProvider;
+        
+        try {
+            const firebase = await import('./firebase-config.js');
+            auth = firebase.auth;
+            createUserWithEmailAndPassword = firebase.createUserWithEmailAndPassword;
+            signInWithEmailAndPassword = firebase.signInWithEmailAndPassword;
+            updateProfile = firebase.updateProfile;
+            signInWithPopup = firebase.signInWithPopup;
+            GoogleAuthProvider = firebase.GoogleAuthProvider;
+            OAuthProvider = firebase.OAuthProvider;
+            console.log("Firebase loaded successfully");
+        } catch (e) {
+            alert("CRITICAL ERROR: Could not load 'firebase-config.js'.\n\n1. Did you create the file?\n2. Are you running on a Local Server (http://...)?\n\nError: " + e.message);
+        }
+
+        // GSAP Animation
+        if(window.gsap) gsap.from(".anim-entry", { opacity: 0, scale: 0.95, duration: 0.4, ease: "power2.out" });
+
+        let currentMode = 'signin';
+        const errorMsg = document.getElementById('error-message');
+        const submitBtn = document.getElementById('submit-btn');
+
+        // Toggle Function
+        window.toggleMode = function() {
+            const heading = document.getElementById('auth-heading');
+            const submitText = document.getElementById('submit-text');
+            const footerText = document.getElementById('footer-text');
+            const toggleBtn = document.getElementById('toggle-mode-btn');
+            const nameContainer = document.getElementById('name-container');
+
+            errorMsg.style.display = 'none';
+            
+            if (currentMode === 'signin') {
+                currentMode = 'signup';
+                heading.innerText = "Join FixitBw today";
+                submitText.innerText = "Create account";
+                footerText.innerText = "Have an account already?";
+                toggleBtn.innerText = "Log in";
+                nameContainer.classList.remove('hidden');
+            } else {
+                currentMode = 'signin';
+                heading.innerText = "Sign in to FixitBw";
+                submitText.innerText = "Next";
+                footerText.innerText = "Don't have an account?";
+                toggleBtn.innerText = "Sign up";
+                nameContainer.classList.add('hidden');
+            }
+        }
+
+        // Attach Toggle Event Manually if ID exists
+        const toggleBtnEl = document.getElementById('toggle-mode-btn');
+        if(toggleBtnEl) toggleBtnEl.addEventListener('click', toggleMode);
+
+        // --- EMAIL SUBMIT HANDLER ---
+        document.getElementById('auth-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            if (!auth) {
+                alert("Firebase is not loaded. Please check if firebase-config.js exists.");
+                return;
+            }
+
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const fullName = document.getElementById('full-name').value;
+
+            // Visual Loading
+            const originalText = document.getElementById('submit-text').innerText;
+            document.getElementById('submit-text').innerText = "Processing...";
+            errorMsg.style.display = 'none';
+
+            try {
+                let userCredential;
+                if (currentMode === 'signup') {
+                    // Try to create account
+                    userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                    // Update name
+                    await updateProfile(userCredential.user, {
+                        displayName: fullName || 'Builder',
+                        photoURL: `https://ui-avatars.com/api/?name=${encodeURIComponent(fullName || 'User')}&background=f97316&color=fff`
+                    });
+                } else {
+                    // Try to Login
+                    userCredential = await signInWithEmailAndPassword(auth, email, password);
+                }
+                
+                // If we get here, it worked!
+                alert("Login Successful! Redirecting...");
+                
+                // Save session for other pages
+                localStorage.setItem('isLoggedIn', 'true');
+                localStorage.setItem('userEmail', userCredential.user.email);
+                
+                window.location.assign('index.html');
+
+            } catch (error) {
+                console.error("Auth Error:", error);
+                document.getElementById('submit-text').innerText = originalText;
+                
+                // SHOW THE ERROR ON SCREEN
+                let msg = error.code ? error.code : error.message;
+                errorMsg.innerText = "Error: " + msg;
+                errorMsg.style.display = 'block';
+            }
+        });
+
+        // --- SOCIAL LOGIN HANDLER ---
+        async function socialLogin(providerName) {
+            if (!auth) { alert("Firebase not loaded."); return; }
+            
+            let provider;
+            if (providerName === 'google') provider = new GoogleAuthProvider();
+            if (providerName === 'microsoft') provider = new OAuthProvider('microsoft.com');
+            if (providerName === 'yahoo') provider = new OAuthProvider('yahoo.com');
+
+            try {
+                const result = await signInWithPopup(auth, provider);
+                alert("Social Login Successful! Redirecting...");
+                localStorage.setItem('isLoggedIn', 'true');
+                localStorage.setItem('userEmail', result.user.email);
+                window.location.assign('index.html');
+            } catch (error) {
+                alert("Social Login Error: " + error.message);
+            }
+        }
+
+        document.getElementById('btn-google').addEventListener('click', () => socialLogin('google'));
+        document.getElementById('btn-outlook').addEventListener('click', () => socialLogin('microsoft'));
+        document.getElementById('btn-yahoo').addEventListener('click', () => socialLogin('yahoo'));
+    </script>
         // Import from your config file
         import { auth, GoogleAuthProvider, OAuthProvider, signInWithPopup, signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile } from './firebase-config.js';
 
