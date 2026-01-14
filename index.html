@@ -41,7 +41,7 @@
             --bg-secondary: #0a0a0a;
             --bg-card: rgba(255,255,255,0.02);
             --text-main: #ffffff;
-            --text-muted: #a1a1aa; /* zinc-400 */
+            --text-muted: #a1a1aa;
             --border-color: rgba(255, 255, 255, 0.1);
             --grid-line: rgba(255,255,255,0.03);
             --sidebar-bg: rgba(5, 5, 5, 0.95);
@@ -49,11 +49,11 @@
         }
 
         [data-theme="light"] {
-            --bg-primary: #f4f4f5; /* zinc-100 */
+            --bg-primary: #f4f4f5;
             --bg-secondary: #ffffff;
             --bg-card: rgba(255,255,255, 0.8);
-            --text-main: #18181b; /* zinc-900 */
-            --text-muted: #52525b; /* zinc-600 */
+            --text-main: #18181b;
+            --text-muted: #52525b;
             --border-color: rgba(0, 0, 0, 0.1);
             --grid-line: rgba(0,0,0,0.05);
             --sidebar-bg: rgba(255, 255, 255, 0.95);
@@ -63,7 +63,7 @@
         body { 
             background-color: var(--bg-primary); 
             color: var(--text-main); 
-            cursor: none; /* We hide default cursor here */
+            cursor: none; 
             overflow-x: hidden; 
             transition: background-color 0.3s ease, color 0.3s ease;
         }
@@ -186,9 +186,13 @@
                 </div>
 
                 <!-- Logged IN State (Hidden by default) -->
-                <div id="nav-user-menu" class="hidden items-center gap-4">
-                    <span class="text-xs font-mono text-accent">Welcome</span>
-                    <button onclick="logout()" class="text-xs font-bold uppercase tracking-widest text-theme-muted hover:text-red-500 transition-colors">
+                <div id="nav-user-menu" class="hidden items-center gap-3">
+                    <!-- User Photo & Name Container -->
+                    <div class="flex items-center gap-2">
+                        <img id="nav-user-photo" src="" alt="Profile" class="w-8 h-8 rounded-full border border-theme object-cover hidden">
+                        <span id="nav-user-name" class="text-xs font-mono text-accent truncate max-w-[100px] hidden md:block"></span>
+                    </div>
+                    <button onclick="logout()" class="text-xs font-bold uppercase tracking-widest text-theme-muted hover:text-red-500 transition-colors ml-2">
                         Log Out
                     </button>
                 </div>
@@ -213,7 +217,7 @@
                 </button>
             </div>
 
-            <!-- Auth Buttons (Sidebar) -->
+            <!-- Auth Buttons (Sidebar - Logged Out) -->
             <div id="sidebar-auth-buttons" class="grid grid-cols-2 gap-3 mb-8">
                 <a href="auth.html" class="border border-theme hover:border-accent hover:text-accent text-theme-main font-bold uppercase tracking-widest text-[10px] py-3 rounded-sm transition-colors text-center block">
                     Sign In
@@ -223,11 +227,14 @@
                 </a>
             </div>
 
-            <!-- Logged In User Menu (Sidebar) -->
+            <!-- Logged In User Menu (Sidebar - Logged In) -->
             <div id="sidebar-user-menu" class="hidden mb-8">
-                <div id="user-info-box" class="p-4 border border-theme rounded-sm bg-theme-card mb-3">
-                    <p class="text-xs text-theme-muted mb-1">Signed in as</p>
-                    <p class="text-sm font-bold text-theme-main truncate" id="user-email-display">user@example.com</p>
+                <div id="user-info-box" class="flex items-center gap-3 p-4 border border-theme rounded-sm bg-theme-card mb-3">
+                    <img id="sidebar-user-photo" src="" class="w-10 h-10 rounded-full border border-theme object-cover">
+                    <div class="overflow-hidden">
+                        <p class="text-xs text-theme-muted mb-0.5">Signed in as</p>
+                        <p class="text-sm font-bold text-theme-main truncate" id="user-email-display"></p>
+                    </div>
                 </div>
                 <button onclick="logout()" class="w-full border border-red-500/30 text-red-500 hover:bg-red-500 hover:text-white font-bold uppercase tracking-widest text-[10px] py-3 rounded-sm transition-colors text-center">
                     Log Out
@@ -241,7 +248,7 @@
                         Home
                     </a>
                 </li>
-                <!-- Profile Link -->
+                <!-- Profile Link (Added here, hidden by default) -->
                 <li id="sidebar-profile-link" class="hidden">
                     <a href="#" class="flex items-center gap-4 text-2xl font-display text-theme-main hover:translate-x-2 transition-transform group">
                         <iconify-icon icon="lucide:user" class="text-accent opacity-0 group-hover:opacity-100 transition-opacity text-lg"></iconify-icon>
@@ -441,53 +448,165 @@
         </div>
     </footer>
 
-    <!-- Standard UI Scripts (Always Load) -->
-    <script>
-        // --- THEME LOGIC (Interaction) ---
+    <!-- Firebase + Logic -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+        // --- FIREBASE CONFIG ---
+        const firebaseConfig = {
+          apiKey: "AIzaSyAyeDDy3YgnyQvG5Mhlte5ht4oASd_iu0I",
+          authDomain: "fixitbw-67922.firebaseapp.com",
+          projectId: "fixitbw-67922",
+          storageBucket: "fixitbw-67922.firebasestorage.app",
+          messagingSenderId: "598663812042",
+          appId: "1:598663812042:web:14cf2992ea1fc948467533",
+          measurementId: "G-QPQF3N4XQ7"
+        };
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        // --- THEME LOGIC ---
         function applyTheme(themeName) {
             const html = document.documentElement;
-            const label = document.getElementById('current-theme-label');
             html.removeAttribute('data-theme');
             if (themeName === 'light') html.setAttribute('data-theme', 'light');
             else if (themeName === 'system' && window.matchMedia('(prefers-color-scheme: light)').matches) html.setAttribute('data-theme', 'light');
-            
-            // Update UI buttons
+            updateThemeUI(themeName);
+        }
+
+        function setTheme(themeName) {
+            localStorage.setItem('theme', themeName);
+            applyTheme(themeName);
+        }
+
+        function updateThemeUI(activeTheme) {
             document.querySelectorAll('.theme-btn').forEach(btn => {
                 btn.classList.remove('border-accent', 'text-accent');
                 btn.classList.add('border-theme', 'text-theme-muted');
             });
-            const activeBtn = document.querySelector(`.theme-btn[data-theme-value="${themeName}"]`);
+            const activeBtn = document.querySelector(`.theme-btn[data-theme-value="${activeTheme}"]`);
             if (activeBtn) {
                 activeBtn.classList.remove('border-theme', 'text-theme-muted');
                 activeBtn.classList.add('border-accent', 'text-accent');
             }
         }
-        function setTheme(themeName) { localStorage.setItem('theme', themeName); applyTheme(themeName); }
-        window.addEventListener('storage', (e) => { if (e.key === 'theme') applyTheme(e.newValue); });
+
+        window.addEventListener('storage', (e) => {
+            if (e.key === 'theme') {
+                applyTheme(e.newValue);
+            }
+        });
+
         const savedTheme = localStorage.getItem('theme') || 'dark';
         applyTheme(savedTheme);
 
-        // --- ANIMATIONS & INTERACTION ---
+        // --- SESSION MANAGEMENT ---
+        onAuthStateChanged(auth, (user) => {
+            const navAuthBtns = document.getElementById('nav-auth-buttons');
+            const navUserMenu = document.getElementById('nav-user-menu');
+            const sidebarAuthBtns = document.getElementById('sidebar-auth-buttons');
+            const sidebarUserMenu = document.getElementById('sidebar-user-menu');
+            const sidebarProfile = document.getElementById('sidebar-profile-link');
+            
+            // Navbar user elements
+            const navUserName = document.getElementById('nav-user-name');
+            const navUserPhoto = document.getElementById('nav-user-photo');
+
+            // Sidebar user elements
+            const sidebarEmail = document.getElementById('user-email-display');
+            const sidebarPhoto = document.getElementById('sidebar-user-photo');
+
+            if (user) {
+                // HIDE Auth Buttons
+                if(navAuthBtns) navAuthBtns.classList.add('hidden');
+                if(sidebarAuthBtns) sidebarAuthBtns.classList.add('hidden');
+
+                // SHOW User Menus
+                if(navUserMenu) navUserMenu.classList.remove('hidden');
+                if(navUserMenu) navUserMenu.classList.add('flex');
+                
+                if(sidebarUserMenu) sidebarUserMenu.classList.remove('hidden');
+                if(sidebarProfile) sidebarProfile.classList.remove('hidden');
+
+                // POPULATE Data
+                const displayName = user.displayName || user.email.split('@')[0];
+                const photoURL = user.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&background=f97316&color=fff`;
+
+                if(navUserName) navUserName.innerText = displayName;
+                if(navUserPhoto) {
+                    navUserPhoto.src = photoURL;
+                    navUserPhoto.classList.remove('hidden');
+                }
+
+                if(sidebarEmail) sidebarEmail.innerText = user.email;
+                if(sidebarPhoto) sidebarPhoto.src = photoURL;
+
+            } else {
+                // SHOW Auth Buttons
+                if(navAuthBtns) navAuthBtns.classList.remove('hidden');
+                if(sidebarAuthBtns) sidebarAuthBtns.classList.remove('hidden');
+
+                // HIDE User Menus
+                if(navUserMenu) {
+                    navUserMenu.classList.add('hidden');
+                    navUserMenu.classList.remove('flex');
+                }
+                if(sidebarUserMenu) sidebarUserMenu.classList.add('hidden');
+                if(sidebarProfile) sidebarProfile.classList.add('hidden');
+            }
+        });
+
+        window.setTheme = setTheme; 
+        window.logout = () => {
+            signOut(auth).then(() => {
+                window.location.reload();
+            }).catch((error) => {
+                console.error("Sign out error", error);
+            });
+        };
+
+        // --- UI INTERACTIONS ---
+        const menuBtn = document.getElementById('menu-btn');
+        const closeBtn = document.getElementById('close-btn');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('sidebar-overlay');
+
+        function toggleSidebar() {
+            const isClosed = sidebar.classList.contains('translate-x-full');
+            if (isClosed) {
+                sidebar.classList.remove('translate-x-full');
+                overlay.classList.remove('opacity-0', 'pointer-events-none');
+            } else {
+                sidebar.classList.add('translate-x-full');
+                overlay.classList.add('opacity-0', 'pointer-events-none');
+            }
+        }
+
+        if(menuBtn) menuBtn.addEventListener('click', toggleSidebar);
+        if(closeBtn) closeBtn.addEventListener('click', toggleSidebar);
+        if(overlay) overlay.addEventListener('click', toggleSidebar);
+
+        // Animations
+        gsap.to(".anim-entry", { y: 0, opacity: 1, duration: 1, stagger: 0.1, scrollTrigger: { trigger: "body", start: "top center" }, ease: "power3.out" });
         const tl = gsap.timeline();
         tl.to('.loader-bar', { height: '100%', duration: 1, ease: "power4.inOut" })
           .to('.fade-text', { opacity: 0, duration: 0.5 }, "-=0.5")
           .to('.loader-wrap', { y: '-100%', duration: 0.8, ease: "power4.inOut" })
           .to('.hero-anim', { y: 0, opacity: 1, duration: 1, stagger: 0.1, ease: "power3.out" }, "-=0.4");
 
-        const spotlightCards = document.querySelectorAll('.spotlight');
-        document.addEventListener('mousemove', e => {
-            spotlightCards.forEach(card => {
+        const cursorDot = document.querySelector('.cursor-dot');
+        const cursorCircle = document.querySelector('.cursor-circle');
+        const cards = document.querySelectorAll('.card-spotlight');
+
+        document.addEventListener('mousemove', (e) => {
+            gsap.to(cursorDot, { x: e.clientX, y: e.clientY, duration: 0.1 });
+            gsap.to(cursorCircle, { x: e.clientX, y: e.clientY, duration: 0.4 });
+            cards.forEach(card => {
                 const rect = card.getBoundingClientRect();
                 card.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`);
                 card.style.setProperty('--mouse-y', `${e.clientY - rect.top}px`);
             });
-        });
-
-        const cursorDot = document.querySelector('.cursor-dot');
-        const cursorCircle = document.querySelector('.cursor-circle');
-        document.addEventListener('mousemove', (e) => {
-            gsap.to(cursorDot, { x: e.clientX, y: e.clientY, duration: 0.1 });
-            gsap.to(cursorCircle, { x: e.clientX, y: e.clientY, duration: 0.4 });
         });
 
         const interactables = document.querySelectorAll('a, button, .spotlight');
@@ -502,70 +621,10 @@
                 const rect = btn.getBoundingClientRect();
                 gsap.to(btn, { x: (e.clientX - rect.left - rect.width / 2) * 0.3, y: (e.clientY - rect.top - rect.height / 2) * 0.3, duration: 0.3 });
             });
-            btn.addEventListener('mouseleave', () => { gsap.to(btn, { x: 0, y: 0, duration: 0.3 }); });
+            btn.addEventListener('mouseleave', () => {
+                gsap.to(btn, { x: 0, y: 0, duration: 0.3 });
+            });
         });
-
-        const menuBtn = document.getElementById('menu-btn');
-        const closeBtn = document.getElementById('close-btn');
-        const sidebar = document.getElementById('sidebar');
-        const overlay = document.getElementById('sidebar-overlay');
-        function toggleSidebar() {
-            const isClosed = sidebar.classList.contains('translate-x-full');
-            if (isClosed) { sidebar.classList.remove('translate-x-full'); overlay.classList.remove('opacity-0', 'pointer-events-none'); } 
-            else { sidebar.classList.add('translate-x-full'); overlay.classList.add('opacity-0', 'pointer-events-none'); }
-        }
-        if(menuBtn) menuBtn.addEventListener('click', toggleSidebar);
-        if(closeBtn) closeBtn.addEventListener('click', toggleSidebar);
-        if(overlay) overlay.addEventListener('click', toggleSidebar);
-    </script>
-
-    <!-- Backend Script (Firebase - Module) -->
-    <script type="module">
-        import { auth, onAuthStateChanged, signOut } from './firebase-config.js';
-
-        // Listen for Auth State
-        onAuthStateChanged(auth, (user) => {
-            const navAuthBtns = document.getElementById('nav-auth-buttons');
-            const navUserMenu = document.getElementById('nav-user-menu');
-            const sidebarAuthBtns = document.getElementById('sidebar-auth-buttons');
-            const sidebarUserMenu = document.getElementById('sidebar-user-menu');
-            const sidebarProfile = document.getElementById('sidebar-profile-link');
-
-            if (user) {
-                // Logged In
-                if(navAuthBtns) navAuthBtns.classList.add('hidden');
-                if(navUserMenu) { navUserMenu.classList.remove('hidden'); navUserMenu.classList.add('flex'); }
-                if(sidebarAuthBtns) sidebarAuthBtns.classList.add('hidden');
-                if(sidebarUserMenu) {
-                    sidebarUserMenu.classList.remove('hidden');
-                    const nameDisplay = document.getElementById('user-email-display');
-                    if(nameDisplay) nameDisplay.innerText = user.displayName || user.email;
-                    
-                    if(sidebarUserMenu.querySelector('img')) {
-                         sidebarUserMenu.querySelector('img').src = user.photoURL || `https://ui-avatars.com/api/?name=${user.email}&background=333&color=fff`;
-                    } else {
-                        const img = document.createElement('img');
-                        img.src = user.photoURL || `https://ui-avatars.com/api/?name=${user.email}&background=333&color=fff`;
-                        img.className = "w-8 h-8 rounded-full border border-theme mr-3";
-                        const infoContainer = sidebarUserMenu.querySelector('#user-info-box');
-                        if(infoContainer) { infoContainer.classList.add('flex', 'items-center'); infoContainer.prepend(img); }
-                    }
-                }
-                if(sidebarProfile) sidebarProfile.classList.remove('hidden');
-            } else {
-                // Logged Out
-                if(navAuthBtns) navAuthBtns.classList.remove('hidden');
-                if(navUserMenu) { navUserMenu.classList.add('hidden'); navUserMenu.classList.remove('flex'); }
-                if(sidebarAuthBtns) sidebarAuthBtns.classList.remove('hidden');
-                if(sidebarUserMenu) sidebarUserMenu.classList.add('hidden');
-                if(sidebarProfile) sidebarProfile.classList.add('hidden');
-            }
-        });
-
-        // Make logout available globally
-        window.logout = () => {
-            signOut(auth).then(() => { window.location.reload(); }).catch((error) => { console.error(error); });
-        };
     </script>
 </body>
 </html>
