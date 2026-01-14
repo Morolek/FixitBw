@@ -111,8 +111,6 @@
             border-left: 1px solid var(--border-color);
             overflow-y: auto;
         }
-
-        /* Custom Scrollbar for Sidebar */
         .sidebar::-webkit-scrollbar { width: 4px; }
         .sidebar::-webkit-scrollbar-track { background: transparent; }
         .sidebar::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 4px; }
@@ -154,7 +152,7 @@
     <div class="cursor-dot hidden md:block"></div>
     <div class="cursor-circle hidden md:block"></div>
     
-    <!-- Loader -->
+    <!-- Loader (Will be removed by Script 1) -->
     <div class="loader-wrap"><div class="loader-bar"></div><div class="mt-4 text-[10px] font-body font-medium tracking-widest uppercase fade-text text-white">Initializing FixitBw...</div></div>
 
     <!-- Navigation -->
@@ -175,7 +173,7 @@
             </div>
 
             <div class="flex items-center gap-4">
-                <!-- Logged OUT State -->
+                <!-- Logged OUT State (Default) -->
                 <div id="nav-auth-buttons" class="flex items-center gap-4">
                     <a href="auth.html" class="magnetic hidden md:block text-xs font-body font-bold uppercase tracking-widest text-theme-muted hover:text-theme-main transition-colors px-3">
                         Sign In
@@ -187,12 +185,12 @@
 
                 <!-- Logged IN State (Hidden by default) -->
                 <div id="nav-user-menu" class="hidden items-center gap-3">
-                    <!-- User Photo & Name Container -->
                     <div class="flex items-center gap-2">
-                        <img id="nav-user-photo" src="" alt="Profile" class="w-8 h-8 rounded-full border border-theme object-cover hidden">
+                        <!-- IMPORTANT: referrerPolicy="no-referrer" allows Google Images to load -->
+                        <img id="nav-user-photo" src="" alt="User" referrerpolicy="no-referrer" class="w-8 h-8 rounded-full border border-theme object-cover hidden">
                         <span id="nav-user-name" class="text-xs font-mono text-accent truncate max-w-[100px] hidden md:block"></span>
                     </div>
-                    <button onclick="logout()" class="text-xs font-bold uppercase tracking-widest text-theme-muted hover:text-red-500 transition-colors ml-2">
+                    <button onclick="window.logoutUser()" class="text-xs font-bold uppercase tracking-widest text-theme-muted hover:text-red-500 transition-colors ml-2">
                         Log Out
                     </button>
                 </div>
@@ -217,7 +215,7 @@
                 </button>
             </div>
 
-            <!-- Auth Buttons (Sidebar - Logged Out) -->
+            <!-- Auth Buttons (Sidebar) -->
             <div id="sidebar-auth-buttons" class="grid grid-cols-2 gap-3 mb-8">
                 <a href="auth.html" class="border border-theme hover:border-accent hover:text-accent text-theme-main font-bold uppercase tracking-widest text-[10px] py-3 rounded-sm transition-colors text-center block">
                     Sign In
@@ -227,16 +225,16 @@
                 </a>
             </div>
 
-            <!-- Logged In User Menu (Sidebar - Logged In) -->
+            <!-- Logged In User Menu (Sidebar) -->
             <div id="sidebar-user-menu" class="hidden mb-8">
                 <div id="user-info-box" class="flex items-center gap-3 p-4 border border-theme rounded-sm bg-theme-card mb-3">
-                    <img id="sidebar-user-photo" src="" class="w-10 h-10 rounded-full border border-theme object-cover">
+                    <img id="sidebar-user-photo" src="" referrerpolicy="no-referrer" class="w-10 h-10 rounded-full border border-theme object-cover">
                     <div class="overflow-hidden">
                         <p class="text-xs text-theme-muted mb-0.5">Signed in as</p>
                         <p class="text-sm font-bold text-theme-main truncate" id="user-email-display"></p>
                     </div>
                 </div>
-                <button onclick="logout()" class="w-full border border-red-500/30 text-red-500 hover:bg-red-500 hover:text-white font-bold uppercase tracking-widest text-[10px] py-3 rounded-sm transition-colors text-center">
+                <button onclick="window.logoutUser()" class="w-full border border-red-500/30 text-red-500 hover:bg-red-500 hover:text-white font-bold uppercase tracking-widest text-[10px] py-3 rounded-sm transition-colors text-center">
                     Log Out
                 </button>
             </div>
@@ -248,7 +246,7 @@
                         Home
                     </a>
                 </li>
-                <!-- Profile Link (Added here, hidden by default) -->
+                <!-- Profile Link -->
                 <li id="sidebar-profile-link" class="hidden">
                     <a href="#" class="flex items-center gap-4 text-2xl font-display text-theme-main hover:translate-x-2 transition-transform group">
                         <iconify-icon icon="lucide:user" class="text-accent opacity-0 group-hover:opacity-100 transition-opacity text-lg"></iconify-icon>
@@ -448,24 +446,8 @@
         </div>
     </footer>
 
-    <!-- Firebase + Logic -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-
-        // --- FIREBASE CONFIG ---
-        const firebaseConfig = {
-          apiKey: "AIzaSyAyeDDy3YgnyQvG5Mhlte5ht4oASd_iu0I",
-          authDomain: "fixitbw-67922.firebaseapp.com",
-          projectId: "fixitbw-67922",
-          storageBucket: "fixitbw-67922.firebasestorage.app",
-          messagingSenderId: "598663812042",
-          appId: "1:598663812042:web:14cf2992ea1fc948467533",
-          measurementId: "G-QPQF3N4XQ7"
-        };
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-
+    <!-- SCRIPT 1: UI Logic (Runs immediately to clear loader) -->
+    <script>
         // --- THEME LOGIC ---
         function applyTheme(themeName) {
             const html = document.documentElement;
@@ -501,6 +483,84 @@
         const savedTheme = localStorage.getItem('theme') || 'dark';
         applyTheme(savedTheme);
 
+        // --- ANIMATIONS & INTERACTION ---
+        const tl = gsap.timeline();
+        tl.to('.loader-bar', { height: '100%', duration: 1, ease: "power4.inOut" })
+          .to('.fade-text', { opacity: 0, duration: 0.5 }, "-=0.5")
+          .to('.loader-wrap', { y: '-100%', duration: 0.8, ease: "power4.inOut" })
+          .to('.hero-anim', { y: 0, opacity: 1, duration: 1, stagger: 0.1, ease: "power3.out" }, "-=0.4");
+
+        const cursorDot = document.querySelector('.cursor-dot');
+        const cursorCircle = document.querySelector('.cursor-circle');
+        const cards = document.querySelectorAll('.card-spotlight');
+
+        document.addEventListener('mousemove', (e) => {
+            gsap.to(cursorDot, { x: e.clientX, y: e.clientY, duration: 0.1 });
+            gsap.to(cursorCircle, { x: e.clientX, y: e.clientY, duration: 0.4 });
+            
+            cards.forEach(card => {
+                const rect = card.getBoundingClientRect();
+                card.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`);
+                card.style.setProperty('--mouse-y', `${e.clientY - rect.top}px`);
+            });
+        });
+
+        const interactables = document.querySelectorAll('a, button, .spotlight');
+        interactables.forEach(el => {
+            el.addEventListener('mouseenter', () => cursorCircle.classList.add('active'));
+            el.addEventListener('mouseleave', () => cursorCircle.classList.remove('active'));
+        });
+
+        const magnets = document.querySelectorAll('.magnetic');
+        magnets.forEach(btn => {
+            btn.addEventListener('mousemove', (e) => {
+                const rect = btn.getBoundingClientRect();
+                gsap.to(btn, { x: (e.clientX - rect.left - rect.width / 2) * 0.3, y: (e.clientY - rect.top - rect.height / 2) * 0.3, duration: 0.3 });
+            });
+            btn.addEventListener('mouseleave', () => {
+                gsap.to(btn, { x: 0, y: 0, duration: 0.3 });
+            });
+        });
+
+        const menuBtn = document.getElementById('menu-btn');
+        const closeBtn = document.getElementById('close-btn');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('sidebar-overlay');
+
+        function toggleSidebar() {
+            const isClosed = sidebar.classList.contains('translate-x-full');
+            if (isClosed) {
+                sidebar.classList.remove('translate-x-full');
+                overlay.classList.remove('opacity-0', 'pointer-events-none');
+            } else {
+                sidebar.classList.add('translate-x-full');
+                overlay.classList.add('opacity-0', 'pointer-events-none');
+            }
+        }
+
+        menuBtn.addEventListener('click', toggleSidebar);
+        closeBtn.addEventListener('click', toggleSidebar);
+        overlay.addEventListener('click', toggleSidebar);
+    </script>
+
+    <!-- SCRIPT 2: Firebase Logic (Separate so UI loads even if this fails) -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+        // --- FIREBASE CONFIG (MERGED) ---
+        const firebaseConfig = {
+          apiKey: "AIzaSyAyeDDy3YgnyQvG5Mhlte5ht4oASd_iu0I",
+          authDomain: "fixitbw-67922.firebaseapp.com",
+          projectId: "fixitbw-67922",
+          storageBucket: "fixitbw-67922.firebasestorage.app",
+          messagingSenderId: "598663812042",
+          appId: "1:598663812042:web:14cf2992ea1fc948467533",
+          measurementId: "G-QPQF3N4XQ7"
+        };
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
         // --- SESSION MANAGEMENT ---
         onAuthStateChanged(auth, (user) => {
             const navAuthBtns = document.getElementById('nav-auth-buttons');
@@ -509,11 +569,8 @@
             const sidebarUserMenu = document.getElementById('sidebar-user-menu');
             const sidebarProfile = document.getElementById('sidebar-profile-link');
             
-            // Navbar user elements
             const navUserName = document.getElementById('nav-user-name');
             const navUserPhoto = document.getElementById('nav-user-photo');
-
-            // Sidebar user elements
             const sidebarEmail = document.getElementById('user-email-display');
             const sidebarPhoto = document.getElementById('sidebar-user-photo');
 
@@ -523,14 +580,16 @@
                 if(sidebarAuthBtns) sidebarAuthBtns.classList.add('hidden');
 
                 // SHOW User Menus
-                if(navUserMenu) navUserMenu.classList.remove('hidden');
-                if(navUserMenu) navUserMenu.classList.add('flex');
-                
+                if(navUserMenu) {
+                    navUserMenu.classList.remove('hidden');
+                    navUserMenu.classList.add('flex');
+                }
                 if(sidebarUserMenu) sidebarUserMenu.classList.remove('hidden');
                 if(sidebarProfile) sidebarProfile.classList.remove('hidden');
 
                 // POPULATE Data
                 const displayName = user.displayName || user.email.split('@')[0];
+                // Generate colorful avatar if Google photo is missing
                 const photoURL = user.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&background=f97316&color=fff`;
 
                 if(navUserName) navUserName.innerText = displayName;
@@ -557,74 +616,14 @@
             }
         });
 
-        window.setTheme = setTheme; 
-        window.logout = () => {
+        // Make logout available globally
+        window.logoutUser = () => {
             signOut(auth).then(() => {
                 window.location.reload();
             }).catch((error) => {
                 console.error("Sign out error", error);
             });
         };
-
-        // --- UI INTERACTIONS ---
-        const menuBtn = document.getElementById('menu-btn');
-        const closeBtn = document.getElementById('close-btn');
-        const sidebar = document.getElementById('sidebar');
-        const overlay = document.getElementById('sidebar-overlay');
-
-        function toggleSidebar() {
-            const isClosed = sidebar.classList.contains('translate-x-full');
-            if (isClosed) {
-                sidebar.classList.remove('translate-x-full');
-                overlay.classList.remove('opacity-0', 'pointer-events-none');
-            } else {
-                sidebar.classList.add('translate-x-full');
-                overlay.classList.add('opacity-0', 'pointer-events-none');
-            }
-        }
-
-        if(menuBtn) menuBtn.addEventListener('click', toggleSidebar);
-        if(closeBtn) closeBtn.addEventListener('click', toggleSidebar);
-        if(overlay) overlay.addEventListener('click', toggleSidebar);
-
-        // Animations
-        gsap.to(".anim-entry", { y: 0, opacity: 1, duration: 1, stagger: 0.1, scrollTrigger: { trigger: "body", start: "top center" }, ease: "power3.out" });
-        const tl = gsap.timeline();
-        tl.to('.loader-bar', { height: '100%', duration: 1, ease: "power4.inOut" })
-          .to('.fade-text', { opacity: 0, duration: 0.5 }, "-=0.5")
-          .to('.loader-wrap', { y: '-100%', duration: 0.8, ease: "power4.inOut" })
-          .to('.hero-anim', { y: 0, opacity: 1, duration: 1, stagger: 0.1, ease: "power3.out" }, "-=0.4");
-
-        const cursorDot = document.querySelector('.cursor-dot');
-        const cursorCircle = document.querySelector('.cursor-circle');
-        const cards = document.querySelectorAll('.card-spotlight');
-
-        document.addEventListener('mousemove', (e) => {
-            gsap.to(cursorDot, { x: e.clientX, y: e.clientY, duration: 0.1 });
-            gsap.to(cursorCircle, { x: e.clientX, y: e.clientY, duration: 0.4 });
-            cards.forEach(card => {
-                const rect = card.getBoundingClientRect();
-                card.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`);
-                card.style.setProperty('--mouse-y', `${e.clientY - rect.top}px`);
-            });
-        });
-
-        const interactables = document.querySelectorAll('a, button, .spotlight');
-        interactables.forEach(el => {
-            el.addEventListener('mouseenter', () => cursorCircle.classList.add('active'));
-            el.addEventListener('mouseleave', () => cursorCircle.classList.remove('active'));
-        });
-
-        const magnets = document.querySelectorAll('.magnetic');
-        magnets.forEach(btn => {
-            btn.addEventListener('mousemove', (e) => {
-                const rect = btn.getBoundingClientRect();
-                gsap.to(btn, { x: (e.clientX - rect.left - rect.width / 2) * 0.3, y: (e.clientY - rect.top - rect.height / 2) * 0.3, duration: 0.3 });
-            });
-            btn.addEventListener('mouseleave', () => {
-                gsap.to(btn, { x: 0, y: 0, duration: 0.3 });
-            });
-        });
     </script>
 </body>
 </html>
