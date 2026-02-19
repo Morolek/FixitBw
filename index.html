@@ -111,6 +111,8 @@
             border-left: 1px solid var(--border-color);
             overflow-y: auto;
         }
+
+        /* Custom Scrollbar for Sidebar */
         .sidebar::-webkit-scrollbar { width: 4px; }
         .sidebar::-webkit-scrollbar-track { background: transparent; }
         .sidebar::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 4px; }
@@ -186,7 +188,7 @@
                 <!-- Logged IN State (Hidden by default) -->
                 <div id="nav-user-menu" class="hidden items-center gap-3">
                     <div class="flex items-center gap-2">
-                        <!-- IMPORTANT: referrerPolicy="no-referrer" allows Google Images to load -->
+                        <!-- User Photo (1 Letter Force) -->
                         <img id="nav-user-photo" src="" alt="User" referrerpolicy="no-referrer" class="w-8 h-8 rounded-full border border-theme object-cover hidden">
                         <span id="nav-user-name" class="text-xs font-mono text-accent truncate max-w-[100px] hidden md:block"></span>
                     </div>
@@ -215,7 +217,7 @@
                 </button>
             </div>
 
-            <!-- Auth Buttons (Sidebar) -->
+            <!-- Auth Buttons (Sidebar - Logged Out) -->
             <div id="sidebar-auth-buttons" class="grid grid-cols-2 gap-3 mb-8">
                 <a href="auth.html" class="border border-theme hover:border-accent hover:text-accent text-theme-main font-bold uppercase tracking-widest text-[10px] py-3 rounded-sm transition-colors text-center block">
                     Sign In
@@ -225,7 +227,7 @@
                 </a>
             </div>
 
-            <!-- Logged In User Menu (Sidebar) -->
+            <!-- Logged In User Menu (Sidebar - Logged In) -->
             <div id="sidebar-user-menu" class="hidden mb-8">
                 <div id="user-info-box" class="flex items-center gap-3 p-4 border border-theme rounded-sm bg-theme-card mb-3">
                     <img id="sidebar-user-photo" src="" referrerpolicy="no-referrer" class="w-10 h-10 rounded-full border border-theme object-cover">
@@ -244,13 +246,6 @@
                     <a href="index.html" class="flex items-center gap-4 text-2xl font-display text-theme-main hover:translate-x-2 transition-transform group">
                         <iconify-icon icon="lucide:home" class="text-accent opacity-0 group-hover:opacity-100 transition-opacity text-lg"></iconify-icon>
                         Home
-                    </a>
-                </li>
-                <!-- Profile Link -->
-                <li id="sidebar-profile-link" class="hidden">
-                    <a href="#" class="flex items-center gap-4 text-2xl font-display text-theme-main hover:translate-x-2 transition-transform group">
-                        <iconify-icon icon="lucide:user" class="text-accent opacity-0 group-hover:opacity-100 transition-opacity text-lg"></iconify-icon>
-                        Profile
                     </a>
                 </li>
                 <li>
@@ -295,9 +290,7 @@
 
         <div class="py-6">
             <a href="#" class="flex items-center gap-3 p-4 bg-theme-card border border-theme rounded-sm group hover:border-accent transition-colors">
-                <div class="w-10 h-10 bg-accent/20 rounded-full flex items-center justify-center text-accent">
-                    <iconify-icon icon="lucide:settings-2"></iconify-icon>
-                </div>
+                <div class="w-10 h-10 bg-accent/20 rounded-full flex items-center justify-center text-accent"><iconify-icon icon="lucide:settings-2"></iconify-icon></div>
                 <div>
                     <div class="text-sm font-bold text-theme-main">Settings</div>
                     <div class="text-[10px] text-theme-muted">Account & Preferences</div>
@@ -451,35 +444,24 @@
         // --- THEME LOGIC ---
         function applyTheme(themeName) {
             const html = document.documentElement;
+            const label = document.getElementById('current-theme-label');
             html.removeAttribute('data-theme');
             if (themeName === 'light') html.setAttribute('data-theme', 'light');
             else if (themeName === 'system' && window.matchMedia('(prefers-color-scheme: light)').matches) html.setAttribute('data-theme', 'light');
-            updateThemeUI(themeName);
-        }
-
-        function setTheme(themeName) {
-            localStorage.setItem('theme', themeName);
-            applyTheme(themeName);
-        }
-
-        function updateThemeUI(activeTheme) {
+            
+            // Update UI buttons
             document.querySelectorAll('.theme-btn').forEach(btn => {
                 btn.classList.remove('border-accent', 'text-accent');
                 btn.classList.add('border-theme', 'text-theme-muted');
             });
-            const activeBtn = document.querySelector(`.theme-btn[data-theme-value="${activeTheme}"]`);
+            const activeBtn = document.querySelector(`.theme-btn[data-theme-value="${themeName}"]`);
             if (activeBtn) {
                 activeBtn.classList.remove('border-theme', 'text-theme-muted');
                 activeBtn.classList.add('border-accent', 'text-accent');
             }
         }
-
-        window.addEventListener('storage', (e) => {
-            if (e.key === 'theme') {
-                applyTheme(e.newValue);
-            }
-        });
-
+        function setTheme(themeName) { localStorage.setItem('theme', themeName); applyTheme(themeName); }
+        window.addEventListener('storage', (e) => { if (e.key === 'theme') applyTheme(e.newValue); });
         const savedTheme = localStorage.getItem('theme') || 'dark';
         applyTheme(savedTheme);
 
@@ -543,7 +525,7 @@
         overlay.addEventListener('click', toggleSidebar);
     </script>
 
-    <!-- SCRIPT 2: Firebase Logic (Separate so UI loads even if this fails) -->
+    <!-- SCRIPT 2: Firebase Logic -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
@@ -567,7 +549,6 @@
             const navUserMenu = document.getElementById('nav-user-menu');
             const sidebarAuthBtns = document.getElementById('sidebar-auth-buttons');
             const sidebarUserMenu = document.getElementById('sidebar-user-menu');
-            const sidebarProfile = document.getElementById('sidebar-profile-link');
             
             const navUserName = document.getElementById('nav-user-name');
             const navUserPhoto = document.getElementById('nav-user-photo');
@@ -585,12 +566,12 @@
                     navUserMenu.classList.add('flex');
                 }
                 if(sidebarUserMenu) sidebarUserMenu.classList.remove('hidden');
-                if(sidebarProfile) sidebarProfile.classList.remove('hidden');
 
-                // POPULATE Data
+                // POPULATE Data with 1-Letter Avatar Force
                 const displayName = user.displayName || user.email.split('@')[0];
-                // Generate colorful avatar if Google photo is missing
-                const photoURL = user.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&background=f97316&color=fff`;
+                const firstLetter = displayName.charAt(0).toUpperCase();
+                // Always use UI Avatars for 1-letter uniformity
+                const photoURL = `https://ui-avatars.com/api/?name=${firstLetter}&background=f97316&color=fff&length=1`;
 
                 if(navUserName) navUserName.innerText = displayName;
                 if(navUserPhoto) {
@@ -612,7 +593,6 @@
                     navUserMenu.classList.remove('flex');
                 }
                 if(sidebarUserMenu) sidebarUserMenu.classList.add('hidden');
-                if(sidebarProfile) sidebarProfile.classList.add('hidden');
             }
         });
 
