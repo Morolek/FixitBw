@@ -191,6 +191,7 @@
         
         <!-- Header -->
         <div class="flex justify-between items-center mb-8 relative">
+            <!-- Close Button (Also serves as Guest Exit) -->
             <a href="index.html" class="p-2 rounded-full hover:bg-zinc-800/10 transition-colors text-theme-main">
                 <iconify-icon icon="lucide:x" width="20"></iconify-icon>
             </a>
@@ -251,20 +252,29 @@
             </form>
 
             <!-- Footer Toggle -->
-            <div class="mt-8 text-[15px] text-theme-muted mb-8">
+            <div class="mt-8 text-[15px] text-theme-muted mb-4">
                 <span id="footer-text">Don't have an account?</span>
                 <button id="toggle-mode-btn" class="text-accent hover:underline ml-1 font-medium">Sign up</button>
+            </div>
+
+            <!-- NEW: GUEST OPTION -->
+            <div class="pt-6 border-t border-white/10 text-center">
+                <p class="text-xs text-theme-muted mb-2">Just browsing?</p>
+                <a href="index.html" class="inline-block text-xs font-bold uppercase tracking-widest text-theme-main hover:text-accent transition-colors border border-white/20 hover:border-accent px-6 py-2 rounded-full">
+                    Continue as Guest
+                </a>
             </div>
         </div>
 
     </div>
 
-    <!-- Firebase Logic with Merged Config -->
+    <!-- Firebase Logic -->
     <script type="module">
+        // Import Functions directly from CDN
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getAuth, GoogleAuthProvider, OAuthProvider, signInWithPopup, signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
-        // --- FIREBASE CONFIGURATION (MERGED) ---
+        // --- FIREBASE CONFIG (Embedded for reliability) ---
         const firebaseConfig = {
           apiKey: "AIzaSyAyeDDy3YgnyQvG5Mhlte5ht4oASd_iu0I",
           authDomain: "fixitbw-67922.firebaseapp.com",
@@ -274,8 +284,6 @@
           appId: "1:598663812042:web:14cf2992ea1fc948467533",
           measurementId: "G-QPQF3N4XQ7"
         };
-
-        // Initialize Firebase
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
 
@@ -284,7 +292,7 @@
 
         let currentMode = 'signin';
         
-        // UI Elements
+        // Cache DOM elements
         const nameContainer = document.getElementById('name-container');
         const heading = document.getElementById('auth-heading');
         const submitText = document.getElementById('submit-text');
@@ -319,7 +327,7 @@
 
         // --- SUCCESS HANDLER ---
         function handleAuthSuccess(user) {
-            // Store session locally
+            // Store session
             localStorage.setItem('isLoggedIn', 'true');
             localStorage.setItem('userEmail', user.email);
 
