@@ -19,8 +19,8 @@
                 extend: {
                     fontFamily: {
                         display: ['Clash Display', 'sans-serif'],
-                        body: ['General Sans', 'sans-serif'],
-                        mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'monospace'],
+                        body:['General Sans', 'sans-serif'],
+                        mono:['ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'monospace'],
                     },
                     colors: {
                         'accent': '#f97316', 
@@ -42,7 +42,7 @@
             --bg-secondary: #0a0a0a;
             --bg-card: rgba(255,255,255,0.02);
             --text-main: #ffffff;
-            --text-muted: #a1a1aa;
+            --text-muted: #a1a1aa; /* zinc-400 */
             --border-color: rgba(255, 255, 255, 0.1);
             --grid-line: rgba(255,255,255,0.03);
             --sidebar-bg: rgba(5, 5, 5, 0.95);
@@ -50,11 +50,11 @@
         }
 
         [data-theme="light"] {
-            --bg-primary: #f4f4f5;
+            --bg-primary: #f4f4f5; /* zinc-100 */
             --bg-secondary: #ffffff;
             --bg-card: rgba(255,255,255, 0.8);
-            --text-main: #18181b;
-            --text-muted: #52525b;
+            --text-main: #18181b; /* zinc-900 */
+            --text-muted: #52525b; /* zinc-600 */
             --border-color: rgba(0, 0, 0, 0.1);
             --grid-line: rgba(0,0,0,0.05);
             --sidebar-bg: rgba(255, 255, 255, 0.95);
@@ -65,19 +65,20 @@
             background-color: var(--bg-primary); 
             color: var(--text-main); 
             cursor: none; 
-            overflow-x: hidden; 
-            transition: background-color 0.5s ease, color 0.5s ease;
+            overflow-y: auto; 
+            overflow-x: hidden;
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
 
         ::selection { background: #f97316; color: #000; }
 
-        .noise { position: fixed; inset: 0; pointer-events: none; z-index: 50; opacity: 0.04; background: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E"); }
+        .noise { position: fixed; inset: 0; pointer-events: none; z-index: 50; opacity: 0.05; background: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E"); }
         .ambient-glow { position: fixed; top: 20%; right: -10%; width: 50vw; height: 50vw; background: radial-gradient(circle, rgba(249, 115, 22, 0.08) 0%, rgba(0,0,0,0) 70%); pointer-events: none; z-index: -1; }
 
         /* Cursor */
         .cursor-dot { width: 6px; height: 6px; background: #f97316; position: fixed; border-radius: 50%; z-index: 9999; pointer-events: none; transform: translate(-50%, -50%); }
         .cursor-circle { width: 40px; height: 40px; border: 1px solid var(--text-muted); position: fixed; border-radius: 50%; z-index: 9998; pointer-events: none; transform: translate(-50%, -50%); transition: width 0.3s, height 0.3s, background 0.3s, border-color 0.3s; }
-        .cursor-circle.active { width: 60px; height: 60px; background-color: rgba(249, 115, 22, 0.05); border-color: #f97316; }
+        .cursor-circle.active { width: 60px; height: 60px; background-color: rgba(249, 115, 22, 0.1); border-color: #f97316; }
 
         /* Card Spotlight */
         .card-spotlight { background: var(--bg-card); position: relative; overflow: hidden; transition: transform 0.3s ease, border-color 0.3s ease; border: 1px solid var(--border-color); }
@@ -95,19 +96,6 @@
         .sidebar::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 4px; }
         .sidebar::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
 
-        /* Auth Modal */
-        .auth-modal-overlay { opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
-        .auth-modal-overlay.open { opacity: 1; pointer-events: all; }
-        .auth-provider-btn {
-            display: flex; align-items: center; justify-content: center; gap: 10px;
-            width: 100%; padding: 10px; margin-bottom: 8px;
-            border: 1px solid var(--border-color); border-radius: 4px;
-            background: var(--bg-card); color: var(--text-main);
-            font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;
-            transition: all 0.2s;
-        }
-        .auth-provider-btn:hover { background: rgba(249, 115, 22, 0.1); border-color: #f97316; }
-        
         /* Utility classes */
         .text-theme-main { color: var(--text-main); }
         .text-theme-muted { color: var(--text-muted); }
@@ -138,33 +126,6 @@
     <div class="cursor-dot hidden md:block"></div>
     <div class="cursor-circle hidden md:block"></div>
 
-    <!-- Auth Modal -->
-    <div id="auth-modal" class="auth-modal-overlay fixed inset-0 z-[200] flex items-center justify-center px-4">
-        <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="closeAuthModal()"></div>
-        <div class="relative bg-zinc-900 border border-theme p-8 rounded-sm max-w-sm w-full shadow-2xl transform transition-transform scale-95" id="auth-content">
-            <div class="text-center mb-6">
-                <h3 id="auth-title" class="text-2xl font-display text-white mb-1">Create Account</h3>
-                <p id="auth-subtitle" class="text-zinc-500 text-sm">Join the network of professional builders.</p>
-            </div>
-            <div class="space-y-2 mb-6">
-                <button class="auth-provider-btn"><iconify-icon icon="flat-color-icons:google" width="16"></iconify-icon> Sign up with Google</button>
-                <div class="grid grid-cols-2 gap-2">
-                    <button class="auth-provider-btn"><iconify-icon icon="logos:microsoft-icon" width="16"></iconify-icon> Outlook</button>
-                    <button class="auth-provider-btn"><iconify-icon icon="logos:yahoo" width="16"></iconify-icon> Yahoo</button>
-                </div>
-            </div>
-            <div class="flex items-center gap-4 mb-6"><div class="h-px bg-white/10 flex-grow"></div><span class="text-[10px] text-zinc-600 uppercase font-mono">Or use email</span><div class="h-px bg-white/10 flex-grow"></div></div>
-            <form class="space-y-4">
-                <div id="name-field-container"><input type="text" placeholder="FULL NAME" class="w-full bg-white/5 border border-white/10 rounded-sm px-4 py-3 text-xs font-mono text-white placeholder-zinc-600 focus:outline-none focus:border-accent transition-all"></div>
-                <input type="email" placeholder="EMAIL ADDRESS" class="w-full bg-white/5 border border-white/10 rounded-sm px-4 py-3 text-xs font-mono text-white placeholder-zinc-600 focus:outline-none focus:border-accent transition-all">
-                <input type="password" placeholder="PASSWORD" class="w-full bg-white/5 border border-white/10 rounded-sm px-4 py-3 text-xs font-mono text-white placeholder-zinc-600 focus:outline-none focus:border-accent transition-all">
-                <button type="button" class="w-full bg-accent hover:bg-white text-black font-bold uppercase tracking-widest text-xs py-3 rounded-sm transition-colors mt-2"><span id="auth-submit-text">Create Account</span></button>
-            </form>
-            <div class="mt-6 text-center"><p class="text-xs text-zinc-500"><span id="auth-footer-text">Already have an account?</span> <button onclick="toggleAuthMode()" class="text-accent hover:underline font-bold ml-1" id="auth-toggle-btn">Sign In</button></p></div>
-            <button onclick="closeAuthModal()" class="absolute top-4 right-4 text-zinc-500 hover:text-white"><iconify-icon icon="lucide:x" width="20"></iconify-icon></button>
-        </div>
-    </div>
-
     <!-- Navigation -->
     <nav class="fixed top-0 left-0 w-full z-[100] px-6 py-5 border-b border-theme backdrop-blur-xl transition-colors duration-500">
         <div class="flex justify-between items-center max-w-[1800px] mx-auto">
@@ -173,23 +134,14 @@
                 <span class="font-display font-semibold text-2xl tracking-tight text-theme-main">FixitBw</span>
             </a>
 
+            <!-- Updated Links -->
             <div class="hidden md:flex gap-1">
-                <a href="#" class="magnetic px-5 py-2 text-xs font-body font-medium uppercase tracking-widest text-theme-main bg-theme-card rounded-full">About</a>
+                <a href="about.html" class="magnetic px-5 py-2 text-xs font-body font-medium uppercase tracking-widest text-theme-main bg-theme-card rounded-full">About</a>
                 <a href="catalog.html" class="magnetic px-5 py-2 text-xs font-body font-medium uppercase tracking-widest text-theme-muted hover:text-theme-main hover:bg-theme-card rounded-full transition-all">Catalog</a>
                 <a href="promise.html" class="magnetic px-5 py-2 text-xs font-body font-medium uppercase tracking-widest text-theme-muted hover:text-theme-main hover:bg-theme-card rounded-full transition-all">Promise</a>
             </div>
 
             <div class="flex items-center gap-4">
-                <!-- Sign In Button -->
-                <button onclick="openAuthModal('signin')" class="magnetic hidden md:block text-xs font-body font-bold uppercase tracking-widest text-theme-muted hover:text-theme-main transition-colors px-3">
-                    Sign In
-                </button>
-                
-                <!-- Sign Up Button -->
-                <button onclick="openAuthModal('signup')" class="magnetic hidden md:flex items-center gap-2 bg-accent hover:bg-white border border-transparent px-5 py-2 rounded-sm text-black transition-all duration-300 group shadow-[0_0_15px_rgba(249,115,22,0.3)] hover:shadow-[0_0_20px_rgba(255,255,255,0.3)]">
-                    <span class="text-xs font-body font-bold uppercase tracking-widest">Sign Up</span>
-                </button>
-
                  <!-- Sidebar Toggle Button -->
                 <button id="menu-btn" class="magnetic flex items-center justify-center w-10 h-10 border border-theme rounded-full hover:border-accent hover:text-accent text-theme-main transition-all">
                     <iconify-icon icon="lucide:menu" width="20"></iconify-icon>
@@ -207,16 +159,6 @@
                 <span class="text-xs font-mono uppercase tracking-widest text-accent">Menu</span>
                 <button id="close-btn" class="text-theme-muted hover:text-accent transition-colors">
                     <iconify-icon icon="lucide:x" width="24"></iconify-icon>
-                </button>
-            </div>
-
-            <!-- Mobile Auth Buttons inside Sidebar -->
-            <div class="grid grid-cols-2 gap-3 mb-8">
-                <button onclick="openAuthModal('signin')" class="border border-theme hover:border-accent hover:text-accent text-theme-main font-bold uppercase tracking-widest text-[10px] py-3 rounded-sm transition-colors text-center">
-                    Sign In
-                </button>
-                <button onclick="openAuthModal('signup')" class="bg-accent hover:bg-white text-black font-bold uppercase tracking-widest text-[10px] py-3 rounded-sm transition-colors text-center shadow-[0_0_10px_rgba(249,115,22,0.2)]">
-                    Sign Up
                 </button>
             </div>
 
@@ -254,13 +196,13 @@
             <div class="mt-8 pt-8 border-t border-theme">
                 <span class="text-xs font-mono uppercase tracking-widest text-theme-muted block mb-4">Appearance</span>
                 <div class="flex gap-2">
-                    <button onclick="setTheme('dark')" class="flex-1 py-2 px-3 border border-theme rounded-sm flex items-center justify-center gap-2 hover:border-accent hover:text-accent text-theme-muted transition-all text-xs uppercase" title="Dark Mode">
+                    <button onclick="setTheme('dark')" class="theme-btn flex-1 py-2 px-3 border border-theme rounded-sm flex items-center justify-center gap-2 hover:border-accent hover:text-accent text-theme-muted transition-all text-xs uppercase" title="Dark Mode" data-theme-value="dark">
                         <iconify-icon icon="lucide:moon"></iconify-icon>
                     </button>
-                    <button onclick="setTheme('light')" class="flex-1 py-2 px-3 border border-theme rounded-sm flex items-center justify-center gap-2 hover:border-accent hover:text-accent text-theme-muted transition-all text-xs uppercase" title="Light Mode">
+                    <button onclick="setTheme('light')" class="theme-btn flex-1 py-2 px-3 border border-theme rounded-sm flex items-center justify-center gap-2 hover:border-accent hover:text-accent text-theme-muted transition-all text-xs uppercase" title="Light Mode" data-theme-value="light">
                         <iconify-icon icon="lucide:sun"></iconify-icon>
                     </button>
-                    <button onclick="setTheme('system')" class="flex-1 py-2 px-3 border border-theme rounded-sm flex items-center justify-center gap-2 hover:border-accent hover:text-accent text-theme-muted transition-all text-xs uppercase" title="System Auto">
+                    <button onclick="setTheme('system')" class="theme-btn flex-1 py-2 px-3 border border-theme rounded-sm flex items-center justify-center gap-2 hover:border-accent hover:text-accent text-theme-muted transition-all text-xs uppercase" title="System Auto" data-theme-value="system">
                         <iconify-icon icon="lucide:monitor"></iconify-icon>
                     </button>
                 </div>
@@ -451,26 +393,28 @@
                 <a href="https://www.tiktok.com/@fixitbw" target="_blank" class="text-zinc-500 hover:text-white transition-colors"><iconify-icon icon="ic:baseline-tiktok" width="20"></iconify-icon></a>
             </div>
 
-            <p class="text-[10px] font-mono text-zinc-600 uppercase">© 2024 FixitBw. About Us.</p>
+            <p class="text-[10px] font-mono text-zinc-600 uppercase">© 2024 FixitBw. Gaborone, Botswana.</p>
         </div>
     </footer>
 
+    <!-- SCRIPT 1: Standard UI Logic -->
     <script>
         // --- THEME LOGIC (Interaction) ---
         function applyTheme(themeName) {
             const html = document.documentElement;
-            
-            // Remove previous theme attributes
             html.removeAttribute('data-theme');
+            if (themeName === 'light') html.setAttribute('data-theme', 'light');
+            else if (themeName === 'system' && window.matchMedia('(prefers-color-scheme: light)').matches) html.setAttribute('data-theme', 'light');
             
-            if (themeName === 'light') {
-                html.setAttribute('data-theme', 'light');
-            } else if (themeName === 'system') {
-                if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
-                    html.setAttribute('data-theme', 'light');
-                }
-            } else {
-                // Default dark
+            // Update UI buttons
+            document.querySelectorAll('.theme-btn').forEach(btn => {
+                btn.classList.remove('border-accent', 'text-accent');
+                btn.classList.add('border-theme', 'text-theme-muted');
+            });
+            const activeBtn = document.querySelector(`.theme-btn[data-theme-value="${themeName}"]`);
+            if (activeBtn) {
+                activeBtn.classList.remove('border-theme', 'text-theme-muted');
+                activeBtn.classList.add('border-accent', 'text-accent');
             }
         }
 
@@ -485,6 +429,9 @@
                 applyTheme(e.newValue);
             }
         });
+
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        applyTheme(savedTheme);
 
         // Animations
         gsap.to(".anim-entry", {
@@ -582,55 +529,6 @@
         menuBtn.addEventListener('click', toggleSidebar);
         closeBtn.addEventListener('click', toggleSidebar);
         overlay.addEventListener('click', toggleSidebar);
-
-        // --- AUTH MODAL LOGIC ---
-        let authMode = 'signup'; // 'signup' or 'signin'
-
-        function openAuthModal(mode) {
-            authMode = mode;
-            updateAuthUI();
-            document.getElementById('auth-modal').classList.add('open');
-            // If sidebar is open, close it for better UX
-            if (!sidebar.classList.contains('translate-x-full')) {
-                toggleSidebar();
-            }
-            gsap.fromTo("#auth-content", {scale: 0.9, opacity: 0}, {scale: 1, opacity: 1, duration: 0.3, ease: "back.out(1.7)"});
-        }
-
-        function closeAuthModal() {
-            document.getElementById('auth-modal').classList.remove('open');
-        }
-
-        function toggleAuthMode() {
-            authMode = authMode === 'signup' ? 'signin' : 'signup';
-            updateAuthUI();
-        }
-
-        function updateAuthUI() {
-            const title = document.getElementById('auth-title');
-            const subtitle = document.getElementById('auth-subtitle');
-            const submitText = document.getElementById('auth-submit-text');
-            const footerText = document.getElementById('auth-footer-text');
-            const toggleBtn = document.getElementById('auth-toggle-btn');
-            const nameField = document.getElementById('name-field-container');
-
-            if (authMode === 'signup') {
-                title.innerText = 'Create Account';
-                subtitle.innerText = 'Join the network of professional builders.';
-                submitText.innerText = 'Create Account';
-                footerText.innerText = 'Already have an account?';
-                toggleBtn.innerText = 'Sign In';
-                nameField.style.display = 'block';
-            } else {
-                title.innerText = 'Welcome Back';
-                subtitle.innerText = 'Sign in to manage your rentals.';
-                submitText.innerText = 'Sign In';
-                footerText.innerText = "Don't have an account?";
-                toggleBtn.innerText = 'Sign Up';
-                nameField.style.display = 'none';
-            }
-        }
     </script>
-
 </body>
 </html>
