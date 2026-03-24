@@ -1,3 +1,5 @@
+--- START OF FILE index (6).html ---
+
 <!DOCTYPE html>
 <html lang="en" class="scroll-smooth">
 <head>
@@ -175,16 +177,6 @@
             </div>
 
             <div class="flex items-center gap-4">
-                <!-- Logged OUT State (Default) -->
-                <div id="nav-auth-buttons" class="flex items-center gap-4">
-                    <a href="auth.html" class="magnetic hidden md:block text-xs font-body font-bold uppercase tracking-widest text-theme-muted hover:text-theme-main transition-colors px-3">
-                        Sign In
-                    </a>
-                    <a href="auth.html" class="magnetic hidden md:flex items-center gap-2 bg-accent hover:bg-white border border-transparent px-5 py-2 rounded-sm text-black transition-all duration-300 group shadow-[0_0_15px_rgba(249,115,22,0.3)] hover:shadow-[0_0_20px_rgba(255,255,255,0.3)]">
-                        <span class="text-xs font-body font-bold uppercase tracking-widest">Sign Up</span>
-                    </a>
-                </div>
-
                 <!-- Logged IN State (Hidden by default) -->
                 <div id="nav-user-menu" class="hidden items-center gap-3">
                     <div class="flex items-center gap-2">
@@ -215,16 +207,6 @@
                 <button id="close-btn" class="text-theme-muted hover:text-accent transition-colors">
                     <iconify-icon icon="lucide:x" width="24"></iconify-icon>
                 </button>
-            </div>
-
-            <!-- Auth Buttons (Sidebar - Logged Out) -->
-            <div id="sidebar-auth-buttons" class="grid grid-cols-2 gap-3 mb-8">
-                <a href="auth.html" class="border border-theme hover:border-accent hover:text-accent text-theme-main font-bold uppercase tracking-widest text-[10px] py-3 rounded-sm transition-colors text-center block">
-                    Sign In
-                </a>
-                <a href="auth.html" class="bg-accent hover:bg-white text-black font-bold uppercase tracking-widest text-[10px] py-3 rounded-sm transition-colors text-center shadow-[0_0_10px_rgba(249,115,22,0.2)] block">
-                    Sign Up
-                </a>
             </div>
 
             <!-- Logged In User Menu (Sidebar - Logged In) -->
@@ -530,7 +512,6 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
-        // --- FIREBASE CONFIG (MERGED) ---
         const firebaseConfig = {
           apiKey: "AIzaSyAyeDDy3YgnyQvG5Mhlte5ht4oASd_iu0I",
           authDomain: "fixitbw-67922.firebaseapp.com",
@@ -543,34 +524,23 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
 
-        // --- SESSION MANAGEMENT ---
         onAuthStateChanged(auth, (user) => {
-            const navAuthBtns = document.getElementById('nav-auth-buttons');
             const navUserMenu = document.getElementById('nav-user-menu');
-            const sidebarAuthBtns = document.getElementById('sidebar-auth-buttons');
             const sidebarUserMenu = document.getElementById('sidebar-user-menu');
-            
             const navUserName = document.getElementById('nav-user-name');
             const navUserPhoto = document.getElementById('nav-user-photo');
             const sidebarEmail = document.getElementById('user-email-display');
             const sidebarPhoto = document.getElementById('sidebar-user-photo');
 
             if (user) {
-                // HIDE Auth Buttons
-                if(navAuthBtns) navAuthBtns.classList.add('hidden');
-                if(sidebarAuthBtns) sidebarAuthBtns.classList.add('hidden');
-
-                // SHOW User Menus
                 if(navUserMenu) {
                     navUserMenu.classList.remove('hidden');
                     navUserMenu.classList.add('flex');
                 }
                 if(sidebarUserMenu) sidebarUserMenu.classList.remove('hidden');
 
-                // POPULATE Data with 1-Letter Avatar Force
                 const displayName = user.displayName || user.email.split('@')[0];
                 const firstLetter = displayName.charAt(0).toUpperCase();
-                // Always use UI Avatars for 1-letter uniformity
                 const photoURL = `https://ui-avatars.com/api/?name=${firstLetter}&background=f97316&color=fff&length=1`;
 
                 if(navUserName) navUserName.innerText = displayName;
@@ -578,16 +548,9 @@
                     navUserPhoto.src = photoURL;
                     navUserPhoto.classList.remove('hidden');
                 }
-
                 if(sidebarEmail) sidebarEmail.innerText = user.email;
                 if(sidebarPhoto) sidebarPhoto.src = photoURL;
-
             } else {
-                // SHOW Auth Buttons
-                if(navAuthBtns) navAuthBtns.classList.remove('hidden');
-                if(sidebarAuthBtns) sidebarAuthBtns.classList.remove('hidden');
-
-                // HIDE User Menus
                 if(navUserMenu) {
                     navUserMenu.classList.add('hidden');
                     navUserMenu.classList.remove('flex');
@@ -596,7 +559,6 @@
             }
         });
 
-        // Make logout available globally
         window.logoutUser = () => {
             signOut(auth).then(() => {
                 window.location.reload();
