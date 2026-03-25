@@ -107,16 +107,6 @@
         .modal-overlay { opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
         .modal-overlay.open { opacity: 1; pointer-events: all; }
         
-        .auth-provider-btn {
-            display: flex; align-items: center; justify-content: center; gap: 10px;
-            width: 100%; padding: 10px; margin-bottom: 8px;
-            border: 1px solid var(--border-color); border-radius: 4px;
-            background: var(--bg-card); color: var(--text-main);
-            font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;
-            transition: all 0.2s;
-        }
-        .auth-provider-btn:hover { background: rgba(249, 115, 22, 0.1); border-color: #f97316; }
-
         /* UI Elements */
         .custom-checkbox input:checked + div { background-color: #f97316; border-color: #f97316; }
         .custom-checkbox input:checked + div svg { opacity: 1; }
@@ -189,16 +179,6 @@
             </div>
 
             <div class="flex items-center gap-4">
-                <!-- Logged OUT State -->
-                <div id="nav-auth-buttons" class="flex items-center gap-4">
-                    <a href="auth.html" class="magnetic hidden md:block text-xs font-body font-bold uppercase tracking-widest text-theme-muted hover:text-theme-main transition-colors px-3">
-                        Sign In
-                    </a>
-                    <a href="auth.html" class="magnetic hidden md:flex items-center gap-2 bg-accent hover:bg-white border border-transparent px-5 py-2 rounded-sm text-black transition-all duration-300 group shadow-[0_0_15px_rgba(249,115,22,0.3)] hover:shadow-[0_0_20px_rgba(255,255,255,0.3)]">
-                        <span class="text-xs font-body font-bold uppercase tracking-widest">Sign Up</span>
-                    </a>
-                </div>
-
                 <!-- Logged IN State (Hidden by default) -->
                 <div id="nav-user-menu" class="hidden items-center gap-4">
                     <span class="text-xs font-mono text-accent">Welcome</span>
@@ -225,16 +205,6 @@
                 <button id="close-btn" class="text-theme-muted hover:text-accent transition-colors">
                     <iconify-icon icon="lucide:x" width="24"></iconify-icon>
                 </button>
-            </div>
-
-            <!-- Auth Buttons (Sidebar) -->
-            <div id="sidebar-auth-buttons" class="grid grid-cols-2 gap-3 mb-8">
-                <a href="auth.html" class="border border-theme hover:border-accent hover:text-accent text-theme-main font-bold uppercase tracking-widest text-[10px] py-3 rounded-sm transition-colors text-center block">
-                    Sign In
-                </a>
-                <a href="auth.html" class="bg-accent hover:bg-white text-black font-bold uppercase tracking-widest text-[10px] py-3 rounded-sm transition-colors text-center shadow-[0_0_10px_rgba(249,115,22,0.2)] block">
-                    Sign Up
-                </a>
             </div>
 
             <!-- Logged In User Menu (Sidebar) -->
@@ -653,10 +623,7 @@
         // --- SESSION MANAGEMENT ---
         function checkSession() {
             const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
-            const navAuthBtns = document.getElementById('nav-auth-buttons');
             const navUserMenu = document.getElementById('nav-user-menu');
-            
-            const sidebarAuthBtns = document.getElementById('sidebar-auth-buttons');
             const sidebarUserMenu = document.getElementById('sidebar-user-menu');
             const userEmail = localStorage.getItem('userEmail') || 'User';
 
@@ -668,23 +635,17 @@
             const sidebarProfile = document.getElementById('sidebar-profile-link');
 
             if (isLoggedIn) {
-                if(navAuthBtns) navAuthBtns.classList.add('hidden');
                 if(navUserMenu) {
                     navUserMenu.classList.remove('hidden');
                     navUserMenu.classList.add('flex');
                 }
-                
-                if(sidebarAuthBtns) sidebarAuthBtns.classList.add('hidden');
                 if(sidebarUserMenu) sidebarUserMenu.classList.remove('hidden');
                 if(sidebarProfile) sidebarProfile.classList.remove('hidden');
             } else {
-                if(navAuthBtns) navAuthBtns.classList.remove('hidden');
                 if(navUserMenu) {
                     navUserMenu.classList.add('hidden');
                     navUserMenu.classList.remove('flex');
                 }
-
-                if(sidebarAuthBtns) sidebarAuthBtns.classList.remove('hidden');
                 if(sidebarUserMenu) sidebarUserMenu.classList.add('hidden');
                 if(sidebarProfile) sidebarProfile.classList.add('hidden');
             }
